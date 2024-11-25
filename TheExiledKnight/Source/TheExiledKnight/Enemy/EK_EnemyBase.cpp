@@ -8,6 +8,7 @@
 #include "Engine/DamageEvents.h"
 #include"Animation/AnimInstance.h"
 #include"Enemy/DamageSystem/EKDamageType.h"
+#include"Player/EKPlayer/EKPlayer.h"
 #include"Enemy/EKEnemyGamePlayTags.h"
 
 
@@ -16,6 +17,11 @@
 AEK_EnemyBase::AEK_EnemyBase()
 {
 	EnemyStat = CreateDefaultSubobject<UEK_EnemyStatusComponent>(TEXT("EnemyStat"));
+}
+void AEK_EnemyBase::BeginPlay()
+{
+	Super::BeginPlay();
+	InitialLocation = GetActorLocation();
 }
 
 #pragma region DamageSystem
@@ -63,6 +69,7 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 
 	return Damage;
 }
+
 #pragma endregion
 #pragma region HanadleDamageType
 void AEK_EnemyBase::HandleStrongAttack(float Damage)
@@ -109,14 +116,15 @@ void AEK_EnemyBase::PlayHurtReactionAnimation(const FVector& DamageDirection)
 		if (ForwardDot > 0)HurtMontage = hurtFAnimMontage;
 		else HurtMontage = hurtBAnimMontage;
 	}
-	EnemyStat->OnDamageTaken.Broadcast();  
 
+	 
 	if (HurtMontage) 
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-		if (AnimInstance->Montage_IsPlaying(StunMontage))StopAnimMontage(StunMontage);
 		if (AnimInstance&&BeforeHurtMontage==nullptr)
 		{
+			if (AnimInstance->IsAnyMontagePlaying())AnimInstance->StopAllMontages(0.1f);  
+			EnemyStat->OnDamageTaken.Broadcast();  
 			FOnMontageEnded MontageEndedDelegate;
 			MontageEndedDelegate.BindUObject(this, &AEK_EnemyBase::OnHurtAnimationEnded);
 			AnimInstance->Montage_Play(HurtMontage); 
@@ -124,7 +132,10 @@ void AEK_EnemyBase::PlayHurtReactionAnimation(const FVector& DamageDirection)
 			AnimInstance->Montage_SetEndDelegate(MontageEndedDelegate, HurtMontage);
 		
 		}
-		
+	}
+	else //don't have hurt montage 
+	{
+		EnemyStat->OnDamageTaken.Broadcast();
 	}
 			
 }
@@ -136,6 +147,7 @@ void AEK_EnemyBase::OnHurtAnimationEnded(UAnimMontage* Montage, bool bInterrupte
 		UE_LOG(LogTemp, Warning, TEXT("OnHurtAnimationEnded called"));
 		EnemyStat->OnHurtAnimationEnd.Broadcast();
 		BeforeHurtMontage = nullptr;
+		
 	}
 	if (EnemyStat->GetCurrentPoise() <= 0 && !bIsStunned) //stun animation montage 
 	{
@@ -223,6 +235,7 @@ void AEK_EnemyBase::SetAttackTarget(AActor* Actor)
 		AttackTarget = Actor;
 	}
 }
+
 
 
 
