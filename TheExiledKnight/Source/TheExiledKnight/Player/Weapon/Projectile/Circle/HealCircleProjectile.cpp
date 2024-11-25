@@ -61,7 +61,6 @@ void AHealCircleProjectile::Tick(float DeltaTime)
 		if (HitPlayer)
 		{
 			HitPlayer->GetPlayerStatusComponent()->SetHp(50);
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Heal Circle"));
 			break;
 		}
 	}

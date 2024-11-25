@@ -48,10 +48,10 @@ void UEKPlayerStatusComponent::BeginPlay()
 	if (EKPlayerGameInstance)
 	{
 		FEKPlayerLevel* EKPlayerLevelTemp = EKPlayerGameInstance->GetEKPlayerLevelData(Level);
-		EKPlayerLevel = *EKPlayerLevelTemp;
+		EKPlayerLevelData = *EKPlayerLevelTemp;
 
 		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(Level);
-		EKPlayerStatus = *EKPlayerStatusTemp;
+		EKPlayerStatusData = *EKPlayerStatusTemp;
 	}
 }
 
@@ -68,10 +68,18 @@ void UEKPlayerStatusComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 #pragma region Set Basic Status
 
-void UEKPlayerStatusComponent::SetMaxHp(int32 SetData)
+void UEKPlayerStatusComponent::SetMaxHp(int32 VitalityLevel)
 {
-	MaxHp = FMath::Clamp(MaxHp + SetData + (Vitality * 50), 0, PlayerMaxHp);
-	SetHp(SetData);
+	if (!EKPlayerGameInstance)
+	{
+		return;
+	}
+
+	FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(VitalityLevel);
+	EKPlayerStatusData = *EKPlayerStatusTemp;
+
+	MaxHp = FMath::Clamp(EKPlayerStatusData.Vitality, 0, PlayerMaxHp);
+	SetHp(MaxHp);
 }
 
 void UEKPlayerStatusComponent::SetHp(int32 SetData)
@@ -80,10 +88,18 @@ void UEKPlayerStatusComponent::SetHp(int32 SetData)
 	Delegate_HPUpdated.Broadcast(MaxHp, Hp);
 }
 
-void UEKPlayerStatusComponent::SetMaxMp(int32 SetData)
+void UEKPlayerStatusComponent::SetMaxMp(int32 MentalLevel)
 {
-	MaxMp = FMath::Clamp(MaxMp + SetData + (Mental * 50), 0, PlayerMaxMp);
-	SetMp(SetData);
+	if (!EKPlayerGameInstance)
+	{
+		return;
+	}
+
+	FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(MentalLevel);
+	EKPlayerStatusData = *EKPlayerStatusTemp;
+
+	MaxMp = FMath::Clamp(EKPlayerStatusData.Mental, 0, PlayerMaxMp);
+	SetMp(MaxMp);
 }
 
 void UEKPlayerStatusComponent::SetMp(int32 SetData)
@@ -92,10 +108,18 @@ void UEKPlayerStatusComponent::SetMp(int32 SetData)
 	Delegate_MPUpdated.Broadcast(MaxMp, Mp);
 }
 
-void UEKPlayerStatusComponent::SetMaxStamina(int32 SetData)
+void UEKPlayerStatusComponent::SetMaxStamina(int32 EnduranceLevel)
 {
-	MaxStamina = FMath::Clamp(MaxStamina + SetData + (Endurance * 50), 0, PlayerMaxStamina);
-	SetStamina(SetData);
+	if (!EKPlayerGameInstance)
+	{
+		return;
+	}
+
+	FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(EnduranceLevel);
+	EKPlayerStatusData = *EKPlayerStatusTemp;
+
+	MaxStamina = FMath::Clamp(EKPlayerStatusData.Endurance, 0, PlayerMaxStamina);
+	SetStamina(MaxStamina);
 }
 
 void UEKPlayerStatusComponent::SetStamina(int32 SetData)
@@ -164,24 +188,30 @@ void UEKPlayerStatusComponent::Calculate_NormalStatus()
 
 #pragma region Damage
 
-void UEKPlayerStatusComponent::SetPlayerDefaultDamage()
-{
-
-}
-
 void UEKPlayerStatusComponent::SetPlayerFinalDamage()
 {
+	if (!EKPlayerGameInstance)
+	{
+		return;
+	}
+
 	if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword))
 	{
-		FinalDamage = DefaultDamage + ((Strength * 10) * 1.5) + ((Ability * 10) * 0.8) + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
+		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseStrength);
+		EKPlayerStatusData = *EKPlayerStatusTemp;
+		FinalDamage = DefaultDamage + EKPlayerStatusData.Strength + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
 	}
 	else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear))
 	{
-		FinalDamage = DefaultDamage + ((Ability * 10) * 1.5) + ((Strength * 10) * 0.8) + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
+		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseAbility);
+		EKPlayerStatusData = *EKPlayerStatusTemp;
+		FinalDamage = DefaultDamage + EKPlayerStatusData.Ability + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
 	}
 	else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff))
 	{
-		FinalDamage = DefaultDamage + ((Intelligence * 10) * 1.5) + ((Mental * 10) * 0.8) + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
+		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseIntelligence);
+		EKPlayerStatusData = *EKPlayerStatusTemp;
+		FinalDamage = DefaultDamage + EKPlayerStatusData.Intelligence + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
 	}
 }
 
@@ -189,44 +219,59 @@ void UEKPlayerStatusComponent::SetPlayerFinalDamage()
 
 #pragma region LevelUp
 
-void UEKPlayerStatusComponent::LevelUp(uint8 SetData)
+void UEKPlayerStatusComponent::LevelUp(uint8 IncreaseLevel)
 {
-	Level = FMath::Clamp(Level + SetData, 0, PlayerMaxLevel);
+	if (!EKPlayerGameInstance)
+	{
+		return;
+	}
+
+	for (int i = 0; i < IncreaseLevel; i++)
+	{
+		FEKPlayerLevel* EKPlayerLevelDataTemp = EKPlayerGameInstance->GetEKPlayerLevelData(Level);
+		EKPlayerLevelData = *EKPlayerLevelDataTemp;
+
+		if (CurrentAstral >= EKPlayerLevelData.NeedAstral)
+		{
+			Level = FMath::Clamp(Level + 1, 0, PlayerMaxLevel);
+			CurrentAstral -= EKPlayerLevelData.NeedAstral;
+		}
+	}
 }
 
-void UEKPlayerStatusComponent::LevelUpVitality(uint8 SetData)
+void UEKPlayerStatusComponent::LevelUpVitality(uint8 IncreaseLevel)
 {
-	Vitality = FMath::Clamp(Vitality + SetData, 0, PlayerMaxVitalityLevel);
-	SetMaxHp(0);
+	BaseVitality = FMath::Clamp(BaseVitality + IncreaseLevel, 0, PlayerMaxVitalityLevel);
+	SetMaxHp(BaseVitality);
 }
 
-void UEKPlayerStatusComponent::LevelUpMental(uint8 SetData)
+void UEKPlayerStatusComponent::LevelUpMental(uint8 IncreaseLevel)
 {
-	Mental = FMath::Clamp(Mental + SetData, 0, PlayerMaxMentalLevel);
-	SetMaxMp(0);
+	BaseMental = FMath::Clamp(BaseMental + IncreaseLevel, 0, PlayerMaxMentalLevel);
+	SetMaxMp(BaseMental);
 }
 
-void UEKPlayerStatusComponent::LevelUpEndurance(uint8 SetData)
+void UEKPlayerStatusComponent::LevelUpEndurance(uint8 IncreaseLevel)
 {
-	Endurance = FMath::Clamp(Endurance + SetData, 0, PlayerMaxEnduranceLevel);
-	SetMaxStamina(0);
+	BaseEndurance = FMath::Clamp(BaseEndurance + IncreaseLevel, 0, PlayerMaxEnduranceLevel);
+	SetMaxStamina(BaseEndurance);
 }
 
-void UEKPlayerStatusComponent::LevelUpStrength(uint8 SetData)
+void UEKPlayerStatusComponent::LevelUpStrength(uint8 IncreaseLevel)
 {
-	Strength = FMath::Clamp(Strength + SetData, 0, PlayerMaxStrengthLevel);
+	BaseStrength = FMath::Clamp(BaseStrength + IncreaseLevel, 0, PlayerMaxStrengthLevel);
 	SetPlayerFinalDamage();
 }
 
-void UEKPlayerStatusComponent::LevelUpAbility(uint8 SetData)
+void UEKPlayerStatusComponent::LevelUpAbility(uint8 IncreaseLevel)
 {
-	Ability = FMath::Clamp(Ability + SetData, 0, PlayerMaxAbilityLevel);
+	BaseAbility = FMath::Clamp(BaseAbility + IncreaseLevel, 0, PlayerMaxAbilityLevel);
 	SetPlayerFinalDamage();
 }
 
-void UEKPlayerStatusComponent::LevelUpIntelligence(uint8 SetData)
+void UEKPlayerStatusComponent::LevelUpIntelligence(uint8 IncreaseLevel)
 {
-	Intelligence = FMath::Clamp(Intelligence + SetData, 0, PlayerMaxInteligenceLevel);
+	BaseIntelligence = FMath::Clamp(BaseIntelligence + IncreaseLevel, 0, PlayerMaxInteligenceLevel);
 	SetPlayerFinalDamage();
 }
 

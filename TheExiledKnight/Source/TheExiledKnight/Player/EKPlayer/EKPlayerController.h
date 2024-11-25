@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/GameInstance/EKPlayerGameInstance.h"
 #include "EKPlayerController.generated.h"
 
 struct FInputActionValue;
@@ -87,6 +88,7 @@ private:
 
 	void LockOnStarted(const FInputActionValue& InputValue);
 
+	void DomainExpansionStarted(const FInputActionValue& InputValue);
 
 public:
 	void OnPressed_GameMenu(const FInputActionValue& InputValue);
@@ -155,14 +157,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Common")
 	UInputAction* IA_Right;
 
-	// Test Input
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Test")
-	UInputAction* IATest;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Common")
+	UInputAction* IADomainExpansion;
+	
 #pragma endregion
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class AEKPlayer* EKPlayer;
+
+	class UEKPlayerGameInstance* EKPlayerGameInstance;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class AEKItem_Base* Item = nullptr;
@@ -172,8 +175,24 @@ protected:
 	UFUNCTION()
 	void DestroyItem();
 
+#pragma region Domain Expansion
+
 protected:
-	// Common Animation Montage
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DomainExpansion")
+	TArray<TSubclassOf<class ADomainExpansionBase>> DomainExpansions;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DomainExpansion")
+	TSubclassOf<class ADomainExpansionBase> CurrentDomainExpansion;
+
+	FEKPlayerDomainExpansion EKPlayerDomainExpansionData;
+
+	void ChangeDomainExpansion(int32 Row);
+
+#pragma endregion
+
+#pragma region Animation
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation|Common")
 	UAnimMontage* UsePotionAnim;
 
@@ -183,8 +202,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation|Common")
 	UAnimMontage* BackStepAnim;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation|Common")
-	UAnimMontage* DieAnim;
+#pragma endregion
 
 public:
 	bool bIsEquipWeapon = false;

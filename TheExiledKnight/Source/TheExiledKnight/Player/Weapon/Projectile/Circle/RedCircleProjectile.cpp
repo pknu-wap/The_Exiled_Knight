@@ -62,9 +62,8 @@ void ARedCircleProjectile::Tick(float DeltaTime)
 		if (HitEnemy)
 		{
 			TSubclassOf<UEKPlayerNormalDamageType> PlayerDamageType = UEKPlayerNormalDamageType::StaticClass();
-			UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer->GetCurrentWeapon(), PlayerDamageType);
+			UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer, PlayerDamageType);
 			HitEnemy->GetCharacterMovement()->MaxWalkSpeed = 100;
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Red Circle"));
 		}
 	}
 
