@@ -10,6 +10,7 @@
 #include"Enemy/DamageSystem/EKDamageType.h"
 #include"Player/EKPlayer/EKPlayer.h"
 #include"Enemy/EKEnemyGamePlayTags.h"
+#include"AIController.h"
 
 
 
@@ -233,6 +234,16 @@ void AEK_EnemyBase::SetAttackTarget(AActor* Actor)
 	if (Actor)
 	{
 		AttackTarget = Actor;
+	}
+}
+
+void AEK_EnemyBase::ReturnToInitializeLocation()
+{
+	AAIController* AIController = Cast<AAIController>(GetController()); 
+
+	if (AIController)
+	{
+		AIController->MoveToLocation(InitialLocation, AcceptanceRadius);
 	}
 }
 

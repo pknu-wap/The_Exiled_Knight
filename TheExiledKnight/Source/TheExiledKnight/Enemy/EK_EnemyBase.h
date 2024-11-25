@@ -46,7 +46,9 @@ public:
 	UFUNCTION(BlueprintCallable) 
 	void SetAttackTarget(AActor* Actor);
 
-	
+	UFUNCTION(BlueprintCallable)
+	void ReturnToInitializeLocation();
+
 protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "AnimMontage", meta = (AllowPrivateAccess = "true"));
@@ -96,5 +98,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FVector InitialLocation; 
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float AcceptanceRadius = 10.0f; 
 
 };

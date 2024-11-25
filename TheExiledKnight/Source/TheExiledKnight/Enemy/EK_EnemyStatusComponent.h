@@ -11,6 +11,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDamageTaken);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHitAnimationEnd);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPoiseIsZero); 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStunAnimationEnd);
+
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent)) 
 
 class THEEXILEDKNIGHT_API UEK_EnemyStatusComponent : public UActorComponent
