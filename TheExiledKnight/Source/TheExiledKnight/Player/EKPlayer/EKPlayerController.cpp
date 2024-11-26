@@ -47,7 +47,7 @@ void AEKPlayerController::BeginPlay()
 
 	EKPlayerGameInstance = Cast<UEKPlayerGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
-	ChangeDomainExpansion(1);
+	ChangeDomainExpansion(2);
 }
 
 void AEKPlayerController::SetupInputComponent()
@@ -778,6 +778,10 @@ void AEKPlayerController::SetBattleStateEnd()
 	EKPlayer->EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_BattleState);
 	if (bIsEquipWeapon)
 	{
+		if (EKPlayer->CheckPlayerDie())
+		{
+			return;
+		}
 		EKPlayer->GetCurrentWeapon()->PlayWeaponEquipAnimMontage(EKPlayer, this);
 	}
 }

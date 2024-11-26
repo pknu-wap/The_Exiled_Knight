@@ -3,15 +3,15 @@
 #pragma once
 
 #include "Player/DomainExpansion/DomainExpansionBase.h"
-#include "DomainExpansionHPPig.generated.h"
+#include "DomainExpansionTimeSlow.generated.h"
 
 UCLASS()
-class THEEXILEDKNIGHT_API ADomainExpansionHPPig : public ADomainExpansionBase
+class THEEXILEDKNIGHT_API ADomainExpansionTimeSlow : public ADomainExpansionBase
 {
 	GENERATED_BODY()
 
 public:
-	ADomainExpansionHPPig();
+	ADomainExpansionTimeSlow();
 
 protected:
 	virtual void BeginPlay() override;

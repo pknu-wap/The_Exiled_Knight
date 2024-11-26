@@ -9,6 +9,7 @@ namespace EKPlayerGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG(EKPlayer_State_DomainExpansion, "EKPlayer.State.DomainExpansion");
 	UE_DEFINE_GAMEPLAY_TAG(EKPlayer_State_DomainExpansion_HPPig, "EKPlayer.State.DomainExpansion.HPPig");
+	UE_DEFINE_GAMEPLAY_TAG(EKPlayer_State_DomainExpansion_TimeSlow, "EKPlayer.State.DomainExpansion.TimeSlow");
 
 	UE_DEFINE_GAMEPLAY_TAG(EKPlayer_State_Move, "EKPlayer.State.Move");
 	UE_DEFINE_GAMEPLAY_TAG(EKPlayer_State_Look, "EKPlayer.State.Look");

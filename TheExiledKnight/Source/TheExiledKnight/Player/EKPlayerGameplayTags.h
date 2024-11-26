@@ -11,6 +11,7 @@ namespace EKPlayerGameplayTags
 
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(EKPlayer_State_DomainExpansion);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(EKPlayer_State_DomainExpansion_HPPig);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(EKPlayer_State_DomainExpansion_TimeSlow);
 
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(EKPlayer_State_Move);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(EKPlayer_State_Look);

@@ -171,6 +171,11 @@ float AEKPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACont
 		return 0.f;
 	}
 
+	if (CheckPlayerDie())
+	{
+		return 0.f;
+	}
+
 	UEKDamageType* DamageType = Cast<UEKDamageType>(DamageEvent.DamageTypeClass->GetDefaultObject());
 
 	if (DamageType->IsA(UEKNormalDamageType::StaticClass()))
@@ -227,8 +232,6 @@ NextFunc:
 			HitDirection(DamageCauser);
 		}
 	}
-
-	CheckPlayerDie();
 
 	EKPlayerController->InvincibilityTimer(0.5f);
 

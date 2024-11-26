@@ -224,12 +224,13 @@ void AEK_EnemyBase::SetAttackTarget(AActor* Actor)
 	}
 }
 
+void AEK_EnemyBase::RemoveTimeslow()
+{
+	this->CustomTimeDilation = DefaultTimeDelayValue;
+}
 
-
-
-
-
-
-
-
-
+void AEK_EnemyBase::RemoveTimeslowTimer()
+{
+	this->CustomTimeDilation = TimeDelayValue;
+	GetWorldTimerManager().SetTimer(RemoveTimeslowHandle, this, &ThisClass::RemoveTimeslow, TimeslowDuration, false);
+}

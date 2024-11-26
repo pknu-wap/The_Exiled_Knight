@@ -89,4 +89,12 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int SantuaryID = 0;
+
+public:
+	FTimerHandle RemoveTimeslowHandle;
+	float TimeslowDuration = 0.1f;
+	float TimeDelayValue = 0.5f;
+	float DefaultTimeDelayValue = 1.f;
+	void RemoveTimeslow();
+	void RemoveTimeslowTimer();
 };

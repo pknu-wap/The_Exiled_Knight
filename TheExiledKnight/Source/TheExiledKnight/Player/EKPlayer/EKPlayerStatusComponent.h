@@ -89,15 +89,18 @@ public:
 	int32 GetBaseAbility() { return BaseAbility; }
 	int32 GetBaseIntelligence() { return BaseIntelligence; }
 
-	void SetMaxHp(int32 SetData);
+	void SetStatusHandle();
+
+	void SetMaxHp();
 	void SetHp(int32 SetData);
-	void SetMaxMp(int32 SetData);
+	void SetMaxMp();
 	void SetMp(int32 SetData);
-	void SetMaxStamina(int32 SetData);
+	void SetMaxStamina();
 	void SetStamina(int32 SetData);
 
 public:
 	float GetPlayerDefaultDamage() { return DefaultDamage; }
+	void SetPlayerDefaultDamage();
 
 	float GetPlayerFinalDamage() { return FinalDamage; }
 	void SetPlayerFinalDamage();
