@@ -92,13 +92,13 @@ void AEKPlayer::BeginPlay()
 		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
 	}*/
 
-	/*if (GreatSwordTypeBClass)
+	if (GreatSwordTypeBClass)
 	{
 		FActorSpawnParameters SpawnParams;
 		CurrentWeapon = GetWorld()->SpawnActor<AEKPlayerWeapon>(GreatSwordTypeBClass, SpawnParams);
 		AttachWeaponToSpineSocket(CurrentWeapon);
 		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
-	}*/
+	}
 
 	// Test Spear Version
 
@@ -218,7 +218,6 @@ NextFunc:
 	{
 		if (!EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Invincibility))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, TEXT("Damage Down"));
 			PlayerStatusComponent->SetHp(-Damage * 0.2);
 			HitDirection(DamageCauser);
 		}
@@ -227,13 +226,12 @@ NextFunc:
 	{
 		if (!EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Invincibility))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, TEXT("Normal"));
 			PlayerStatusComponent->SetHp(-Damage);
 			HitDirection(DamageCauser);
 		}
 	}
 
-	EKPlayerController->InvincibilityTimer(0.5f);
+	EKPlayerController->InvincibilityTimer(0.4f);
 
 	return 0.f;
 }

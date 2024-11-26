@@ -13,6 +13,7 @@
 #include "Item/EKItem_Base.h"
 #include "Engine/SkeletalMesh.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Player/EKPlayerAnimation/EKPlayerAnimInstance.h"
 #include "EKPlayerWeapon.generated.h"
 
 UCLASS(Abstract)

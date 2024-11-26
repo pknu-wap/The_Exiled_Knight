@@ -122,8 +122,6 @@ void AEKPlayerController::MoveTriggered(const FInputActionValue& InputValue)
 		return;
 	}
 
-	EKPlayer->EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_Move);
-
 	FVector2D MovementVector = InputValue.Get<FVector2D>();
 
 	FRotator Rotator = GetControlRotation();
@@ -135,12 +133,14 @@ void AEKPlayerController::MoveTriggered(const FInputActionValue& InputValue)
 
 	if (MovementVector.X != 0)
 	{
+		EKPlayer->EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_Move);
 		FVector Direction = UKismetMathLibrary::GetForwardVector(FRotator(0, Rotator.Yaw, 0));
 		GetPawn()->AddMovementInput(Direction, MovementVector.X);
 	}
 
 	if (MovementVector.Y != 0)
 	{
+		EKPlayer->EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_Move);
 		FVector Direction = UKismetMathLibrary::GetRightVector(FRotator(0, Rotator.Yaw, 0));
 		GetPawn()->AddMovementInput(Direction, MovementVector.Y);
 	}
