@@ -63,7 +63,7 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 				return 0.0f;
 			}
 
-			// ÇÇ°Ý ¾Ö´Ï¸ÞÀÌ¼Ç Àç»ý
+			// ï¿½Ç°ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½
 			FVector DamageDirection = (DamageCauser->GetActorLocation() - GetActorLocation()).GetSafeNormal();
 			PlayHurtReactionAnimation(DamageDirection);
 		}

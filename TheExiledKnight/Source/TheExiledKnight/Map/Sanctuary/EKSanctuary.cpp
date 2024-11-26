@@ -5,11 +5,15 @@
 #include "NiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Enemy/EK_EnemyBase.h"
+#include "Subsystems/SanctuarySubsystem.h"
+#include "UI/UISubsystem.h"
+#include "EKGameplayTags.h"
+#include "Blueprint/UserWidget.h"
 
 // Sets default values
 AEKSanctuary::AEKSanctuary()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
@@ -25,7 +29,15 @@ AEKSanctuary::AEKSanctuary()
 void AEKSanctuary::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	USanctuarySubsystem* sanctuarySystem = GetGameInstance()->GetSubsystem<USanctuarySubsystem>();
+	if (!sanctuarySystem) return;
+	bActivated = sanctuarySystem->IsActivated(SanctuaryID);
+	if (bActivated)
+	{
+		ActivateSantuary();
+	}
+
 	SaveMap();
 }
 
@@ -39,25 +51,48 @@ void AEKSanctuary::Tick(float DeltaTime)
 void AEKSanctuary::Interact()
 {
 	if (!bActivated)
-	{	
+	{
 		ActivateSantuary();
+
+		USanctuarySubsystem* sanctuarySystem = GetGameInstance()->GetSubsystem<USanctuarySubsystem>();
+		if (!sanctuarySystem) return;
+		sanctuarySystem->ActivateSanctuary(SanctuaryID);
+
+		for (int i = 0; i < ShouldOpen_SanctuaryIDs.Num(); i++)
+		{
+			sanctuarySystem->ActivateSanctuary(ShouldOpen_SanctuaryIDs[i]);
+		}
+
 		bActivated = true;
 	}
 
 	LoadMap();
+
+	UUISubsystem* UISystem = GetGameInstance()->GetSubsystem<UUISubsystem>();
+	if (!UISystem) return;
+	UISystem->SetLayerVisibility(FEKGameplayTags::Get().UI_Layer_GameMenu, ESlateVisibility::SelfHitTestInvisible);
+	UISystem->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_Santuary, ESlateVisibility::SelfHitTestInvisible);
+
+	APlayerController* pc = UGameplayStatics::GetPlayerController(this, 0);
+	if (pc)
+	{
+		FInputModeUIOnly UIInputMode;
+		pc->SetInputMode(UIInputMode);
+		pc->SetShowMouseCursor(true);
+	}
 }
 
 void AEKSanctuary::ActivateSantuary()
 {
-	GetWorld()->GetTimerManager().SetTimer(ActivateHandle, 
-		[&]() { 
+	GetWorld()->GetTimerManager().SetTimer(ActivateHandle,
+		[&]() {
 			CurrentScale = CurrentScale + FVector(0.05, 0.05, 0.05);
 			Niagara_Santuary->SetWorldScale3D(CurrentScale);
 		},
 		0.02, true);
 
 	GetWorld()->GetTimerManager().SetTimer(StopHandle,
-		[&]() { 
+		[&]() {
 			GetWorld()->GetTimerManager().ClearTimer(ActivateHandle);
 			// ActivateHandle.Invalidate();
 		}, 1, false);
@@ -127,6 +162,4 @@ void AEKSanctuary::LoadMap()
 			}
 		},
 		0.5, false);
-
 }
-

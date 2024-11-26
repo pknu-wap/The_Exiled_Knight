@@ -22,9 +22,8 @@ public:
 	TObjectPtr<UDataTable> GetItemClassDB() { return ItemClassDB; };
 	const FItemStruct* GetItemInfo(uint8 ID);
 
-	AEKItem_Base* CreateItemInstance(uint8 ID);
-
-	FLevelRate* GetLevelRateInfo(int level);
+	AEKItem_Base* GetOrCreateItemInstance(FName ItemName);
+	const TSubclassOf<AEKItem_Base> GetItemClass(FName ItemName);
 
 	FWeaponStruct* GetWeaponInfo(uint8 ID);
 	FRune* GetRuneInfo(uint8 ID);
@@ -37,13 +36,11 @@ protected:
 	TObjectPtr<UDataTable> ItemClassDB;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
-	TObjectPtr<UDataTable> LevelRateDB;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
 	TMap<uint8, FItemStruct> ItemDictionary;
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
-	TMap<uint8, TSubclassOf<AEKItem_Base>> ItemInstanceDictionary;
+	TMap<FName, AEKItem_Base*> ItemInstanceCache;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
 	TObjectPtr<UDataTable> WeaponDB;
