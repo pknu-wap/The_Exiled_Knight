@@ -6,16 +6,17 @@
 #include "Components/ActorComponent.h"
 #include "Structs/InventorySlotStruct.h"
 #include "EKEnums.h"
+#include "Player/Data/EKPlayerMagic.h"
 #include "InventoryComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAdd_Item_Delegate);
 
-UCLASS( ClassGroup=(Custom), Blueprintable, meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), Blueprintable, meta = (BlueprintSpawnableComponent))
 class THEEXILEDKNIGHT_API UInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UInventoryComponent();
 
@@ -23,7 +24,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -33,6 +34,7 @@ public:
 
 	const TArray<FInventorySlot> GetContents(EUpgradeItemType Category);
 	const TArray<FInventorySlot>& GetConstContents(EItemCategory Category);
+	const TArray<FEKPlayerMagic>& GetMagics() { return Magic; }
 
 	int GetIndexToAdd(uint8 ID);
 	int GetDupSlotIndex(uint8 ID, int MaxStack);
@@ -78,7 +80,7 @@ private:
 
 	TArray<FInventorySlot> UseableItem;
 
-	TArray<FInventorySlot> Magic;
+	TArray<FEKPlayerMagic> Magic;
 
 	TArray<FInventorySlot> Upgrades;
 

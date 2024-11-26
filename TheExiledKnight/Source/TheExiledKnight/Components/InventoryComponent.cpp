@@ -85,7 +85,7 @@ const TArray<FInventorySlot>& UInventoryComponent::GetConstContents(EItemCategor
 	case EItemCategory::UseableItem:
 		return UseableItem;
 	case EItemCategory::Magic:
-		return Magic;
+		return None;
 	case EItemCategory::Upgrades:
 		return Upgrades;
 	case EItemCategory::Hunting:
@@ -163,7 +163,7 @@ TArray<FInventorySlot>& UInventoryComponent::GetContents(EItemCategory Category)
 	case EItemCategory::UseableItem:
 		return UseableItem;
 	case EItemCategory::Magic:
-		return Magic;
+		return None;
 	case EItemCategory::Upgrades:
 		return Upgrades;
 	case EItemCategory::Hunting:
@@ -213,7 +213,7 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 	if (indexToAdd == -1)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("GetIndexToAdd returns -1"))
-		return false;
+			return false;
 	}
 
 	FInventorySlot tmp1, tmp2 = Slots[indexToAdd];
@@ -226,7 +226,7 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 		Slots[index] = tmp2;
 		tmp2 = tmp1;
 	}
-	
+
 	UE_LOG(LogTemp, Warning, TEXT("Add new Item to Inventory Slot"));
 
 	AddItemDelegate.Broadcast();
@@ -251,7 +251,7 @@ bool UInventoryComponent::UseItem(FItemStruct ItemToUse, int Quantity)
 
 	if (Slots[index].Quantity < Quantity)
 		return false;
-	
+
 	AEKItem_Base* ItemInstance = GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetOrCreateItemInstance(ItemToUse.Name);
 	if (ItemInstance == nullptr)
 	{
@@ -330,7 +330,7 @@ bool UInventoryComponent::DeleteItem(FItemStruct ItemToDelete, int Quantity)
 			Slots[index] = tmp2;
 			tmp2 = tmp1;
 		}
-		
+
 		UE_LOG(LogTemp, Warning, TEXT("destroy item and add new empty slot"));
 	}
 
@@ -364,8 +364,7 @@ bool UInventoryComponent::UpdateSlots(TArray<FInventorySlot>& Slots)
 bool UInventoryComponent::AddNewSlot(TArray<FInventorySlot>& Slots)
 {
 	UE_LOG(LogTemp, Warning, TEXT("AddNewSlot"))
-	Slots.AddDefaulted(ExpansionSize);
+		Slots.AddDefaulted(ExpansionSize);
 
 	return true;
 }
-

@@ -26,14 +26,14 @@ void USlotComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	for(int i = 0; i < MaxWeaponSlot; i++)
+	for (int i = 0; i < MaxWeaponSlot; i++)
 		WeaponSlots.Add(FItemStruct());
 	for (int i = 0; i < MaxRuneSlot; i++)
 		RuneSlots.Add(FItemStruct());
 	for (int i = 0; i < MaxUseableSlot; i++)
 		UseableSlots.Add(FItemStruct());
 	for (int i = 0; i < MaxMagicSlot; i++)
-		MagicSlots.Add(FMagicStruct());
+		MagicSlots.Add(FEKPlayerMagic());
 }
 
 
@@ -72,7 +72,7 @@ void USlotComponent::EquipWeapon(const FItemStruct& InItemData)
 		if (slotIdx == ActiveWeaponSlot)
 		{
 			player->EquipWeapon(*weaponInfo);
-			Delegate_QuickSlotUpdated.Broadcast(EItemCategory::Weapon, slotIdx);
+			Delegate_QuickSlotUpdated.Broadcast(EItemCategory::Weapon, ActiveWeaponSlot);
 		}
 
 		Delegate_SlotUpdated.Broadcast(EItemCategory::Weapon, slotIdx);
@@ -108,11 +108,29 @@ void USlotComponent::EquipUseableItem(const FItemStruct& InItemData)
 	{
 		UseableSlots[slotIdx] = InItemData;
 		Delegate_SlotUpdated.Broadcast(EItemCategory::UseableItem, slotIdx);
+
+		if (slotIdx == ActiveUseableSlot)
+		{
+			Delegate_QuickSlotUpdated.Broadcast(EItemCategory::UseableItem, slotIdx);
+		}
 	}
 }
 
-void USlotComponent::EquipMagic(const FMagicStruct& InMagicData)
+void USlotComponent::EquipMagic(const FEKPlayerMagic& InMagicData)
 {
+	UWidget_Equipment* equipWidget = GetEquipmentWidget();
+	if (!equipWidget) return;
+
+	int slotIdx = equipWidget->GetEquipSelectSlotIdx();
+
+	if (MagicSlots.IsValidIndex(slotIdx))
+	{
+		MagicSlots[slotIdx] = InMagicData;
+		if (slotIdx == ActiveMagicSlot)
+		{
+			Delegate_QuickSlotUpdated.Broadcast(EItemCategory::Magic, ActiveMagicSlot);
+		}
+	}
 }
 
 void USlotComponent::UpdateActiveSlot(EInputType InInputType)
@@ -139,7 +157,7 @@ void USlotComponent::UpdateActiveSlot(EInputType InInputType)
 
 		break;
 	}
-	case EInputType::Left: 
+	case EInputType::Left:
 	{
 		ActiveFragmentSlot++;
 		if (ActiveFragmentSlot >= MaxFragmentSlot)
@@ -149,7 +167,7 @@ void USlotComponent::UpdateActiveSlot(EInputType InInputType)
 
 		break;
 	}
-	case EInputType::Right: 
+	case EInputType::Right:
 	{
 		ActiveWeaponSlot++;
 		if (ActiveWeaponSlot >= MaxWeaponSlot)
@@ -187,4 +205,3 @@ UWidget_Equipment* USlotComponent::GetEquipmentWidget()
 	UWidget_Equipment* equipWidget = Cast<UWidget_Equipment>(widget);
 	return equipWidget;
 }
-
