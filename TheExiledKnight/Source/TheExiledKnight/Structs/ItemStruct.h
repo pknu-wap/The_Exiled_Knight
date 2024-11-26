@@ -6,6 +6,9 @@
 #include "EKEnums.h"
 #include "ItemStruct.generated.h"
 
+#define INVALID_INDEX -1
+#define EMPTY_ID 1
+
 USTRUCT(BlueprintType)
 struct FItemStruct : public FTableRowBase
 {
@@ -85,6 +88,15 @@ struct FWeaponStruct : public FTableRowBase
     TSubclassOf<class AEKPlayerWeapon> WeaponClass;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FName AbilityName = "";
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int AbilityMPCost = 50;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int Weight = 15;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float AttackPow = 1.0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -105,14 +117,14 @@ struct FLevelRate : public FTableRowBase
     FLevelRate();
     FLevelRate(const FLevelRate& Other)
     {
-        PotionRate = Other.PotionRate;
+        PotionHealRate = Other.PotionHealRate;
         SwordRate = Other.SwordRate;
         StaffRate = Other.StaffRate;
         SpearRate = Other.SpearRate;
     };
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float PotionRate = 0.0f;
+    float PotionHealRate = 0.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float SwordRate = 0.0f;
@@ -142,6 +154,12 @@ struct FRune : public FTableRowBase
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statment|Upgrade")
     int32 ID;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statment|Upgrade")
+    int32 Weight = 15;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statment|Upgrade")
+    int32 DEF = 30;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statment|Upgrade")
     int32 Vitality;

@@ -58,6 +58,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int SanctuaryID = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<int> ShouldOpen_SanctuaryIDs;
+
 private:
 	FVector CurrentScale = FVector(0, 0, 0);
 	FTimerHandle ActivateHandle;
