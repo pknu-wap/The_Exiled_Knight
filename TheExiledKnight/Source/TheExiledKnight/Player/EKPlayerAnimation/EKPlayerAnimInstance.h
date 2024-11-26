@@ -70,4 +70,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Info|Bool")
 	bool bIsDie = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Info|Bool")
+	bool bIsEquip = false;
 };
