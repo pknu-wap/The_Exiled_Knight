@@ -12,14 +12,6 @@ UEKPlayerStatusComponent::UEKPlayerStatusComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// Edit Basic Status Value Here
-	MaxHp = 1000;
-	Hp = 1000;
-	MaxMp = 1000;
-	Mp = 1000;
-	MaxStamina = 1000;
-	Stamina = 1000;
-	
-	// Edit Basic Status Value Here
 	Level = 1;
 	Vitality = 1; BaseVitality = 1;
 	Mental = 1;	BaseMental = 1;

@@ -139,22 +139,22 @@ protected:
 protected:
 	// Basic status
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
-	int MaxHp;
+	int MaxHp = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
-	int Hp;
+	int Hp = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
-	int MaxMp;
+	int MaxMp = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
-	int Mp;
+	int Mp = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
-	int MaxStamina;
+	int MaxStamina = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
-	int Stamina;
+	int Stamina = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
 	int ATK;

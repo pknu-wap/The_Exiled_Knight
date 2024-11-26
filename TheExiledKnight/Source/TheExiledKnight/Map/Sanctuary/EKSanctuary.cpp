@@ -5,6 +5,9 @@
 #include "NiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Enemy/EK_EnemyBase.h"
+#include "Subsystems/SanctuarySubsystem.h"
+#include "UI/UISubsystem.h"
+#include "EKGameplayTags.h"
 
 // Sets default values
 AEKSanctuary::AEKSanctuary()

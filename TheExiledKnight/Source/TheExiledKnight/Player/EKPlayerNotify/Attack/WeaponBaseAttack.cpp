@@ -70,11 +70,6 @@ void UWeaponBaseAttack::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequen
 		{
 			IgnoreEnemy.Emplace(HitEnemy);
 			TSubclassOf<UEKPlayerNormalDamageType> PlayerDamageType = UEKPlayerNormalDamageType::StaticClass();
-			UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer, PlayerDamageType);
-
-
-
-			UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer->GetCurrentWeapon(), PlayerDamageType);
 			USlotComponent* slotcomponent = EKPlayerController->GetSlotComponent();
 			int activeWeaponSlot = slotcomponent->ActiveWeaponSlot;
 
@@ -99,7 +94,7 @@ void UWeaponBaseAttack::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequen
 			float finalWeaponATK = currentWeaponInfo->AttackPow * damageRateByWeaponType;
 			float finalPlayerATK = EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage();
 			float finalApplyDamage = finalPlayerATK + finalWeaponATK;
-			UGameplayStatics::ApplyDamage(HitEnemy, finalApplyDamage, EKPlayerController, EKPlayer->GetCurrentWeapon(), PlayerDamageType);
+			UGameplayStatics::ApplyDamage(HitEnemy, finalApplyDamage, EKPlayerController, EKPlayer, PlayerDamageType);
 
 			UE_LOG(LogTemp, Warning, TEXT("ApplyDamge : %.2f"), finalApplyDamage);
 			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Attack"));
