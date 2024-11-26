@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "UI/Inventory/Widget_Inventory.h"
@@ -6,6 +6,7 @@
 #include "UI/Inventory/Widget_Inventory_CategorySlot.h"
 #include "Components/ScrollBox.h"
 #include "Components/Button.h"
+#include "Components/TextBlock.h"
 
 void UWidget_Inventory::NativeConstruct()
 {
@@ -36,6 +37,35 @@ void UWidget_Inventory::NativeConstruct()
 
 void UWidget_Inventory::UpdateContents(EItemCategory Category)
 {
+	switch (Category)
+	{
+	case EItemCategory::None:
+		break;
+	case EItemCategory::Weapon:
+		Text_CategoryName->SetText(FText::FromString(FString::Printf(TEXT("무기"))));
+		break;
+	case EItemCategory::Rune:
+		Text_CategoryName->SetText(FText::FromString(FString::Printf(TEXT("룬"))));
+		break;
+	case EItemCategory::FragmentOfGod:
+		Text_CategoryName->SetText(FText::FromString(FString::Printf(TEXT("신의 파편"))));
+		break;
+	case EItemCategory::UseableItem:
+		Text_CategoryName->SetText(FText::FromString(FString::Printf(TEXT("사용 아이템"))));
+		break;
+	case EItemCategory::Magic:
+		Text_CategoryName->SetText(FText::FromString(FString::Printf(TEXT("마법"))));
+		break;
+	case EItemCategory::Upgrades:
+		Text_CategoryName->SetText(FText::FromString(FString::Printf(TEXT("강화 전용 아이템"))));
+		break;
+	case EItemCategory::Hunting:
+		Text_CategoryName->SetText(FText::FromString(FString::Printf(TEXT("기타"))));
+		break;
+	default:
+		break;
+	}
+
 	for (int i = 0; i < CategorySlots.Num(); i++)
 	{
 		if (CategorySlots[i]->Category == Category)

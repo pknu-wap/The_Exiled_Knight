@@ -10,6 +10,7 @@
 
 class UButton;
 class UScrollBox;
+class UTextBlock;
 class UWidget_InvContentList;
 class UWidget_Inventory_CategorySlot;
 
@@ -41,6 +42,9 @@ public:
 
 	UPROPERTY(meta = (BindWidget), BlueprintReadOnly, EditAnywhere)
 	UScrollBox* ScrollBox_Category;
+
+	UPROPERTY(meta = (BindWidget), BlueprintReadOnly, EditAnywhere)
+	UTextBlock* Text_CategoryName;
 
 	UPROPERTY(meta = (BindWidget), BlueprintReadOnly, EditAnywhere)
 	UButton* Button_BeforeCategory;

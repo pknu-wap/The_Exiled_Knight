@@ -3,6 +3,7 @@
 
 #include "Components/InventoryComponent.h"
 #include "Subsystems/InventorySubsystem.h"
+#include "Player/GameInstance/EKPlayerGameInstance.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -30,6 +31,15 @@ void UInventoryComponent::BeginPlay()
 	Hunting.Empty();
 
 	InitializeInventory();
+
+	UEKPlayerGameInstance* gameInst = Cast<UEKPlayerGameInstance>(GetWorld()->GetGameInstance());
+	if (!gameInst) return;
+	for (int i = 0; i < 10; i++)
+	{
+		FEKPlayerMagic* magicInfo = gameInst->GetEKPlayerMagicData(i);
+		if (!magicInfo) continue;
+		Magic.Add(*magicInfo);
+	}
 }
 
 
@@ -132,7 +142,7 @@ void UInventoryComponent::InitializeInventory()
 	AddNewSlot(GetContents(EItemCategory::Rune));
 	AddNewSlot(GetContents(EItemCategory::FragmentOfGod));
 	AddNewSlot(GetContents(EItemCategory::UseableItem));
-	AddNewSlot(GetContents(EItemCategory::Magic));
+	// AddNewSlot(GetContents(EItemCategory::Magic));
 	AddNewSlot(GetContents(EItemCategory::Upgrades));
 	AddNewSlot(GetContents(EItemCategory::Hunting));
 
