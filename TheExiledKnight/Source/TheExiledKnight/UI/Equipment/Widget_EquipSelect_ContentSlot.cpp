@@ -21,6 +21,7 @@ void UWidget_EquipSelect_ContentSlot::UpdateSlot(EItemCategory inCategory, const
 	Category = inCategory;
 	MagicData = inData;
 
+	Image_Item->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	Image_Item->SetBrushFromTexture(MagicData.Icon);
 }
 
@@ -31,13 +32,17 @@ void UWidget_EquipSelect_ContentSlot::UpdateSlot(EItemCategory inCategory, const
 
 	if (inData.Quantity > 0)
 	{
+		Image_Item->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		Image_Item->SetBrushFromTexture(SlotData.Item.Icon);
 
 		Text_Quantity->SetText(UKismetTextLibrary::Conv_IntToText(inData.Quantity));
 		Text_Quantity->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 	else
+	{
+		Image_Item->SetVisibility(ESlateVisibility::Collapsed);
 		Text_Quantity->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UWidget_EquipSelect_ContentSlot::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
