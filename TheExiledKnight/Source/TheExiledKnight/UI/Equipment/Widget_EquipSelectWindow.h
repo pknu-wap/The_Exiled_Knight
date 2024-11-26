@@ -39,6 +39,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateDescription_Rune(const FInventorySlot& SlotData);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateDescription_Fragment(const FInventorySlot& SlotData);
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdateStatusInfo();
 
