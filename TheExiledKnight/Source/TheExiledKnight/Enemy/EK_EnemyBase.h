@@ -49,6 +49,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ReturnToInitializeLocation();
 
+	UFUNCTION(BlueprintCallable)
+	FVector GetInitializeLocation();
+
+
+
 protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "AnimMontage", meta = (AllowPrivateAccess = "true"));
@@ -97,9 +102,8 @@ public:
 	int SantuaryID = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FVector InitialLocation; 
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float AcceptanceRadius = 10.0f; 
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVector InitialLocation;
 };

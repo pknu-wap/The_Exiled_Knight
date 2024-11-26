@@ -246,6 +246,11 @@ void AEK_EnemyBase::ReturnToInitializeLocation()
 	}
 }
 
+FVector AEK_EnemyBase::GetInitializeLocation()
+{
+	return InitialLocation;
+}
+
 
 
 
