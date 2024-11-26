@@ -82,6 +82,19 @@ void UWidget_QuickSlot::SlotUpdated(EItemCategory inCategory, int inSlotIdx)
 		}
 		break;
 	}
+	case EItemCategory::Magic:
+	{
+		if (slotComp->MagicSlots.IsValidIndex(inSlotIdx) && !slotComp->MagicSlots[inSlotIdx].MagicName.IsNone())
+		{
+			Image_Item->SetBrushFromTexture(slotComp->MagicSlots[inSlotIdx].Icon);
+			Image_Item->SetOpacity(1);
+		}
+		else
+		{
+			Image_Item->SetOpacity(0);
+		}
+		break;
+	}
 	default:
 	{
 		break;
