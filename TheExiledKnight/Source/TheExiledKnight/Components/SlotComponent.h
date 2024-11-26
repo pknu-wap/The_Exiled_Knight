@@ -13,12 +13,12 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSlotUpdated, EItemCategory, InCate
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FQuickSlotUpdated, EItemCategory, InCategory, int, InSlotIdx);
 
 
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class THEEXILEDKNIGHT_API USlotComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:
+public:	
 	// Sets default values for this component's properties
 	USlotComponent();
 
@@ -26,7 +26,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:
+public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -65,7 +65,7 @@ public:
 	// Special Skill
 	int ActiveFragmentSlot = 0;
 	int MaxFragmentSlot = 6;
-
+	
 public:
 	UPROPERTY(BlueprintAssignable)
 	FSlotUpdated Delegate_SlotUpdated;

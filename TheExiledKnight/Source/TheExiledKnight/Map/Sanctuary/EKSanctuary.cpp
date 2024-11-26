@@ -51,7 +51,7 @@ void AEKSanctuary::Tick(float DeltaTime)
 void AEKSanctuary::Interact()
 {
 	if (!bActivated)
-	{	
+	{
 		ActivateSantuary();
 
 		USanctuarySubsystem* sanctuarySystem = GetGameInstance()->GetSubsystem<USanctuarySubsystem>();
