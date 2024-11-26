@@ -14,6 +14,7 @@
 #include "Engine/SkeletalMesh.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Player/EKPlayerAnimation/EKPlayerAnimInstance.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "EKPlayerWeapon.generated.h"
 
 UCLASS(Abstract)
@@ -42,6 +43,10 @@ public:
 public:
 	virtual void AttachWeaponToSpineSocket(AEKPlayerWeapon* Weapon, AEKPlayer* EKPlayer);
 	virtual void AttachWeaponToHandSocket(AEKPlayerWeapon* Weapon, AEKPlayer* EKPlayer);
+
+	virtual UAnimMontage* GetWeaponAttackAnim() { return nullptr; }
+
+	bool CheckAnimMontageEnd(AEKPlayer* EKPlayer, UAnimMontage* Checking);
 
 public:
 	virtual UCapsuleComponent* GetWeaponCapsuleComponent() { return nullptr; }

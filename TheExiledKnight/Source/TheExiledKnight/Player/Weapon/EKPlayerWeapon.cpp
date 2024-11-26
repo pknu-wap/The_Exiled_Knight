@@ -28,8 +28,7 @@ void AEKPlayerWeapon::PlayWeaponEquipAnimMontage(AEKPlayer* EKPlayer, AEKPlayerC
 	{
 		if (!EKPlayerController->bIsEquipWeapon && WeaponEquipAnim)
 		{
-			UEKPlayerAnimInstance* EKAnimInstance = Cast<UEKPlayerAnimInstance>(EKPlayer->GetMesh()->GetAnimInstance());
-			if (EKAnimInstance->Montage_IsPlaying(WeaponEquipAnim))
+			if (!CheckAnimMontageEnd(EKPlayer, WeaponEquipAnim))
 			{
 				return;
 			}
@@ -90,3 +89,13 @@ void AEKPlayerWeapon::ResetAttackCombo()
 }
 
 #pragma endregion
+
+bool AEKPlayerWeapon::CheckAnimMontageEnd(AEKPlayer* EKPlayer, UAnimMontage* Checking)
+{
+	UEKPlayerAnimInstance* EKAnimInstance = Cast<UEKPlayerAnimInstance>(EKPlayer->GetMesh()->GetAnimInstance());
+	if (EKAnimInstance->Montage_IsPlaying(Checking))
+	{
+		return false;
+	}
+	return true;
+}

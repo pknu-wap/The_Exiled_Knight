@@ -156,6 +156,20 @@ void AEKPlayer::Tick(float DeltaTime)
 		LockOnTargetRotation = TargetRotation;
 		EKPlayerController->SetControlRotation(LockOnTargetRotation);
 	}
+
+	if (!CurrentWeapon)
+	{
+		return;
+	}
+
+	if (CurrentWeapon->CheckAnimMontageEnd(this, CurrentWeapon->GetWeaponAttackAnim()))
+	{
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+	}
+	else
+	{
+		GetCharacterMovement()->bOrientRotationToMovement = false;
+	}
 }
 
 #pragma region Damage
