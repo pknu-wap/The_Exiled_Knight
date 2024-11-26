@@ -26,7 +26,7 @@ void USlotComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	for(int i = 0; i < MaxWeaponSlot; i++)
+	for (int i = 0; i < MaxWeaponSlot; i++)
 		WeaponSlots.Add(FItemStruct());
 	for (int i = 0; i < MaxRuneSlot; i++)
 		RuneSlots.Add(FItemStruct());
@@ -157,7 +157,7 @@ void USlotComponent::UpdateActiveSlot(EInputType InInputType)
 
 		break;
 	}
-	case EInputType::Left: 
+	case EInputType::Left:
 	{
 		ActiveFragmentSlot++;
 		if (ActiveFragmentSlot >= MaxFragmentSlot)
@@ -167,7 +167,7 @@ void USlotComponent::UpdateActiveSlot(EInputType InInputType)
 
 		break;
 	}
-	case EInputType::Right: 
+	case EInputType::Right:
 	{
 		ActiveWeaponSlot++;
 		if (ActiveWeaponSlot >= MaxWeaponSlot)
@@ -205,4 +205,3 @@ UWidget_Equipment* USlotComponent::GetEquipmentWidget()
 	UWidget_Equipment* equipWidget = Cast<UWidget_Equipment>(widget);
 	return equipWidget;
 }
-

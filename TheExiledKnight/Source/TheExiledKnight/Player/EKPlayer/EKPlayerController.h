@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/SlotComponent.h"
 #include "EKPlayerController.generated.h"
 
 struct FInputActionValue;
@@ -70,7 +71,7 @@ private:
 	void SprintAndDodgeTriggered(const FInputActionValue& InputValue);
 	void SprintAndDodgeRelease(const FInputActionValue& InputValue);
 
-	void UsePotionStarted(const FInputActionValue& InputValue);
+	void UseItem(const FInputActionValue& InputValue);
 
 	void WeaponAttackStarted(const FInputActionValue& InputValue);
 
@@ -175,9 +176,6 @@ protected:
 protected:
 	// Common Animation Montage
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation|Common")
-	UAnimMontage* UsePotionAnim;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation|Common")
 	UAnimMontage* DodgeAnim;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation|Common")
@@ -189,6 +187,8 @@ protected:
 public:
 	bool bIsEquipWeapon = false;
 
+	class USlotComponent* GetSlotComponent() { return SlotComponent; }
+	class UInventoryComponent* GetInventoryComponent() { return InventoryComponent; }
 #pragma region Timer
 
 public:
