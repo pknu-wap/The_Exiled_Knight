@@ -169,6 +169,8 @@ void UEKPlayerStatusComponent::Calculate_NormalStatus()
 			Intelligence += runeInfo->Intelligence;
 		}
 	}
+
+	//UE_LOG(LogTemp, Warning, TEXT(""))
 }
 
 int UEKPlayerStatusComponent::GetCalculatedHP(int InVitality)

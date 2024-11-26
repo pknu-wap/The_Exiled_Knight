@@ -195,8 +195,8 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 		return true;
 	}
 
-	indexToAdd = GetIndexToAdd(ItemToAdd.ID, ItemToAdd.ItemCategory);
-	//indexToAdd = GetEmptySlotIndex(ItemToAdd.ItemCategory);
+	//indexToAdd = GetIndexToAdd(ItemToAdd.ID, ItemToAdd.ItemCategory);
+	indexToAdd = GetEmptySlotIndex(ItemToAdd.ItemCategory);
 
 	if (indexToAdd == INVALID_INDEX) // if inventory is full
 	{
@@ -208,6 +208,8 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 	}
 
 	// if empty slot exists
+	indexToAdd = GetIndexToAdd(ItemToAdd.ID, ItemToAdd.ItemCategory);
+
 	// Sort
 	if (indexToAdd == INVALID_INDEX)
 	{

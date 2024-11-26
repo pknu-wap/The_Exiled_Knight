@@ -75,9 +75,6 @@ void UWeaponBaseAttack::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequen
 			USlotComponent* slotcomponent = EKPlayerController->GetSlotComponent();
 			int activeWeaponSlot = slotcomponent->ActiveWeaponSlot;
 
-			if (activeWeaponSlot == 0)
-				return;
-
 			uint8 weaponID = slotcomponent->WeaponSlots[activeWeaponSlot].ID;
 			FWeaponStruct* currentWeaponInfo = EKPlayerController->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetWeaponInfo(weaponID);
 			FLevelRate* currentWeaponLevel = EKPlayerController->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetLevelRateInfo(slotcomponent->WeaponSlots[activeWeaponSlot].ItemLevel);
