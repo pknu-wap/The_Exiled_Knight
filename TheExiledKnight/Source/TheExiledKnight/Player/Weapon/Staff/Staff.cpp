@@ -1,6 +1,8 @@
 // Made by Somalia Pirate
 
 #include "Staff.h"
+#include "Components/SlotComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AStaff::AStaff()
 {
@@ -28,6 +30,13 @@ void AStaff::BeginPlay()
 	Super::BeginPlay();
 
 	EKPlayerGameInstance = Cast<UEKPlayerGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+	APlayerController* pc = UGameplayStatics::GetPlayerController(this, 0);
+	if (!pc) return;
+	USlotComponent* slotComp = pc->GetComponentByClass<USlotComponent>();
+	if (!slotComp) return;
+	slotComp->Delegate_QuickSlotUpdated.RemoveAll(this);
+	slotComp->Delegate_QuickSlotUpdated.AddDynamic(this, &AStaff::MagicUpdated);
 }
 
 void AStaff::Tick(float DeltaTime)
@@ -149,5 +158,22 @@ void AStaff::ChangeMagic(int32 Row)
 		FEKPlayerMagic* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerMagicData(Row);
 		EKPlayerMagic = *EKPlayerStatusTemp;
 		StaffCurrentMagicAnim = StaffMagicAnims[EKPlayerMagic.MagicID];
+	}
+}
+
+void AStaff::MagicUpdated(EItemCategory Category, int InSlotIdx)
+{
+	if (Category != EItemCategory::Magic)
+		return;
+
+	APlayerController* pc = UGameplayStatics::GetPlayerController(this, 0);
+	if (!pc) return;
+	USlotComponent* slotComp = pc->GetComponentByClass<USlotComponent>();
+	if (!slotComp) return;
+
+	if (slotComp->MagicSlots.IsValidIndex(InSlotIdx) 
+		&& StaffMagicAnims.IsValidIndex(slotComp->MagicSlots[InSlotIdx].MagicID))
+	{
+		StaffCurrentMagicAnim = StaffMagicAnims[slotComp->MagicSlots[InSlotIdx].MagicID];
 	}
 }

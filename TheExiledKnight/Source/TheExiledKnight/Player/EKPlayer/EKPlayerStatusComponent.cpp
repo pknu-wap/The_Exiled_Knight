@@ -64,6 +64,8 @@ void UEKPlayerStatusComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	{
 		SetStamina(4);
 	}
+
+	Recalculate_Status();
 }
 
 #pragma region Set Basic Status
@@ -138,7 +140,7 @@ void UEKPlayerStatusComponent::Calculate_BasicStatus()
 {
 	MaxHp = 1000 + Vitality * 100;
 	MaxMp = 1000 + Mental * 100;
-	Stamina = 1000 + Endurance * 100;
+	MaxStamina = 1000 + Endurance * 100;
 
 	UInventorySubsystem* invSystem = GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>();
 	if (!invSystem) return;
@@ -147,11 +149,13 @@ void UEKPlayerStatusComponent::Calculate_BasicStatus()
 	USlotComponent* slotComp = pc->GetComponentByClass<USlotComponent>();
 	if (!slotComp) return;
 
+	DEF = 75 * Endurance + 25 * Ability;
+
 	// Calculate Weapon Stat
 	FWeaponStruct* weaponInfo = invSystem->GetWeaponInfo(slotComp->WeaponSlots[slotComp->ActiveWeaponSlot].ID);
 	if (!weaponInfo) return;
 	ATK = weaponInfo->AttackPow;
-
+	
 	// Calculate 
 	ATK *= 1 + 0.02 * Strength;
 }
@@ -166,6 +170,13 @@ void UEKPlayerStatusComponent::Calculate_NormalStatus()
 	USlotComponent* slotComp = pc->GetComponentByClass<USlotComponent>();
 	if (!slotComp) return;
 
+	Vitality = BaseVitality;
+	Mental = BaseMental;
+	Endurance = BaseEndurance;
+	Strength = BaseStrength;
+	Ability = BaseAbility;
+	Intelligence = BaseIntelligence;
+
 	for (int i = 0; i < slotComp->RuneSlots.Num(); i++)
 	{
 		int itemID = slotComp->RuneSlots[i].ID;
@@ -174,14 +185,48 @@ void UEKPlayerStatusComponent::Calculate_NormalStatus()
 			FRune* runeInfo = invSystem->GetRuneInfo(itemID);
 			if (!runeInfo) return;
 
-			Vitality = BaseVitality + runeInfo->Vitality;
-			Mental = BaseMental + runeInfo->Mental;
-			Endurance = BaseEndurance + runeInfo->Endurance;
-			Strength = BaseStrength + runeInfo->Strength;
-			Ability = BaseAbility + runeInfo->Ability;
-			Intelligence = BaseIntelligence + runeInfo->Intelligence;
+			Vitality += runeInfo->Vitality;
+			Mental += runeInfo->Mental;
+			Endurance += runeInfo->Endurance;
+			Strength += runeInfo->Strength;
+			Ability += runeInfo->Ability;
+			Intelligence += runeInfo->Intelligence;
 		}
 	}
+}
+
+int UEKPlayerStatusComponent::GetCalculatedHP(int InVitality)
+{
+	float rate = 1 + 0.02 * InVitality;
+	float CalculatedHP = PlayerMaxHp + 100 * InVitality;
+	return CalculatedHP;
+}
+
+int UEKPlayerStatusComponent::GetCalculatedMP(int InMental)
+{
+	float rate = 1 + 0.02 * InMental;
+	float CalculatedMP = PlayerMaxMp + 100 * InMental;
+	return CalculatedMP;
+}
+
+int UEKPlayerStatusComponent::GetCalculatedStamina(int InEndurance)
+{
+	float rate = 1 + 0.02 * InEndurance;
+	float CalculatedStamina = PlayerMaxStamina + 100 * InEndurance;
+	return CalculatedStamina;
+}
+
+int UEKPlayerStatusComponent::GetCalculatedATK(int InStrength)
+{
+	// Calculate 
+	float rate = 1 + 0.02 * InStrength;
+	float CalculatedATK = ATK * rate;
+	return CalculatedATK;
+}
+
+int UEKPlayerStatusComponent::GetCalculatedDEF(int InEndurance, int InAbility)
+{
+	return 75 * InEndurance + 25 * InAbility;
 }
 
 #pragma endregion

@@ -6,6 +6,7 @@
 #include "../EKPlayerWeapon.h"
 #include "Player/Data/EKPlayerMagic.h"
 #include "Player/GameInstance/EKPlayerGameInstance.h"
+#include "EKEnums.h"
 #include "Staff.generated.h"
 
 UCLASS()
@@ -33,6 +34,9 @@ public:
 	virtual void PlaySkillStartAnimMontage(AEKPlayer* EKPlayer, AEKPlayerController* EKPlayerController) override;
 
 	void ChangeMagic(int32 Row);
+	
+	UFUNCTION()
+	void MagicUpdated(EItemCategory Category, int InSlotIdx);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")

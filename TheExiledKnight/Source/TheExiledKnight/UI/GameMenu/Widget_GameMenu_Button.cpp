@@ -7,6 +7,7 @@
 #include "EKGameplayTags.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "UI/Equipment/Widget_EquipSelectWindow.h"
 
 void UWidget_GameMenu_Button::NativeConstruct()
 {
@@ -38,6 +39,45 @@ void UWidget_GameMenu_Button::MenuButtonClicked()
 	{
 		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_GameMenu, ESlateVisibility::Collapsed);
 		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_Setting, ESlateVisibility::SelfHitTestInvisible);
+		break;
+	}
+	case EGameMenuCategory::EquipMagic:
+	{
+		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_Santuary, ESlateVisibility::Collapsed);
+		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_EquipMagic, ESlateVisibility::SelfHitTestInvisible);
+		
+		UUserWidget* widget = UIManager->GetWidget(FEKGameplayTags::Get().UI_Widget_GameMenu_EquipMagic);
+		if (!widget) return;
+		UWidget_EquipSelectWindow* userWidget = Cast<UWidget_EquipSelectWindow>(widget);
+		if (!userWidget) return;
+		userWidget->UpdateContents(EItemCategory::Magic);
+		
+		break;
+	}
+	case EGameMenuCategory::Map:
+	{
+		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_Santuary, ESlateVisibility::Collapsed);
+		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_Map, ESlateVisibility::SelfHitTestInvisible);
+		break;
+	}
+	case EGameMenuCategory::PT_Distribute:
+	{
+		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_Santuary, ESlateVisibility::Collapsed);
+		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_Potion, ESlateVisibility::SelfHitTestInvisible);
+		break;
+	}
+	case EGameMenuCategory::PT_Quantity:
+	{
+		break;
+	}
+	case EGameMenuCategory::PT_HealRate:
+	{
+		break;
+	}
+	case EGameMenuCategory::UpgradeStatus:
+	{
+		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_Santuary, ESlateVisibility::Collapsed);
+		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_UpgradeStatus, ESlateVisibility::SelfHitTestInvisible);
 		break;
 	}
 	case EGameMenuCategory::Quit:
