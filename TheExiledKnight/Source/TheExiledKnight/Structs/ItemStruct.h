@@ -88,6 +88,15 @@ struct FWeaponStruct : public FTableRowBase
     TSubclassOf<class AEKPlayerWeapon> WeaponClass;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FName AbilityName = "";
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int AbilityMPCost = 50;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int Weight = 15;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float AttackPow = 1.0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -145,6 +154,12 @@ struct FRune : public FTableRowBase
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statment|Upgrade")
     int32 ID;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statment|Upgrade")
+    int32 Weight = 15;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statment|Upgrade")
+    int32 DEF = 30;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statment|Upgrade")
     int32 Vitality;
