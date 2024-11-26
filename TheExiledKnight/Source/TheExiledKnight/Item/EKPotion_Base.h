@@ -15,5 +15,12 @@ class THEEXILEDKNIGHT_API AEKPotion_Base : public AEKItem_Base
 	GENERATED_BODY()
 	
 public:
-	virtual void UseItem() override;
+	AEKPotion_Base();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:
+	virtual void UseItem(UWorld* WorldContext, int level = 1) override;
 };

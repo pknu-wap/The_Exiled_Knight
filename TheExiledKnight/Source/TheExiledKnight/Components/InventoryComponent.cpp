@@ -8,7 +8,6 @@
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
 {
-	UE_LOG(LogTemp, Warning, TEXT("UInventoryComponent() called"));
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
@@ -97,43 +96,43 @@ const TArray<FInventorySlot>& UInventoryComponent::GetConstContents(EItemCategor
 
 int UInventoryComponent::GetIndexToAdd(uint8 ID, EItemCategory Category)
 {
-	const TArray<FInventorySlot>& Slots = GetConstContents(Category);
+	const TArray<FInventorySlot>& slots = GetConstContents(Category);
 
-	for (int index = 0; index < Slots.Num(); index++)
+	for (int index = 0; index < slots.Num(); index++)
 	{
-		if (Slots[index].Item.ID == 1)
+		if (slots[index].Item.ID == EMPTY_ID)
 			return index;
-		else if (Slots[index].Item.ID > ID)
+		else if (slots[index].Item.ID > ID)
 			return index;
 	}
 
-	return -1;
+	return INVALID_INDEX;
 }
 
-int UInventoryComponent::GetDupSlotIndex(uint8 ID, EItemCategory Category)
+int UInventoryComponent::GetItemIndex(uint8 ID, EItemCategory Category)
 {
-	const TArray<FInventorySlot>& Slots = GetConstContents(Category);
+	const TArray<FInventorySlot>& slots = GetConstContents(Category);
 
-	for (int index = 0; index < Slots.Num(); index++)
+	for (int index = 0; index < slots.Num(); index++)
 	{
-		if (Slots[index].Item.ID == ID)
+		if (slots[index].Item.ID == ID)
 			return index;
 	}
 
-	return -1;
+	return INVALID_INDEX;
 }
 
 int UInventoryComponent::GetEmptySlotIndex(EItemCategory Category)
 {
-	const TArray<FInventorySlot>& Slots = GetConstContents(Category);
+	const TArray<FInventorySlot>& slots = GetConstContents(Category);
 
-	for (int index = 0; index < Slots.Num(); index++)
+	for (int index = 0; index < slots.Num(); index++)
 	{
-		if (Slots[index].Item.ID == 1)
+		if (slots[index].Item.ID == EMPTY_ID)
 			return index;
 	}
 
-	return -1;
+	return INVALID_INDEX;
 }
 
 void UInventoryComponent::InitializeInventory()
@@ -175,20 +174,20 @@ TArray<FInventorySlot>& UInventoryComponent::GetContents(EItemCategory Category)
 
 bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 {
-	TArray<FInventorySlot>& Slots = GetContents(ItemToAdd.ItemCategory);
+	TArray<FInventorySlot>& slots = GetContents(ItemToAdd.ItemCategory);
 
-	int indexToAdd = GetDupSlotIndex(ItemToAdd.ID, ItemToAdd.ItemCategory);
+	int indexToAdd = GetItemIndex(ItemToAdd.ID, ItemToAdd.ItemCategory);
 
-	if (indexToAdd != -1) // if there are duplicate items
+	if (indexToAdd != INVALID_INDEX) // if there are duplicate items
 	{
-		if (Slots[indexToAdd].Quantity + Quantity > Slots[indexToAdd].Item.MaxStackSize)
+		if (slots[indexToAdd].Quantity + Quantity > slots[indexToAdd].Item.MaxStackSize)
 		{
-			Slots[indexToAdd].Quantity = ItemToAdd.MaxStackSize;
+			slots[indexToAdd].Quantity = ItemToAdd.MaxStackSize;
 			UE_LOG(LogTemp, Warning, TEXT("This Slot is full"));
 		}
 		else
 		{
-			Slots[indexToAdd].Quantity += Quantity;
+			slots[indexToAdd].Quantity += Quantity;
 			UE_LOG(LogTemp, Warning, TEXT("Quantity++"));
 			AddItemDelegate.Broadcast();
 		}
@@ -196,34 +195,36 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 		return true;
 	}
 
+	//indexToAdd = GetIndexToAdd(ItemToAdd.ID, ItemToAdd.ItemCategory);
 	indexToAdd = GetEmptySlotIndex(ItemToAdd.ItemCategory);
 
-	if (indexToAdd == -1) // if inventory is full
+	if (indexToAdd == INVALID_INDEX) // if inventory is full
 	{
 		// extand inventory
 		UE_LOG(LogTemp, Warning, TEXT("Expand Inventory Slot"));
 
-		AddNewSlot(Slots);
+		AddNewSlot(slots);
+		indexToAdd = GetIndexToAdd(ItemToAdd.ID, ItemToAdd.ItemCategory);
 	}
 
 	// if empty slot exists
-	// Sort
 	indexToAdd = GetIndexToAdd(ItemToAdd.ID, ItemToAdd.ItemCategory);
 
-	if (indexToAdd == -1)
+	// Sort
+	if (indexToAdd == INVALID_INDEX)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("GetIndexToAdd returns -1"))
-			return false;
+		UE_LOG(LogTemp, Warning, TEXT("GetIndexToAdd returns INVALID_INDEX"))
+		return false;
 	}
 
-	FInventorySlot tmp1, tmp2 = Slots[indexToAdd];
-	Slots[indexToAdd].Item = ItemToAdd;
-	Slots[indexToAdd].Quantity = Quantity;
+	FInventorySlot tmp1, tmp2 = slots[indexToAdd];
+	slots[indexToAdd].Item = ItemToAdd;
+	slots[indexToAdd].Quantity = Quantity;
 
-	for (int index = indexToAdd + 1; index < Slots.Num(); index++)
+	for (int index = indexToAdd + 1; index < slots.Num(); index++)
 	{
-		tmp1 = Slots[index];
-		Slots[index] = tmp2;
+		tmp1 = slots[index];
+		slots[index] = tmp2;
 		tmp2 = tmp1;
 	}
 
@@ -239,100 +240,125 @@ bool UInventoryComponent::UseItem(FItemStruct ItemToUse, int Quantity)
 	if (!ItemToUse.bUseable)
 		return false;
 
-	TArray<FInventorySlot>& Slots = GetContents(ItemToUse.ItemCategory);
+	TArray<FInventorySlot>& slots = GetContents(ItemToUse.ItemCategory);
 
-	int index = GetDupSlotIndex(ItemToUse.ID, ItemToUse.ItemCategory);
+	int index = GetItemIndex(ItemToUse.ID, ItemToUse.ItemCategory);
 
-	if (index == -1)
+	if (index == INVALID_INDEX)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("You don't have that item."));
 		return false;
 	}
 
-	if (Slots[index].Quantity < Quantity)
+	if (slots[index].Quantity < Quantity)
 		return false;
-
-	AEKItem_Base* ItemInstance = GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetOrCreateItemInstance(ItemToUse.Name);
+	
+	AEKItem_Base* ItemInstance = GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->CreateItemInstance(ItemToUse.ID);
 	if (ItemInstance == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("UseItem : ItemInstance is nullptr"));
 		return false;
 	}
 
-	ItemInstance->UseItem();
+	ItemInstance->UseItem(GetWorld());
 
 	DeleteItem(ItemToUse, Quantity);
-
-	//Slots[index].Item;
-	//Slots[index].Quantity -= Quantity;
-
-	//if (Slots[index].Quantity == 0)
-	//	DeleteItem(ItemToUse);
 
 	return true;
 }
 
-bool UInventoryComponent::UpgradeItem(FItemStruct ItemToUpgrade)
+bool UInventoryComponent::UpgradeItem(FItemStruct ItemToUpgrade, FItemStruct Upgrade, int MaterialCount)
 {
-	if (ItemToUpgrade.ItemLevel > 10)
+	if (ItemToUpgrade.ItemLevel > MAX_ITEM_LEVEL)
 		return false;
 
-	TArray<FInventorySlot>& Slots = GetContents(ItemToUpgrade.ItemCategory);
+	TArray<FInventorySlot>& slots = GetContents(ItemToUpgrade.ItemCategory);
 
-	int index = GetDupSlotIndex(ItemToUpgrade.ID, ItemToUpgrade.ItemCategory);
+	int index = GetItemIndex(ItemToUpgrade.ID, ItemToUpgrade.ItemCategory);
 
-	if (index == -1)
+	if (index == INVALID_INDEX)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("You don't have that item."));
 		return false;
 	}
 
+	FItemStruct upgrade;
+
+	if (Upgrade.ID == EMPTY_ID)
+	{
+		FName upgradeName;
+		upgradeName = FName(*FString::Printf(TEXT(UPGRADE"% d"), ItemToUpgrade.ItemLevel));
+
+		upgrade = *GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfoDB()->FindRow<FItemStruct>(upgradeName, TEXT("GetItemRow"));
+	}
+	else
+		upgrade = Upgrade;
+
 	// Find Upgrades 
-	/*FName UpgradeName = "Upgrade" + ItemToUpgrade.ItemLevel;
+	int upgradeIndex = GetItemIndex(upgrade.ID, upgrade.ItemCategory);
 
-	FItemStruct Upgrade = *GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfoDB()->FindRow<FItemStruct>(UpgradeName, TEXT("GetItemRow"));
-
-	int upgradeIndex = GetDupSlotIndex(Upgrade.ID, Upgrade.ItemCategory);
-
-	if (upgradeIndex == -1)
+	if (upgradeIndex == INVALID_INDEX)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("You don't have upgrade."));
 		return false;
 	}
 
-	DeleteItem(Upgrade, 1);*/
+	if (Upgrades[upgradeIndex].Quantity < MaterialCount)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("You need more MaterialCount."));
+		return false;
+	}
 
-	Slots[index].Item.ItemLevel++;
+	if (DeleteItem(upgrade, MaterialCount))
+		return false;
+
+	if (upgrade.ID == OLIVELEAF_ID)
+	{
+		TotalPotionQuantity++;
+		MaxHealthPotionQuantity++;
+
+		// Potion Count Reset
+		DividePotion(MaxHealthPotionQuantity, MaxManaPotionQuantity);
+	}
+	else
+		slots[index].Item.ItemLevel++;
+
+	UE_LOG(LogTemp, Warning, TEXT("Upgrade Complete."));
 
 	return true;
 }
 
 bool UInventoryComponent::DeleteItem(FItemStruct ItemToDelete, int Quantity)
 {
-	TArray<FInventorySlot>& Slots = GetContents(ItemToDelete.ItemCategory);
+	TArray<FInventorySlot>& slots = GetContents(ItemToDelete.ItemCategory);
 
-	int index = GetDupSlotIndex(ItemToDelete.ID, ItemToDelete.ItemCategory);
+	int index = GetItemIndex(ItemToDelete.ID, ItemToDelete.ItemCategory);
 
-	if (index == -1)
+	if (index == INVALID_INDEX)
 		return false;
 
-	Slots[index].Quantity -= Quantity;
+	slots[index].Quantity -= Quantity;
 
-	if (Slots[index].Quantity <= 0 && Slots[index].Item.bDestroyable)
+	if (slots[index].Quantity <= 0 && slots[index].Item.bDestroyable)
 	{
-		Slots[index] = FInventorySlot();
+		slots[index] = FInventorySlot();
 
-		FInventorySlot tmp1, tmp2 = Slots[index + 1];
+		FInventorySlot tmp1, tmp2 = slots[index + 1];
 
-		for (index; index < Slots.Num(); index++)
+		for (index; index < slots.Num(); index++)
 		{
-			tmp1 = Slots[index];
-			Slots[index] = tmp2;
+			if (slots[index].Item.ID == 1)
+				break;
+
+			tmp1 = slots[index];
+			slots[index] = tmp2;
 			tmp2 = tmp1;
 		}
 
 		UE_LOG(LogTemp, Warning, TEXT("destroy item and add new empty slot"));
 	}
+
+	UpdateSlots(slots);
 
 	return true;
 }
@@ -342,20 +368,20 @@ bool UInventoryComponent::UpdateSlots(TArray<FInventorySlot>& Slots)
 	if (Slots.Num() <= ExpansionSize)
 		return false;
 
-	int EmptySlotCnt = 0;
+	int emptySlotCnt = 0;
 
 	for (int i = 0; i < Slots.Num(); i++)
 	{
 		if (Slots[i].Item.ID == 1)
-			EmptySlotCnt++;
+			emptySlotCnt++;
 	}
 
-	int IterCnt = EmptySlotCnt / ExpansionSize;
-	int IndexToDelete = Slots.Num() - (IterCnt * ExpansionSize);
+	int iterCnt = emptySlotCnt / ExpansionSize;
+	int indexToDelete = Slots.Num() - (iterCnt * ExpansionSize);
 
-	for (int i = 0; i < IterCnt; i++)
+	for (int i = 0; i < iterCnt; i++)
 	{
-		Slots.RemoveAt(IndexToDelete);
+		Slots.RemoveAt(indexToDelete);
 	}
 
 	return true;
@@ -363,8 +389,63 @@ bool UInventoryComponent::UpdateSlots(TArray<FInventorySlot>& Slots)
 
 bool UInventoryComponent::AddNewSlot(TArray<FInventorySlot>& Slots)
 {
-	UE_LOG(LogTemp, Warning, TEXT("AddNewSlot"))
-		Slots.AddDefaulted(ExpansionSize);
+	Slots.AddDefaulted(ExpansionSize);
 
 	return true;
 }
+
+bool UInventoryComponent::UseAstral(int Cost)
+{
+	if (Astral < Cost)
+		return false;
+
+	Astral -= Cost;
+
+	return true;
+}
+
+void UInventoryComponent::AddAstral(int Amount)
+{
+	if (Astral + Amount > INT_MAX)
+	{
+		Astral = INT_MAX;
+		return;
+	}
+
+	Astral += Amount;
+
+	UE_LOG(LogTemp, Warning, TEXT("AddAstral"));
+
+	return;
+}
+
+bool UInventoryComponent::RestorePotionQuantity()
+{
+	int healthPotionIndex = GetItemIndex(HEALTH_POTION_ID, EItemCategory::UseableItem);
+	int manaPotionIndex = GetItemIndex(HEALTH_POTION_ID, EItemCategory::UseableItem);
+	
+	if (healthPotionIndex == INVALID_INDEX || manaPotionIndex == INVALID_INDEX)
+		return false;
+
+	UseableItem[healthPotionIndex].Quantity = MaxHealthPotionQuantity;
+	UseableItem[manaPotionIndex].Quantity = MaxManaPotionQuantity;
+
+	return true;
+}
+
+bool UInventoryComponent::DividePotion(int HealthPotionQuantity, int ManaPotionQuantity)
+{
+	if (HealthPotionQuantity < 0 || ManaPotionQuantity < 0)
+		return false;
+
+	if (TotalPotionQuantity != HealthPotionQuantity + ManaPotionQuantity)
+		return false;
+
+	MaxHealthPotionQuantity = HealthPotionQuantity;
+	MaxManaPotionQuantity = ManaPotionQuantity;
+
+	RestorePotionQuantity();
+
+	return true;
+}
+

@@ -2,7 +2,10 @@
 
 
 #include "EK_EnemyStatusComponent.h"
+#include "Components/InventoryComponent.h"
 #include "EKEnemyData.h"
+#include "Kismet/GameplayStatics.h"
+#include "Player/EKPlayer/EKPlayerController.h"
 
 // Sets default values for this component's properties
 #pragma region LifeCycle
@@ -37,9 +40,16 @@ void UEK_EnemyStatusComponent::InitSetting()
 			SetSightRange(FoundData->SightRange);
 			SetHearingRange(FoundData->HearingRange);
 			SetIsDead(false);
+			EnemyName = FoundData->EnemyName;
+			Astral = FoundData->Astral;
+			DropItem = FoundData->DropItem;
 			bIsBoss = FoundData->bIsBoss;
 		}
 	}
+
+	AEKPlayerController* playerController = Cast<AEKPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	UInventoryComponent* inventoryComponent = playerController->GetInventoryComponent();
+	OnHPIsZeroOneParam.AddDynamic(inventoryComponent, &UInventoryComponent::AddAstral);
 }
 void UEK_EnemyStatusComponent::SetHealth(float amount)
 {

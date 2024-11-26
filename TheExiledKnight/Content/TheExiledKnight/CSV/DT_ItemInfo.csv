@@ -1,0 +1,4 @@
+---,ID,Name,ItemObject
+HealthPotion,"1","HealthPotion","/Script/CoreUObject.Class'/Script/TheExiledKnight.EKPotion_Base'"
+ManaPotion,"2","ManaPotion","/Script/CoreUObject.Class'/Script/TheExiledKnight.EKPotion_Base'"
+Test01,"3","Test01","None"

@@ -6,11 +6,14 @@
 #include "Components/ActorComponent.h"
 #include "EK_EnemyStatusComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHPIsZero);  
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHPIsZero);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHPIsZeroOneParam, int, AstralAmount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDamageTaken);    
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHitAnimationEnd);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPoiseIsZero); 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStunAnimationEnd);
+
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent)) 
 
 class THEEXILEDKNIGHT_API UEK_EnemyStatusComponent : public UActorComponent
@@ -57,6 +60,9 @@ public:
 	FOnHPIsZero OnHPIsZero;
 
 	UPROPERTY(BlueprintAssignable, Category = "Status")
+	FOnHPIsZeroOneParam OnHPIsZeroOneParam;
+
+	UPROPERTY(BlueprintAssignable, Category = "Status")
 	FOnHitAnimationEnd OnHurtAnimationEnd; 
 
 	UPROPERTY(BlueprintAssignable, Category = "Status")
@@ -73,11 +79,15 @@ private:
 	UPROPERTY(EditAnywhere, Category = Data, Meta = (AllowPrivteAccess = "true"))
 	FName EnemyID;
 
+	UPROPERTY(VisibleAnywhere, Category = Data, Meta = (AllowPrivteAccess = "true"))
+	FName EnemyName;
+
 	UPROPERTY(VisibleAnywhere, Category = Stat, Meta = (AllowPrivteAccess = "true"))
 	float MaxHealth;
 
 	UPROPERTY(VisibleAnywhere, Category = Stat, Meta = (AllowPrivteAccess = "true"))
 	float CurrentHealth;
+
 	UPROPERTY(VisibleAnywhere, Category = Stat, Meta = (AllowPrivteAccess = "true"))
 	float MaxPoise;
 	
@@ -105,4 +115,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivteAccess = "true"))
 	float MaxSpeed = 350.0f;
 
+	UPROPERTY(EditAnywhere, Category = Item, Meta = (AllowPrivteAccess = "true"))
+	int Astral = 0;
+
+	UPROPERTY(EditAnywhere, Category = "Item", Meta = (AllowPrivateAccess = "true"))
+	FName DropItem = NAME_None;
 };
