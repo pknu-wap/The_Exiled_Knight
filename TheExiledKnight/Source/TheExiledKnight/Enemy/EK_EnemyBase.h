@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "GameplayTagContainer.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include"EnemyWeapon/EKEnemyWeaponBase.h"
 #include "EK_EnemyBase.generated.h"
 
  
@@ -21,6 +22,8 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInvestigator, AActor* DamageCauser)override;
 	
+	void BeginPlay()override;
+
 	void PlayHurtReactionAnimation(const FVector& DamageDirection);   
 	
 	void OnHurtAnimationEnded(UAnimMontage* Montage, bool bInterrupted);
@@ -37,12 +40,15 @@ public:
 
 	void HandleNormalAttack(float Damage);
 
-	
 	UFUNCTION(BlueprintCallable)
 	AActor *GetAttackTarget();
 	
 	UFUNCTION(BlueprintCallable) 
 	void SetAttackTarget(AActor* Actor);
+
+	UFUNCTION(BlueprintCallable)
+	void ReturnToInitializeLocation();
+
 protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "AnimMontage", meta = (AllowPrivateAccess = "true"));
@@ -80,7 +86,7 @@ public:
 	
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
 	bool bIsStunned = false;
-	
+
 	virtual TObjectPtr <UEK_EnemyStatusComponent> GetStatusComponent(); 
 
 	UAnimMontage* BeforeHurtMontage = nullptr;
@@ -89,4 +95,11 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int SantuaryID = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVector InitialLocation; 
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float AcceptanceRadius = 10.0f; 
+
 };
