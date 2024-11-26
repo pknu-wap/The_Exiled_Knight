@@ -7,6 +7,7 @@
 #include "EKGameplayTags.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "UI/Equipment/Widget_EquipSelectWindow.h"
 
 void UWidget_GameMenu_Button::NativeConstruct()
 {
@@ -44,6 +45,13 @@ void UWidget_GameMenu_Button::MenuButtonClicked()
 	{
 		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_Santuary, ESlateVisibility::Collapsed);
 		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_EquipMagic, ESlateVisibility::SelfHitTestInvisible);
+		
+		UUserWidget* widget = UIManager->GetWidget(FEKGameplayTags::Get().UI_Widget_GameMenu_EquipMagic);
+		if (!widget) return;
+		UWidget_EquipSelectWindow* userWidget = Cast<UWidget_EquipSelectWindow>(widget);
+		if (!userWidget) return;
+		userWidget->UpdateContents(EItemCategory::Magic);
+		
 		break;
 	}
 	case EGameMenuCategory::Map:
@@ -64,6 +72,12 @@ void UWidget_GameMenu_Button::MenuButtonClicked()
 	}
 	case EGameMenuCategory::PT_HealRate:
 	{
+		break;
+	}
+	case EGameMenuCategory::UpgradeStatus:
+	{
+		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_Santuary, ESlateVisibility::Collapsed);
+		UIManager->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_UpgradeStatus, ESlateVisibility::SelfHitTestInvisible);
 		break;
 	}
 	case EGameMenuCategory::Quit:
