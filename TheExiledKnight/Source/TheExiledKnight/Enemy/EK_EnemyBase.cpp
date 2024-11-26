@@ -7,7 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/DamageEvents.h"
 #include"Animation/AnimInstance.h"
-#include"Enemy/DamageSystem/EKDamageType.h"
+#include"Player/Weapon/DamageType/EKPlayerDamageType.h"
 #include"Player/EKPlayer/EKPlayer.h"
 #include"Enemy/EKEnemyGamePlayTags.h"
 #include"AIController.h"
@@ -44,11 +44,11 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 		if (Damage > 0)
 		{
 			
-			if (DamageTypeClass->IsChildOf(UEKStrongDamageType::StaticClass()))
+			if (DamageTypeClass->IsChildOf(UEKPlayerStrongDamageType::StaticClass()))
 			{
 				HandleStrongAttack(Damage);
 			}
-			else
+			else //Normal and not 
 			{
 				HandleNormalAttack(Damage);
 			}
