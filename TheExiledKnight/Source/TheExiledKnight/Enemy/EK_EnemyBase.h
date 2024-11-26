@@ -78,10 +78,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BehaviorTree");
 	UBehaviorTree* BehaviorTree;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Perception", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIPerception", meta = (AllowPrivateAccess = "true"))
 	TArray<AActor*> AttachedActors;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Perception", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIPerception", meta = (AllowPrivateAccess = "true"))
 	AActor* AttackTarget;
 	
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
