@@ -57,4 +57,5 @@ private:
 
 	static constexpr float DefaultPeripheralVisionAngle = 60.0f;
 	static constexpr float DefaultSightMaxAge = 15.0f;
+
 };

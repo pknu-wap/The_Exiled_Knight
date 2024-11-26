@@ -12,6 +12,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDamageTaken);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHitAnimationEnd);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPoiseIsZero); 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStunAnimationEnd);
+
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent)) 
 
 class THEEXILEDKNIGHT_API UEK_EnemyStatusComponent : public UActorComponent
@@ -77,6 +79,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = Data, Meta = (AllowPrivteAccess = "true"))
 	FName EnemyID;
 
+	UPROPERTY(VisibleAnywhere, Category = Data, Meta = (AllowPrivteAccess = "true"))
+	FName EnemyName;
+
 	UPROPERTY(VisibleAnywhere, Category = Stat, Meta = (AllowPrivteAccess = "true"))
 	float MaxHealth;
 
@@ -110,4 +115,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivteAccess = "true"))
 	float MaxSpeed = 350.0f;
 
+	UPROPERTY(EditAnywhere, Category = Item, Meta = (AllowPrivteAccess = "true"))
+	int Astral = 0;
+
+	UPROPERTY(EditAnywhere, Category = "Item", Meta = (AllowPrivateAccess = "true"))
+	FName DropItem = NAME_None;
 };
