@@ -18,6 +18,7 @@ enum class EGameMenuCategory : uint8
 	PT_Quantity		UMETA(DisplayName = "Potion_Upgrade_Quantity"),
 	PT_HealRate		UMETA(DisplayName = "Potion_Upgrade_HealRate"),
 	EquipMagic		UMETA(DisplayName = "EquipMagic"),
+	UpgradeStatus	UMETA(DisplayName = "Status_Upgrade"),
 };
 
 class UButton;

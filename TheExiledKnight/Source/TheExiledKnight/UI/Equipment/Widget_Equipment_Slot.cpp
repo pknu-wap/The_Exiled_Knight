@@ -90,6 +90,14 @@ void UWidget_Equipment_Slot::SlotUpdated(EItemCategory inCategory, int inSlotIdx
 			}
 			break;
 		}
+		case EItemCategory::Magic:
+		{
+			if (slotComp->MagicSlots.IsValidIndex(inSlotIdx))
+			{
+				Image_Item->SetBrushFromTexture(slotComp->MagicSlots[inSlotIdx].Icon);
+			}
+			break;
+		}
 		default:
 		{
 			break;

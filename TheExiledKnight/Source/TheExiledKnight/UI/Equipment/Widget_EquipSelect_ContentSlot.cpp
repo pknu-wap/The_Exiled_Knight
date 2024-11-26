@@ -21,7 +21,7 @@ void UWidget_EquipSelect_ContentSlot::UpdateSlot(EItemCategory inCategory, const
 	Category = inCategory;
 	MagicData = inData;
 
-	Image_Item->SetBrushFromTexture(SlotData.Item.Icon);
+	Image_Item->SetBrushFromTexture(MagicData.Icon);
 }
 
 void UWidget_EquipSelect_ContentSlot::UpdateSlot(EItemCategory inCategory, const FInventorySlot& inData)
@@ -50,6 +50,11 @@ void UWidget_EquipSelect_ContentSlot::NativeOnMouseEnter(const FGeometry& InGeom
 	if (!widget) return;
 	UWidget_EquipSelectWindow* EquipSelectWidget = Cast<UWidget_EquipSelectWindow>(widget);
 	if (!EquipSelectWidget) return;
+
+	widget = UISystem->GetWidget(FEKGameplayTags::Get().UI_Widget_GameMenu_EquipMagic);
+	if (!widget) return;
+	UWidget_EquipSelectWindow* EquipMagicWidget = Cast<UWidget_EquipSelectWindow>(widget);
+	if (!EquipMagicWidget) return;
 
 	switch (Category)
 	{
@@ -119,6 +124,11 @@ FEventReply UWidget_EquipSelect_ContentSlot::RedirectMouseDownToWidget(const FGe
 		{
 			// Equip Useable Item
 			slotComp->EquipUseableItem(SlotData.Item);
+			break;
+		}
+		case EItemCategory::Magic:
+		{
+			slotComp->EquipMagic(MagicData);
 			break;
 		}
 		default:
