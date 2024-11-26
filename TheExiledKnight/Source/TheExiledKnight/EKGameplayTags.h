@@ -28,6 +28,12 @@ public:
 	FGameplayTag UI_Widget_GameMenu_UpgradeStatus;		// Upgrade Status
 	FGameplayTag UI_Widget_GameMenu_UpgradeEquipment;	// Upgrade Equipment
 	FGameplayTag UI_Widget_GameMenu_Setting;			// Setting
+	FGameplayTag UI_Widget_GameMenu_Loading;			// Loading
+
+	FGameplayTag UI_Widget_GameMenu_Santuary;			// Santuary
+	FGameplayTag UI_Widget_GameMenu_Map;				// Map Change
+	FGameplayTag UI_Widget_GameMenu_Potion;				// Potion Distribute
+	FGameplayTag UI_Widget_GameMenu_EquipMagic;			// Equip Magic
 
 	FGameplayTag UI_Widget_Game_Status;					// Status
 	FGameplayTag UI_Widget_Game_QuickSlots;				// QuickSlots

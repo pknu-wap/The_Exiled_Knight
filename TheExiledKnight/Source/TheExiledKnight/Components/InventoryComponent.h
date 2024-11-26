@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "Structs/InventorySlotStruct.h"
 #include "EKEnums.h"
+#include "Player/Data/EKPlayerMagic.h"
 #include "InventoryComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAdd_Item_Delegate);
@@ -92,7 +93,7 @@ private:
 
 	TArray<FInventorySlot> UseableItem;
 
-	TArray<FInventorySlot> Magic;
+	TArray<FEKPlayerMagic> Magic;
 
 	TArray<FInventorySlot> Upgrades;
 
