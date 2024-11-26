@@ -26,7 +26,6 @@ void USanctuarySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	}
 
 	ActivatedSanctuary.Add(1);
-	ActivatedSanctuary.Add(2);
 }
 
 void USanctuarySubsystem::ActivateSanctuary(int SanctuaryID)
