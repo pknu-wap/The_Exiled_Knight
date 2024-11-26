@@ -143,13 +143,12 @@ void AEK_EnemyBase::PlayHurtReactionAnimation(const FVector& DamageDirection)
 
 void AEK_EnemyBase::OnHurtAnimationEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	if (!bInterrupted)
-	{	
+		
 		UE_LOG(LogTemp, Warning, TEXT("OnHurtAnimationEnded called"));
 		EnemyStat->OnHurtAnimationEnd.Broadcast();
 		BeforeHurtMontage = nullptr;
 		
-	}
+
 	if (EnemyStat->GetCurrentPoise() <= 0 && !bIsStunned) //stun animation montage 
 	{
 		bIsStunned = true;
