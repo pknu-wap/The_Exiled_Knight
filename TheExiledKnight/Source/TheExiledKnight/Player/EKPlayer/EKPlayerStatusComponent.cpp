@@ -53,6 +53,8 @@ void UEKPlayerStatusComponent::BeginPlay()
 		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(Level);
 		EKPlayerStatus = *EKPlayerStatusTemp;
 	}
+
+	Recalculate_Status();
 }
 
 void UEKPlayerStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -64,8 +66,6 @@ void UEKPlayerStatusComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	{
 		SetStamina(4);
 	}
-
-	Recalculate_Status();
 }
 
 #pragma region Set Basic Status
@@ -159,7 +159,8 @@ void UEKPlayerStatusComponent::Calculate_NormalStatus()
 		if (itemID > 0)
 		{
 			FRune* runeInfo = invSystem->GetRuneInfo(itemID);
-			if (!runeInfo) return;
+			if (!runeInfo) 
+				continue;
 
 			Vitality += runeInfo->Vitality;
 			Mental += runeInfo->Mental;

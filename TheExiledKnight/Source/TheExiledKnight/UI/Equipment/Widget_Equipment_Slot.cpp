@@ -66,7 +66,11 @@ void UWidget_Equipment_Slot::SlotUpdated(EItemCategory inCategory, int inSlotIdx
 		{
 			if (slotComp->WeaponSlots.IsValidIndex(inSlotIdx))
 			{
+				Image_Item->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 				Image_Item->SetBrushFromTexture(slotComp->WeaponSlots[inSlotIdx].Icon);
+
+				if (slotComp->WeaponSlots[inSlotIdx].ID <= 1)
+					Image_Item->SetVisibility(ESlateVisibility::Collapsed);
 			}
 			break;
 		}
@@ -74,7 +78,11 @@ void UWidget_Equipment_Slot::SlotUpdated(EItemCategory inCategory, int inSlotIdx
 		{
 			if (slotComp->RuneSlots.IsValidIndex(inSlotIdx))
 			{
+				Image_Item->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 				Image_Item->SetBrushFromTexture(slotComp->RuneSlots[inSlotIdx].Icon);
+
+				if (slotComp->RuneSlots[inSlotIdx].ID <= 1)
+					Image_Item->SetVisibility(ESlateVisibility::Collapsed);
 			}
 			break;
 		}
@@ -86,7 +94,11 @@ void UWidget_Equipment_Slot::SlotUpdated(EItemCategory inCategory, int inSlotIdx
 		{
 			if (slotComp->UseableSlots.IsValidIndex(inSlotIdx))
 			{
+				Image_Item->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 				Image_Item->SetBrushFromTexture(slotComp->UseableSlots[inSlotIdx].Icon);
+
+				if (slotComp->UseableSlots[inSlotIdx].ID <= 1)
+					Image_Item->SetVisibility(ESlateVisibility::Collapsed);
 			}
 			break;
 		}
@@ -94,7 +106,11 @@ void UWidget_Equipment_Slot::SlotUpdated(EItemCategory inCategory, int inSlotIdx
 		{
 			if (slotComp->MagicSlots.IsValidIndex(inSlotIdx))
 			{
+				Image_Item->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 				Image_Item->SetBrushFromTexture(slotComp->MagicSlots[inSlotIdx].Icon);
+
+				if (slotComp->MagicSlots[inSlotIdx].MagicID < 0)
+					Image_Item->SetVisibility(ESlateVisibility::Collapsed);
 			}
 			break;
 		}

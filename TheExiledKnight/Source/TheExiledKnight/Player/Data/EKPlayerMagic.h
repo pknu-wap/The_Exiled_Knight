@@ -11,7 +11,7 @@ struct FEKPlayerMagic : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 MagicID;
+	int32 MagicID = -1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName MagicName;

@@ -36,6 +36,12 @@ public:
 	void EquipUseableItem(const FItemStruct& InItemData);
 	void EquipMagic(const FEKPlayerMagic& InMagicData);
 
+	void UnEquip(EItemCategory InCategory, const FItemStruct& InItemData);
+	void UnEquipMagic(EItemCategory InCategory, const FEKPlayerMagic& InMagicData);
+
+	bool IsAlreadyEquiped(EItemCategory InCategory, const FItemStruct& InItemData);
+	bool IsAlreadyEquiped(EItemCategory InCategory, const FEKPlayerMagic& InMagicData);
+
 public:
 	void UpdateActiveSlot(EInputType InInputType);
 
