@@ -40,6 +40,7 @@ public:
 
 	const TArray<FInventorySlot> GetContents(EUpgradeItemType Category);
 	const TArray<FInventorySlot>& GetConstContents(EItemCategory Category);
+	const TArray<FEKPlayerMagic>& GetMagics() { return Magic; }
 
 	int GetIndexToAdd(uint8 ID, EItemCategory Category);
 	int GetItemIndex(uint8 ID, EItemCategory Category);
