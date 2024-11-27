@@ -56,12 +56,11 @@ void AThunderBallProjectile::Tick(float DeltaTime)
 			TSubclassOf<UEKPlayerNormalDamageType> PlayerDamageType = UEKPlayerNormalDamageType::StaticClass();
 			if (HitEnemy)
 			{
-				UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer->GetCurrentWeapon(), PlayerDamageType);
+				UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer, PlayerDamageType);
 				if (HitParticle)
 				{
 					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, HitEnemy->GetActorLocation(), HitEnemy->GetActorRotation());
 				}
-				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("Thunder Ball"));
 				Destroy();
 				return;
 			}

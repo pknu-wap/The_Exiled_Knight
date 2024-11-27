@@ -16,13 +16,13 @@
 #define PlayerMaxStamina 1000
 
 // Edit Player Max Level Here
-#define PlayerMaxLevel 120
-#define PlayerMaxVitalityLevel 20
-#define PlayerMaxMentalLevel 20
-#define PlayerMaxEnduranceLevel 20
-#define PlayerMaxStrengthLevel 20
-#define PlayerMaxAbilityLevel 20
-#define PlayerMaxInteligenceLevel 20
+#define PlayerMaxLevel 594
+#define PlayerMaxVitalityLevel 99
+#define PlayerMaxMentalLevel 99
+#define PlayerMaxEnduranceLevel 99
+#define PlayerMaxStrengthLevel 99
+#define PlayerMaxAbilityLevel 99
+#define PlayerMaxInteligenceLevel 99
 
 #pragma endregion
 
@@ -40,6 +40,7 @@ public:
 
 public:
 	virtual void BeginPlay() override;
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
@@ -88,11 +89,13 @@ public:
 	int32 GetBaseAbility() { return BaseAbility; }
 	int32 GetBaseIntelligence() { return BaseIntelligence; }
 
-	void SetMaxHp(int32 SetData);
+	void SetStatusHandle();
+
+	void SetMaxHp();
 	void SetHp(int32 SetData);
-	void SetMaxMp(int32 SetData);
+	void SetMaxMp();
 	void SetMp(int32 SetData);
-	void SetMaxStamina(int32 SetData);
+	void SetMaxStamina();
 	void SetStamina(int32 SetData);
 
 public:
@@ -102,13 +105,13 @@ public:
 	float GetPlayerFinalDamage() { return FinalDamage; }
 	void SetPlayerFinalDamage();
 
-	void LevelUp(uint8 SetData);
-	void LevelUpVitality(uint8 SetData);
-	void LevelUpMental(uint8 SetData);
-	void LevelUpEndurance(uint8 SetData);
-	void LevelUpStrength(uint8 SetData);
-	void LevelUpAbility(uint8 SetData);
-	void LevelUpIntelligence(uint8 SetData);
+	void LevelUp(uint8 IncreaseLevel);
+	void LevelUpVitality(uint8 IncreaseLevel);
+	void LevelUpMental(uint8 IncreaseLevel);
+	void LevelUpEndurance(uint8 IncreaseLevel);
+	void LevelUpStrength(uint8 IncreaseLevel);
+	void LevelUpAbility(uint8 IncreaseLevel);
+	void LevelUpIntelligence(uint8 IncreaseLevel);
 
 #pragma endregion
 
@@ -126,32 +129,32 @@ protected:
 	UEKPlayerGameInstance* EKPlayerGameInstance;
 
 	UPROPERTY()
-	FEKPlayerLevel EKPlayerLevel;
+	FEKPlayerLevel EKPlayerLevelData;
 
 	UPROPERTY()
-	FEKPlayerStatus EKPlayerStatus;
+	FEKPlayerStatus EKPlayerStatusData;
 
 #pragma region Basic Status
 
 protected:
 	// Basic status
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
-	int MaxHp;
+	int MaxHp = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
-	int Hp;
+	int Hp = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
-	int MaxMp;
+	int MaxMp = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
-	int Mp;
+	int Mp = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
-	int MaxStamina;
+	int MaxStamina = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
-	int Stamina;
+	int Stamina = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
 	int ATK;
@@ -160,7 +163,7 @@ protected:
 	int DEF;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Statment|Basic")
-	int32 CurrentSouls;
+	int32 CurrentAstral;
 
 	UPROPERTY(VisibleAnywhere, Category = "Statment|Basic")
 	float DefaultDamage;

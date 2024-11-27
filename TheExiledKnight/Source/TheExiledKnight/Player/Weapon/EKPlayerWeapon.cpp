@@ -10,19 +10,16 @@
 AEKPlayerWeapon::AEKPlayerWeapon()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 void AEKPlayerWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void AEKPlayerWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AEKPlayerWeapon::PlayWeaponEquipAnimMontage(AEKPlayer* EKPlayer, AEKPlayerController* EKPlayerController)
@@ -31,6 +28,10 @@ void AEKPlayerWeapon::PlayWeaponEquipAnimMontage(AEKPlayer* EKPlayer, AEKPlayerC
 	{
 		if (!EKPlayerController->bIsEquipWeapon && WeaponEquipAnim)
 		{
+			if (!CheckAnimMontageEnd(EKPlayer, WeaponEquipAnim))
+			{
+				return;
+			}
 			EKPlayer->PlayAnimMontage(WeaponEquipAnim);
 		}
 		else if (EKPlayerController->bIsEquipWeapon && WeaponUnEquipAnim)
@@ -88,3 +89,13 @@ void AEKPlayerWeapon::ResetAttackCombo()
 }
 
 #pragma endregion
+
+bool AEKPlayerWeapon::CheckAnimMontageEnd(AEKPlayer* EKPlayer, UAnimMontage* Checking)
+{
+	UEKPlayerAnimInstance* EKAnimInstance = Cast<UEKPlayerAnimInstance>(EKPlayer->GetMesh()->GetAnimInstance());
+	if (EKAnimInstance->Montage_IsPlaying(Checking))
+	{
+		return false;
+	}
+	return true;
+}
