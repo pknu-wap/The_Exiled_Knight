@@ -164,10 +164,7 @@ void UEKPlayerStatusComponent::Calculate_BasicStatus()
 	// Calculate Weapon Stat
 	FWeaponStruct* weaponInfo = invSystem->GetWeaponInfo(slotComp->WeaponSlots[slotComp->ActiveWeaponSlot].ID);
 	if (!weaponInfo) return;
-	ATK = weaponInfo->AttackPow;
-	
-	// Calculate 
-	ATK *= 1 + 0.02 * Strength;
+	ATK = weaponInfo->AttackPow + weaponInfo->STRRate * Strength + weaponInfo->DEXRate * Ability + weaponInfo->INTRate * Intelligence;
 }
 
 void UEKPlayerStatusComponent::Calculate_NormalStatus()
