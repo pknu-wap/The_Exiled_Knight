@@ -24,6 +24,7 @@ public:
 
 	FVector GetInitializeLocation(); 
 
+
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInvestigator, AActor* DamageCauser)override;
 	
 	void BeginPlay()override;
@@ -123,4 +124,7 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FVector InitialLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FRotator InitialRotation;
 };
