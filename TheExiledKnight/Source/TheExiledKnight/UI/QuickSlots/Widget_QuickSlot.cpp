@@ -41,7 +41,7 @@ void UWidget_QuickSlot::SlotUpdated(EItemCategory inCategory, int inSlotIdx)
 	}
 	case EItemCategory::Weapon:
 	{
-		if (slotComp->WeaponSlots.IsValidIndex(inSlotIdx) && slotComp->WeaponSlots[inSlotIdx].ID > 0)
+		if (slotComp->WeaponSlots.IsValidIndex(inSlotIdx) && slotComp->WeaponSlots[inSlotIdx].ID > 1)
 		{
 			Image_Item->SetBrushFromTexture(slotComp->WeaponSlots[inSlotIdx].Icon);
 			Image_Item->SetOpacity(1);
@@ -54,7 +54,7 @@ void UWidget_QuickSlot::SlotUpdated(EItemCategory inCategory, int inSlotIdx)
 	}
 	case EItemCategory::Rune:
 	{
-		if (slotComp->RuneSlots.IsValidIndex(inSlotIdx) && slotComp->RuneSlots[inSlotIdx].ID > 0)
+		if (slotComp->RuneSlots.IsValidIndex(inSlotIdx) && slotComp->RuneSlots[inSlotIdx].ID > 1)
 		{
 			Image_Item->SetBrushFromTexture(slotComp->RuneSlots[inSlotIdx].Icon);
 			Image_Item->SetOpacity(1);
@@ -71,7 +71,7 @@ void UWidget_QuickSlot::SlotUpdated(EItemCategory inCategory, int inSlotIdx)
 	}
 	case EItemCategory::UseableItem:
 	{
-		if (slotComp->UseableSlots.IsValidIndex(inSlotIdx) && slotComp->UseableSlots[inSlotIdx].ID > 0)
+		if (slotComp->UseableSlots.IsValidIndex(inSlotIdx) && slotComp->UseableSlots[inSlotIdx].ID > 1)
 		{
 			Image_Item->SetBrushFromTexture(slotComp->UseableSlots[inSlotIdx].Icon);
 			Image_Item->SetOpacity(1);

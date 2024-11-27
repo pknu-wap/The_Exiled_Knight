@@ -11,8 +11,8 @@
 #pragma region Max Value
 
 // Edit Player Basic Max Stat Here
-#define PlayerMaxHp 200
-#define PlayerMaxMp 200
+#define PlayerMaxHp 1000
+#define PlayerMaxMp 1000
 #define PlayerMaxStamina 1000
 
 // Edit Player Max Level Here

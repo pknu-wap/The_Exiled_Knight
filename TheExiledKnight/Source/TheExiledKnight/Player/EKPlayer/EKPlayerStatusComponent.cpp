@@ -197,7 +197,7 @@ void UEKPlayerStatusComponent::Calculate_NormalStatus()
 	for (int i = 0; i < slotComp->RuneSlots.Num(); i++)
 	{
 		int itemID = slotComp->RuneSlots[i].ID;
-		if (itemID > 0)
+		if (itemID > 1)
 		{
 			FRune* runeInfo = invSystem->GetRuneInfo(itemID);
 			if (!runeInfo) 
