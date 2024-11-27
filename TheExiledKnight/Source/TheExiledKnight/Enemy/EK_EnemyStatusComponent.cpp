@@ -48,7 +48,9 @@ void UEK_EnemyStatusComponent::InitSetting()
 	}
 
 	AEKPlayerController* playerController = Cast<AEKPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (!playerController) return;
 	UInventoryComponent* inventoryComponent = playerController->GetInventoryComponent();
+	if (!inventoryComponent) return;
 	OnHPIsZeroOneParam.AddDynamic(inventoryComponent, &UInventoryComponent::AddAstral);
 }
 void UEK_EnemyStatusComponent::SetHealth(float amount)
