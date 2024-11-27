@@ -32,7 +32,7 @@ public:
 	const uint8 GetItemQuantity() { return Quantity; }
 
 	UFUNCTION(BlueprintCallable)
-	virtual void UseItem(UWorld* WorldContext, int level = 1);
+	virtual void UseItem(UWorld* WorldContext, float level = 1);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))

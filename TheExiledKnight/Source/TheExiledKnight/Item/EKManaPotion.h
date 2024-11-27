@@ -22,5 +22,5 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void UseItem(UWorld* WorldContext, int level = 1) override;
+	virtual void UseItem(UWorld* WorldContext, float PotionRate = 1) override;
 };
