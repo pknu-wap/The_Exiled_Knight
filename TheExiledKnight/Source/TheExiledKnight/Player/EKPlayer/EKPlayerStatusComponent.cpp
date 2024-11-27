@@ -90,7 +90,7 @@ void UEKPlayerStatusComponent::SetMaxHp()
 	FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseVitality);
 	EKPlayerStatusData = *EKPlayerStatusTemp;
 
-	MaxHp = FMath::Clamp(EKPlayerStatusData.Vitality, 0, PlayerMaxHp);
+	MaxHp = EKPlayerStatusData.Vitality;
 	SetHp(MaxHp);
 }
 
@@ -110,7 +110,7 @@ void UEKPlayerStatusComponent::SetMaxMp()
 	FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseMental);
 	EKPlayerStatusData = *EKPlayerStatusTemp;
 
-	MaxMp = FMath::Clamp(EKPlayerStatusData.Mental, 0, PlayerMaxMp);
+	MaxMp = EKPlayerStatusData.Mental;
 	SetMp(MaxMp);
 }
 
@@ -130,7 +130,7 @@ void UEKPlayerStatusComponent::SetMaxStamina()
 	FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseEndurance);
 	EKPlayerStatusData = *EKPlayerStatusTemp;
 
-	MaxStamina = FMath::Clamp(EKPlayerStatusData.Endurance, 0, PlayerMaxStamina);
+	MaxStamina = EKPlayerStatusData.Endurance;
 	SetStamina(MaxStamina);
 }
 

@@ -87,6 +87,10 @@ void UEKPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		bIsDie = true;
 	}
+	else
+	{
+		bIsDie = false;
+	}
 
 	if (EKPlayerController)
 	{
