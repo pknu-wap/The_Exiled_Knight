@@ -5,6 +5,8 @@
 #include"Player/EKPlayer/EKPlayer.h"
 #include"Kismet/GameplayStatics.h"
 #include"Player/EKPlayer//EKPlayerStatusComponent.h"
+#include"Enemy/EK_EnemyBase.h"
+#include"Enemy/EK_EnemyStatusComponent.h"
 UEKEnergyBeamNotifyState::UEKEnergyBeamNotifyState()
 {
 	MoveDistancePerSec = 0;
@@ -15,7 +17,7 @@ void UEKEnergyBeamNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAn
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
 	Owner = MeshComp->GetOwner();
-	
+	OwnerEnemy = Cast<AEK_EnemyBase>(Owner);
 	StartLocation = Owner->GetActorLocation();
 	TotalDistance = TotalDuration * MoveDistancePerSec;
 	TotalTime = TotalDuration;
@@ -68,9 +70,16 @@ void UEKEnergyBeamNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAni
 			FCollisionShape::MakeCapsule(AttackRadius, AttackHalfHeight)
 		);
 
+			
 		if (bHit)
 		{
-			float Damage = AttackDamage;
+			float Damage;
+			if (OwnerEnemy)
+			{
+				DefaultDamage = OwnerEnemy->GetStatusComponent()->GetAttackDamage();
+			}
+			
+			Damage = DefaultDamage * AttackDamagePercent;
 
 			for (const FHitResult& Hit : HitResults)
 			{

@@ -42,21 +42,23 @@ private:
 	AActor* Owner;
 
 	FTimerHandle MoveTimerHandle;
+
+	class AEK_EnemyBase* OwnerEnemy;
 	
 	UPROPERTY(EditAnywhere, Category = Attack, Meta = (AllowPrivteAccess = true))
 	float  AttackRadius;
 
 	UPROPERTY(EditAnywhere, Category = Attack, Meta = (AllowPrivteAccess = true))
 	float AttackHalfHeight;
-
-	
 	
 	UPROPERTY(EditAnywhere, Category = Attack, Meta = (AllowPrivteAccess = true))
-	float AttackDamage;
+	float AttackDamagePercent;
 
 	UPROPERTY(EditAnywhere, Category = Attack, Meta = (AllowPrivteAccess = true))
 	bool bAttackHitCheck;
 
 	UPROPERTY(EditAnywhere, Category = Attack, Meta = (AllowPrivteAccess = true))
 	FName StartSocketName;
+
+	float  DefaultDamage = 50.0f;
 };
