@@ -70,33 +70,10 @@ void UWeaponBaseAttack::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequen
 		{
 			IgnoreEnemy.Emplace(HitEnemy);
 			TSubclassOf<UEKPlayerNormalDamageType> PlayerDamageType = UEKPlayerNormalDamageType::StaticClass();
-			USlotComponent* slotcomponent = EKPlayerController->GetSlotComponent();
-			int activeWeaponSlot = slotcomponent->ActiveWeaponSlot;
 
-			uint8 weaponID = slotcomponent->WeaponSlots[activeWeaponSlot].ID;
-			FWeaponStruct* currentWeaponInfo = EKPlayerController->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetWeaponInfo(weaponID);
-			FLevelRate* currentWeaponLevel = EKPlayerController->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetLevelRateInfo(slotcomponent->WeaponSlots[activeWeaponSlot].ItemLevel);
-			
-			float damageRateByWeaponType = 0.0f;
-			
-			if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword))
-			{
-				damageRateByWeaponType = currentWeaponLevel->SwordRate;
-			}
-			else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear))
-			{
-				damageRateByWeaponType = currentWeaponLevel->SpearRate;
-			}
-			else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff))
-			{
-				damageRateByWeaponType = currentWeaponLevel->StaffRate;
-			}
-			float finalWeaponATK = currentWeaponInfo->AttackPow * damageRateByWeaponType;
-			float finalPlayerATK = EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage();
-			float finalApplyDamage = finalPlayerATK + finalWeaponATK;
-			UGameplayStatics::ApplyDamage(HitEnemy, finalApplyDamage, EKPlayerController, EKPlayer, PlayerDamageType);
+			UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer->GetCurrentWeapon(), PlayerDamageType);
 
-			UE_LOG(LogTemp, Warning, TEXT("ApplyDamge : %.2f"), finalApplyDamage);
+			UE_LOG(LogTemp, Warning, TEXT("ApplyDamge : %.2f"), EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue);
 			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Attack"));
 		}
 	}
