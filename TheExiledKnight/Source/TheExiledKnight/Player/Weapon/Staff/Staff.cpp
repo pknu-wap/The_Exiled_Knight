@@ -42,7 +42,6 @@ void AStaff::BeginPlay()
 void AStaff::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 #pragma region Attack
@@ -159,10 +158,6 @@ void AStaff::ChangeMagic(int32 Row)
 		FEKPlayerMagic* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerMagicData(Row);
 		EKPlayerMagic = *EKPlayerStatusTemp;
 		StaffCurrentMagicAnim = StaffMagicAnims[EKPlayerMagic.MagicID];
-		if (!StaffMagicAnims[EKPlayerMagic.MagicID])
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Warning"));
-		}
 	}
 }
 

@@ -18,6 +18,7 @@
 #include "Subsystems/InventorySubsystem.h"
 #include "DrawDebugHelpers.h"
 #include "Interfaces/UInteractableInterface.h"
+#include "Player/DomainExpansion/DomainExpansionBase.h"
 
 AEKPlayerController::AEKPlayerController(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -42,6 +43,10 @@ void AEKPlayerController::BeginPlay()
 	InventoryComponent->AddItemDelegate.AddDynamic(this, &AEKPlayerController::DestroyItem);
 
 	TryInteractLoop();
+
+	EKPlayerGameInstance = Cast<UEKPlayerGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+	ChangeDomainExpansion(2);
 }
 
 void AEKPlayerController::SetupInputComponent()
@@ -83,6 +88,8 @@ void AEKPlayerController::SetupInputComponent()
 
 		EnhancedInputComponent->BindAction(IALockOn, ETriggerEvent::Started, this, &ThisClass::LockOnStarted);
 
+		EnhancedInputComponent->BindAction(IADomainExpansion, ETriggerEvent::Started, this, &ThisClass::DomainExpansionStarted);
+
 		EnhancedInputComponent->BindAction(IAGameMenu, ETriggerEvent::Started, this, &ThisClass::OnPressed_GameMenu);
 		EnhancedInputComponent->BindAction(IA_Up, ETriggerEvent::Started, this, &ThisClass::OnPressed_Up);
 		EnhancedInputComponent->BindAction(IA_Down, ETriggerEvent::Started, this, &ThisClass::OnPressed_Down);
@@ -114,8 +121,6 @@ void AEKPlayerController::MoveTriggered(const FInputActionValue& InputValue)
 		return;
 	}
 
-	EKPlayer->EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_Move);
-
 	FVector2D MovementVector = InputValue.Get<FVector2D>();
 
 	FRotator Rotator = GetControlRotation();
@@ -127,12 +132,14 @@ void AEKPlayerController::MoveTriggered(const FInputActionValue& InputValue)
 
 	if (MovementVector.X != 0)
 	{
+		EKPlayer->EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_Move);
 		FVector Direction = UKismetMathLibrary::GetForwardVector(FRotator(0, Rotator.Yaw, 0));
 		GetPawn()->AddMovementInput(Direction, MovementVector.X);
 	}
 
 	if (MovementVector.Y != 0)
 	{
+		EKPlayer->EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_Move);
 		FVector Direction = UKismetMathLibrary::GetRightVector(FRotator(0, Rotator.Yaw, 0));
 		GetPawn()->AddMovementInput(Direction, MovementVector.Y);
 	}
@@ -270,15 +277,12 @@ void AEKPlayerController::SprintAndDodgeTriggered(const FInputActionValue& Input
 
 	if (KeyPressDuration >= NeedDodgeThresholdTime)
 	{
-		if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Attack))
+		if (!EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Move))
 		{
 			return;
 		}
 
-		if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_SitDown))
-		{
-			EKPlayer->EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_SitDown);
-		}
+		EKPlayer->EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_SitDown);
 
 		EKPlayer->EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_Sprint);
 		EKPlayer->GetCharacterMovement()->MaxWalkSpeed = EKPlayerSprintSpeed;
@@ -374,8 +378,6 @@ void AEKPlayerController::WeaponAttackStarted(const FInputActionValue& InputValu
 		EKPlayer->SetActorRotation(EKPlayer->GetLockOnTargetRotation());
 	}
 
-	BattleStateTimer();
-
 	if (!bIsEquipWeapon)
 	{
 		if (!EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword) &&
@@ -394,6 +396,8 @@ void AEKPlayerController::WeaponAttackStarted(const FInputActionValue& InputValu
 
 		EKPlayer->GetCurrentWeapon()->PlayAttackStartAnimMontage(EKPlayer, this);
 	}
+
+	BattleStateTimer();
 }
 
 void AEKPlayerController::SkillStarted(const FInputActionValue& InputValue)
@@ -421,8 +425,6 @@ void AEKPlayerController::SkillStarted(const FInputActionValue& InputValue)
 		EKPlayer->SetActorRotation(EKPlayer->GetLockOnTargetRotation());
 	}
 
-	BattleStateTimer();
-
 	if (!bIsEquipWeapon)
 	{
 		if (!EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword) &&
@@ -441,6 +443,8 @@ void AEKPlayerController::SkillStarted(const FInputActionValue& InputValue)
 
 		EKPlayer->GetCurrentWeapon()->PlaySkillStartAnimMontage(EKPlayer, this);
 	}
+
+	BattleStateTimer();
 }
 
 #pragma endregion
@@ -465,10 +469,15 @@ void AEKPlayerController::WeaponDefenseStarted(const FInputActionValue& InputVal
 		EKPlayer->SetActorRotation(EKPlayer->GetLockOnTargetRotation());
 	}
 
-	BattleStateTimer();
-
 	if (!bIsEquipWeapon)
 	{
+		if (!EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword) &&
+			!EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear) &&
+			!EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff))
+		{
+			return;
+		}
+
 		EKPlayer->GetCurrentWeapon()->PlayWeaponEquipAnimMontage(EKPlayer, this);
 	}
 	else
@@ -478,6 +487,8 @@ void AEKPlayerController::WeaponDefenseStarted(const FInputActionValue& InputVal
 		EKPlayer->GetCurrentWeapon()->AttachToDefenseSocket(EKPlayer->GetCurrentWeapon(), EKPlayer);
 		InvincibilityTimer(0.2f);
 	}
+
+	BattleStateTimer();
 }
 
 void AEKPlayerController::WeaponDefenseRelease(const FInputActionValue& InputValue)
@@ -486,8 +497,47 @@ void AEKPlayerController::WeaponDefenseRelease(const FInputActionValue& InputVal
 	{
 		return;
 	}
+
+	if (!EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword) &&
+		!EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear) &&
+		!EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff))
+	{
+		return;
+	}
+
 	EKPlayer->EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_Defense);
 	EKPlayer->GetCurrentWeapon()->AttachWeaponToHandSocket(EKPlayer->GetCurrentWeapon(), EKPlayer);
+}
+
+#pragma endregion
+
+#pragma region Domain Expansion
+
+void AEKPlayerController::DomainExpansionStarted(const FInputActionValue& InputValue)
+{
+	if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_DomainExpansion))
+	{
+		return;
+	}
+
+	if (!CurrentDomainExpansion)
+	{
+		return;
+	}
+
+	EKPlayer->GetWorld()->SpawnActor<ADomainExpansionBase>(CurrentDomainExpansion, EKPlayer->GetActorLocation(), EKPlayer->GetActorRotation());
+}
+
+void AEKPlayerController::ChangeDomainExpansion(int32 Row)
+{
+	if (!EKPlayerGameInstance)
+	{
+		return;
+	}
+
+	FEKPlayerDomainExpansion* EKPlayerDomainExpansionDataTemp = EKPlayerGameInstance->GetEKPlayerDomainExpansion(Row);
+	EKPlayerDomainExpansionData = *EKPlayerDomainExpansionDataTemp;
+	CurrentDomainExpansion = DomainExpansions[EKPlayerDomainExpansionData.DomainExpansionID];
 }
 
 #pragma endregion
@@ -612,7 +662,8 @@ void AEKPlayerController::FindInteractableObjects()
 	FRotator Rotation;
 	TArray<FHitResult> HitResults;
 
-	if (!EKPlayer) return;
+	if (!IsValid(EKPlayer))
+		return;
 
 	EKPlayer->GetActorEyesViewPoint(Location, Rotation);
 
@@ -745,6 +796,10 @@ void AEKPlayerController::SetBattleStateEnd()
 	EKPlayer->EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_BattleState);
 	if (bIsEquipWeapon)
 	{
+		if (EKPlayer->CheckPlayerDie())
+		{
+			return;
+		}
 		EKPlayer->GetCurrentWeapon()->PlayWeaponEquipAnimMontage(EKPlayer, this);
 	}
 }

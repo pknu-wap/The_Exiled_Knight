@@ -8,6 +8,8 @@
 #include "Structs/ItemStruct.h"
 #include "EKPlayer.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnPlayerDieDelegate)
+
 UCLASS()
 class AEKPlayer : public ACharacter
 {
@@ -94,6 +96,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FGameplayTagContainer EKPlayerStateContainer;
 
+protected:
+	FOnPlayerDieDelegate OnPlayerDieDelegate;
+
 #pragma region Timer
 
 protected:
@@ -121,6 +126,7 @@ public:
 	void SetLockOnTarget(AActor* Target);
 	AActor* FindNearTarget();
 	FRotator GetLockOnTargetRotation() { return LockOnTargetRotation; }
+	class UBoxComponent* GetTargetFindLockOnBox() { return TargetFindLockOnBox; }
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LockOn")

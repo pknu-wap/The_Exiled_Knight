@@ -52,6 +52,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void StartBossBattle();
+	
+	FVector GetInitializeLocation();
+
+
 
 protected:
 
@@ -82,10 +86,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BehaviorTree");
 	UBehaviorTree* BehaviorTree;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Perception", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIPerception", meta = (AllowPrivateAccess = "true"))
 	TArray<AActor*> AttachedActors;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Perception", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIPerception", meta = (AllowPrivateAccess = "true"))
 	AActor* AttackTarget;
 	
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
@@ -100,8 +104,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int SantuaryID = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FVector InitialLocation; 
+public:
+	FTimerHandle RemoveTimeslowHandle;
+	float TimeslowDuration = 0.1f;
+	float TimeDelayValue = 0.5f;
+	float DefaultTimeDelayValue = 1.f;
+	void RemoveTimeslow();
+	void RemoveTimeslowTimer();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float AcceptanceRadius = 10.0f; 
@@ -109,4 +118,7 @@ public:
 public:
 	FEnemyHpUpdated Delegate_HpUpdated;
 	FEnemyDied Delegate_Died;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVector InitialLocation;
 };

@@ -227,7 +227,7 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 		slots[index] = tmp2;
 		tmp2 = tmp1;
 	}
-	
+
 	UE_LOG(LogTemp, Warning, TEXT("Add new Item to Inventory Slot"));
 
 	AddItemDelegate.Broadcast();
@@ -287,7 +287,10 @@ bool UInventoryComponent::UpgradeItem(FItemStruct ItemToUpgrade, FItemStruct Upg
 	if (Upgrade.ID == EMPTY_ID)
 	{
 		FName upgradeName;
-		upgradeName = FName(*FString::Printf(TEXT(UPGRADE"% d"), ItemToUpgrade.ItemLevel));
+		upgradeName = FName(*FString::Printf(TEXT(UPGRADE"%d"), ItemToUpgrade.ItemLevel));
+
+		if (nullptr == GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfoDB()->FindRow<FItemStruct>(upgradeName, TEXT("GetItemRow")))
+			return false;
 
 		upgrade = *GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfoDB()->FindRow<FItemStruct>(upgradeName, TEXT("GetItemRow"));
 	}
@@ -354,7 +357,7 @@ bool UInventoryComponent::DeleteItem(FItemStruct ItemToDelete, int Quantity)
 			slots[index] = tmp2;
 			tmp2 = tmp1;
 		}
-		
+
 		UE_LOG(LogTemp, Warning, TEXT("destroy item and add new empty slot"));
 	}
 
