@@ -38,6 +38,7 @@ public:
 	FGameplayTag UI_Widget_Game_Status;					// Status
 	FGameplayTag UI_Widget_Game_QuickSlots;				// QuickSlots
 	FGameplayTag UI_Widget_Game_BossBattle;				// Boss Battle
+	FGameplayTag UI_Widget_Game_Died;					// Died;
 
 	FGameplayTag UI_Widget_Menu_MainMenu;				// Setting
 	FGameplayTag UI_Widget_Menu_Setting;				// Setting

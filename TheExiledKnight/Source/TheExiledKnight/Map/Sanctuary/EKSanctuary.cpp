@@ -49,12 +49,13 @@ void AEKSanctuary::Tick(float DeltaTime)
 
 void AEKSanctuary::Interact()
 {
+	USanctuarySubsystem* sanctuarySystem = GetGameInstance()->GetSubsystem<USanctuarySubsystem>();
+	if (!sanctuarySystem) return;
+
 	if (!bActivated)
 	{
 		ActivateSantuary();
 
-		USanctuarySubsystem* sanctuarySystem = GetGameInstance()->GetSubsystem<USanctuarySubsystem>();
-		if (!sanctuarySystem) return;
 		sanctuarySystem->ActivateSanctuary(SanctuaryID);
 
 		for (int i = 0; i < ShouldOpen_SanctuaryIDs.Num(); i++)
@@ -64,6 +65,8 @@ void AEKSanctuary::Interact()
 
 		bActivated = true;
 	}
+
+	sanctuarySystem->VisitSanctuary(SanctuaryID);
 
 	LoadMap();
 

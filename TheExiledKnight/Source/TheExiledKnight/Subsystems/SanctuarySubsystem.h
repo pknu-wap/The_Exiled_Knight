@@ -41,6 +41,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsActivated(int SanctuaryID);
 
+	class AEKSanctuary* GetSanctuary(const UObject* WorldContextObject, int InSanctuaryID);
+
+	int GetLastVisitIdx() { return LastSanctuary_Idx; }
+	void VisitSanctuary(int InSanctuaryID) { LastSanctuary_Idx = InSanctuaryID; };
+
 public:
 	UPROPERTY(BlueprintReadOnly)
 	TArray<int> ActivatedSanctuary;
@@ -50,5 +55,6 @@ public:
 
 private:
 	UDataTable* SanctuaryDB;
+	int LastSanctuary_Idx = 1;
 
 };
