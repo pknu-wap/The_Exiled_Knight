@@ -12,12 +12,12 @@ UEKPlayerStatusComponent::UEKPlayerStatusComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// Edit Basic Status Value Here
-	MaxHp = 1000;
-	Hp = 1000;
-	MaxMp = 1000;
-	Mp = 1000;
-	MaxStamina = 1000;
-	Stamina = 1000;
+	MaxHp = PlayerMaxHp;
+	Hp = MaxHp;
+	MaxMp = PlayerMaxMp;
+	Mp = MaxMp;
+	MaxStamina = PlayerMaxStamina;
+	Stamina = MaxStamina;
 	DefaultDamage = 10.f;
 	FinalDamage = DefaultDamage;
 	
@@ -53,6 +53,8 @@ void UEKPlayerStatusComponent::BeginPlay()
 		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(Level);
 		EKPlayerStatus = *EKPlayerStatusTemp;
 	}
+
+	Recalculate_Status();
 }
 
 void UEKPlayerStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -64,8 +66,6 @@ void UEKPlayerStatusComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	{
 		SetStamina(4);
 	}
-
-	Recalculate_Status();
 }
 
 #pragma region Set Basic Status
@@ -114,9 +114,9 @@ void UEKPlayerStatusComponent::Recalculate_Status()
 
 void UEKPlayerStatusComponent::Calculate_BasicStatus()
 {
-	MaxHp = 1000 + Vitality * 100;
-	MaxMp = 1000 + Mental * 100;
-	MaxStamina = 1000 + Endurance * 100;
+	MaxHp = PlayerMaxHp + Vitality * 100;
+	MaxMp = PlayerMaxMp + Mental * 100;
+	MaxStamina = PlayerMaxStamina + Endurance * 100;
 
 	UInventorySubsystem* invSystem = GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>();
 	if (!invSystem) return;
@@ -125,7 +125,7 @@ void UEKPlayerStatusComponent::Calculate_BasicStatus()
 	USlotComponent* slotComp = pc->GetComponentByClass<USlotComponent>();
 	if (!slotComp) return;
 
-	DEF = 75 * Endurance + 25 * Ability;
+	DEF = 7.5 * Endurance + 2.5 * Ability;
 
 	// Calculate Weapon Stat
 	FWeaponStruct* weaponInfo = invSystem->GetWeaponInfo(slotComp->WeaponSlots[slotComp->ActiveWeaponSlot].ID);
@@ -156,7 +156,8 @@ void UEKPlayerStatusComponent::Calculate_NormalStatus()
 		if (itemID > 0)
 		{
 			FRune* runeInfo = invSystem->GetRuneInfo(itemID);
-			if (!runeInfo) return;
+			if (!runeInfo) 
+				continue;
 
 			Vitality += runeInfo->Vitality;
 			Mental += runeInfo->Mental;
@@ -201,7 +202,7 @@ int UEKPlayerStatusComponent::GetCalculatedATK(int InStrength)
 
 int UEKPlayerStatusComponent::GetCalculatedDEF(int InEndurance, int InAbility)
 {
-	return 75 * InEndurance + 25 * InAbility;
+	return (7.5 * (double)InEndurance + 2.5 * (double)InAbility);
 }
 
 #pragma endregion

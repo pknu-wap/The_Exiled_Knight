@@ -156,10 +156,10 @@ struct FRune : public FTableRowBase
     int32 ID;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statment|Upgrade")
-    int32 Weight = 15;
+    int32 Weight = 0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statment|Upgrade")
-    int32 DEF = 30;
+    int32 DEF = 0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statment|Upgrade")
     int32 Vitality;

@@ -55,6 +55,7 @@ public:
 	float HitAngle = 0.f;
 
 	void EquipWeapon(const FWeaponStruct& InWeaponInfo);
+	void UnEquipWeapon();
 	void AttachWeaponToSpineSocket(TObjectPtr<class AEKPlayerWeapon> Weapon);
 	void AttachWeaponToHandSocket(TObjectPtr<class AEKPlayerWeapon> Weapon);
 

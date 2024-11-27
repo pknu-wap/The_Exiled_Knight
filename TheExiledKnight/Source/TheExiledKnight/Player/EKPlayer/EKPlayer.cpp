@@ -310,6 +310,20 @@ void AEKPlayer::EquipWeapon(const FWeaponStruct& InWeaponInfo)
 	}
 }
 
+void AEKPlayer::UnEquipWeapon()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->Destroy();
+		CurrentWeapon = nullptr;
+
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear);
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_BattleState);
+	}
+}
+
 void AEKPlayer::AttachWeaponToSpineSocket(TObjectPtr<AEKPlayerWeapon> Weapon)
 {
 	if (Weapon)

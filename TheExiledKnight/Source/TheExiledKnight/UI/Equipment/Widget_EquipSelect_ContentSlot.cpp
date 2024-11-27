@@ -3,6 +3,7 @@
 
 #include "UI/Equipment/Widget_EquipSelect_ContentSlot.h"
 #include "UI/Equipment/Widget_EquipSelectWindow.h"
+#include "UI/Equipment/Widget_Equipment.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
@@ -10,6 +11,8 @@
 #include "Components/SlotComponent.h"
 #include "UI/UISubsystem.h"
 #include "EKGameplayTags.h"
+#include "Player/EKPlayer/EKPlayer.h"
+#include "Player/EKPlayer/EKPlayerStatusComponent.h"
 
 void UWidget_EquipSelect_ContentSlot::NativeConstruct()
 {
@@ -93,7 +96,8 @@ FEventReply UWidget_EquipSelect_ContentSlot::RedirectMouseDownToWidget(const FGe
 	FEventReply Reply;
 	Reply.NativeReply = Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 
-	if (SlotData.Item.ID == 0) return Reply;
+	if (Category != EItemCategory::Magic && (SlotData.Item.ID == 0 || SlotData.Item.ID == 1)) return Reply;
+	if (Category == EItemCategory::Magic && MagicData.MagicID < 0) return Reply;
 
 	APlayerController* controller = GetOwningPlayer();
 	if (!controller) return Reply;
@@ -102,6 +106,21 @@ FEventReply UWidget_EquipSelect_ContentSlot::RedirectMouseDownToWidget(const FGe
 
 	if (InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton) == true)
 	{
+		if (Category == EItemCategory::Magic && slotComp->IsAlreadyEquiped(EItemCategory::Magic, MagicData))
+			slotComp->UnEquipMagic(EItemCategory::Magic, MagicData);
+
+		else if (Category == EItemCategory::Weapon && slotComp->IsAlreadyEquiped(EItemCategory::Weapon, SlotData.Item))
+			slotComp->UnEquip(EItemCategory::Weapon, SlotData.Item);
+
+		else if (Category == EItemCategory::Rune && slotComp->IsAlreadyEquiped(EItemCategory::Rune, SlotData.Item))
+			slotComp->UnEquip(EItemCategory::Rune, SlotData.Item);
+
+		else if (Category == EItemCategory::FragmentOfGod && slotComp->IsAlreadyEquiped(EItemCategory::FragmentOfGod, SlotData.Item))
+			slotComp->UnEquip(EItemCategory::FragmentOfGod, SlotData.Item);
+
+		else if (Category == EItemCategory::UseableItem && slotComp->IsAlreadyEquiped(EItemCategory::UseableItem, SlotData.Item))
+			slotComp->UnEquip(EItemCategory::UseableItem, SlotData.Item);
+
 		// Equip Item
 		switch (Category)
 		{
@@ -147,7 +166,37 @@ FEventReply UWidget_EquipSelect_ContentSlot::RedirectMouseDownToWidget(const FGe
 	else if (InMouseEvent.IsMouseButtonDown(EKeys::RightMouseButton) == true)
 	{
 		// UnEquip Item
+
+		if (Category == EItemCategory::Magic && slotComp->IsAlreadyEquiped(EItemCategory::Magic, MagicData))
+			slotComp->UnEquipMagic(EItemCategory::Magic, MagicData);
+
+		else if (Category == EItemCategory::Weapon && slotComp->IsAlreadyEquiped(EItemCategory::Weapon, SlotData.Item))
+			slotComp->UnEquip(EItemCategory::Weapon, SlotData.Item);
+
+		else if (Category == EItemCategory::Rune && slotComp->IsAlreadyEquiped(EItemCategory::Rune, SlotData.Item))
+			slotComp->UnEquip(EItemCategory::Rune, SlotData.Item);
+
+		else if (Category == EItemCategory::FragmentOfGod && slotComp->IsAlreadyEquiped(EItemCategory::FragmentOfGod, SlotData.Item))
+			slotComp->UnEquip(EItemCategory::FragmentOfGod, SlotData.Item);
+
+		else if(Category == EItemCategory::UseableItem && slotComp->IsAlreadyEquiped(EItemCategory::UseableItem, SlotData.Item))
+			slotComp->UnEquip(EItemCategory::UseableItem, SlotData.Item);
 	}
+
+
+	ACharacter* player = UGameplayStatics::GetPlayerCharacter(this, 0);
+	if (!player) return Reply;
+	UEKPlayerStatusComponent* statusComp = player->GetComponentByClass<UEKPlayerStatusComponent>();
+	if (!statusComp) return Reply;
+	UUISubsystem* UISystem = GetWorld()->GetGameInstance()->GetSubsystem<UUISubsystem>();
+	if (!UISystem) return Reply;
+	UUserWidget* widget = UISystem->GetWidget(FEKGameplayTags::Get().UI_Widget_GameMenu_Equipment);
+	if (!widget) return Reply;
+	UWidget_Equipment* EquipmentWidget = Cast<UWidget_Equipment>(widget);
+	if (!EquipmentWidget) return Reply;
+
+	statusComp->Recalculate_Status();
+	EquipmentWidget->UpdateStatusInfo();
 
 	return Reply;
 }
