@@ -44,6 +44,7 @@ AEKEnemyAIController::AEKEnemyAIController()
 #pragma endregion
 
 	DamageSenseConfig = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("DamageSenseConfig"));
+
 	AIPerception->ConfigureSense(*DamageSenseConfig);
 #pragma endregion
 	 

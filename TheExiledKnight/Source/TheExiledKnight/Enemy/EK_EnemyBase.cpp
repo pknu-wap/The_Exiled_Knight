@@ -4,6 +4,7 @@
 #include "EK_EnemyBase.h"
 #include "EK_EnemyStatusComponent.h"
 #include"Player/Weapon/DamageType/EKPlayerDamageType.h"
+#include"Enemy/EnemyAI/EKEnemyAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/DamageEvents.h"
 #include"Animation/AnimInstance.h"
@@ -40,8 +41,19 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 	{
 		SetAttackTarget(DamageCauser);
 	}
-	
+	AEKEnemyAIController* EnemyController = Cast<AEKEnemyAIController>(this);
+	//if (EnemyController&&DamageCauser)
+	//{
+	//	UAISense_Damage::ReportDamageEvent(
+	//		GetWorld(),
+	//		this,               // 데미지를 받은 Actor
+	//		DamageCauser,       // 데미지를 준 Actor
+	//		DamageAmount,       // 데미지 양
+	//		GetActorLocation(), // 데미지 위치
+	//		FVector::ZeroVector // 데미지 방향
+	//	);
 
+	//}
 	if (EnemyStat->GetCurrentHealth() > 0 && !EnemyStat->GetIsDead())
 	{
 		if (Damage > 0)
@@ -55,7 +67,6 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 			{
 				HandleNormalAttack(Damage);
 			}
-
 			
 			if (EnemyStat->GetCurrentHealth() <= 0)
 			{
@@ -68,7 +79,7 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 				return 0.0f;
 			}
 
-			// �ǰ� �ִϸ��̼� ���
+		
 			FVector DamageDirection = (DamageCauser->GetActorLocation() - GetActorLocation()).GetSafeNormal();
 			PlayHurtReactionAnimation(DamageDirection);
 
@@ -247,6 +258,11 @@ void AEK_EnemyBase::SetAttackTarget(AActor* Actor)
 void AEK_EnemyBase::ReturnToInitializeLocation()
 {
 	AAIController* AIController = Cast<AAIController>(GetController()); 
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance&&AnimInstance->IsAnyMontagePlaying())
+	{
+		AnimInstance->StopAllMontages(0.1f);
+	}
 
 	if (AIController)
 	{
