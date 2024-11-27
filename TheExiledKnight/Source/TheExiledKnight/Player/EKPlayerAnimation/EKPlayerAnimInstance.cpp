@@ -95,7 +95,6 @@ void UEKPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	else
 	{
 		EKPlayerController = Cast<AEKPlayerController>(EKPlayer->GetController());
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("BugBug"));
 	}
 
 	Stamina = EKPlayer->GetPlayerStatusComponent()->GetStamina();
