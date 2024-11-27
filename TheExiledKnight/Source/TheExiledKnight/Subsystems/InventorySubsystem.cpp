@@ -139,7 +139,7 @@ FWeaponStruct* UInventorySubsystem::GetWeaponInfo(uint8 ID)
 
 	if (weaponInfo == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("GetWeaponInfo : weaponInfo == nullptr"));
+		//UE_LOG(LogTemp, Warning, TEXT("GetWeaponInfo : weaponInfo == nullptr"));
 		return nullptr;
 	}
 
@@ -152,7 +152,7 @@ FRune* UInventorySubsystem::GetRuneInfo(uint8 ID)
 
 	if (runeInfo == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("GetRuneInfo : runeInfo == nullptr"));
+		//UE_LOG(LogTemp, Warning, TEXT("GetRuneInfo : runeInfo == nullptr"));
 		return nullptr;
 	}
 

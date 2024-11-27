@@ -287,7 +287,10 @@ bool UInventoryComponent::UpgradeItem(FItemStruct ItemToUpgrade, FItemStruct Upg
 	if (Upgrade.ID == EMPTY_ID)
 	{
 		FName upgradeName;
-		upgradeName = FName(*FString::Printf(TEXT(UPGRADE"% d"), ItemToUpgrade.ItemLevel));
+		upgradeName = FName(*FString::Printf(TEXT(UPGRADE"%d"), ItemToUpgrade.ItemLevel));
+
+		if (nullptr == GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfoDB()->FindRow<FItemStruct>(upgradeName, TEXT("GetItemRow")))
+			return false;
 
 		upgrade = *GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfoDB()->FindRow<FItemStruct>(upgradeName, TEXT("GetItemRow"));
 	}
