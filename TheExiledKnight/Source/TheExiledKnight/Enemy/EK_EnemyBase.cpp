@@ -251,6 +251,11 @@ void AEK_EnemyBase::SetAttackTarget(AActor* Actor)
 void AEK_EnemyBase::ReturnToInitializeLocation()
 {
 	AAIController* AIController = Cast<AAIController>(GetController()); 
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance&&AnimInstance->IsAnyMontagePlaying())
+	{
+		AnimInstance->StopAllMontages(0.1f);
+	}
 
 	if (AIController)
 	{
