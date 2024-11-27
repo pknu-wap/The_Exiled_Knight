@@ -32,11 +32,11 @@ void UEKPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	if (EKPlayer == nullptr)
+	if (!EKPlayer)
 	{
 		return;
 	}
-	if (EKMovementComponent == nullptr)
+	if (!EKMovementComponent)
 	{
 		return;
 	}
@@ -88,7 +88,15 @@ void UEKPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		bIsDie = true;
 	}
 
-	bIsEquip = EKPlayerController->bIsEquipWeapon;
+	if (EKPlayerController)
+	{
+		bIsEquip = EKPlayerController->bIsEquipWeapon;
+	}
+	else
+	{
+		EKPlayerController = Cast<AEKPlayerController>(EKPlayer->GetController());
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("BugBug"));
+	}
 
 	Stamina = EKPlayer->GetPlayerStatusComponent()->GetStamina();
 

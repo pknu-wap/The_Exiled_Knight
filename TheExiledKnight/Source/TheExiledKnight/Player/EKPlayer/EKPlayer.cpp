@@ -92,13 +92,13 @@ void AEKPlayer::BeginPlay()
 		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
 	}*/
 
-	if (GreatSwordTypeBClass)
+	/*if (GreatSwordTypeBClass)
 	{
 		FActorSpawnParameters SpawnParams;
 		CurrentWeapon = GetWorld()->SpawnActor<AEKPlayerWeapon>(GreatSwordTypeBClass, SpawnParams);
 		AttachWeaponToSpineSocket(CurrentWeapon);
 		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
-	}
+	}*/
 
 	// Test Spear Version
 

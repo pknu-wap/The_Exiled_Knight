@@ -24,14 +24,14 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player")
-	TObjectPtr<class AEKPlayer> EKPlayer;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	class AEKPlayer* EKPlayer;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player")
-	TObjectPtr<class AEKPlayerController> EKPlayerController;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	class AEKPlayerController* EKPlayerController;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player")
-	TObjectPtr<class UCharacterMovementComponent> EKMovementComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	class UCharacterMovementComponent* EKMovementComponent;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Info|Calc")
