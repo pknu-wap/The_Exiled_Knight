@@ -126,11 +126,152 @@ void USlotComponent::EquipMagic(const FEKPlayerMagic& InMagicData)
 	if (MagicSlots.IsValidIndex(slotIdx))
 	{
 		MagicSlots[slotIdx] = InMagicData;
+
+		Delegate_SlotUpdated.Broadcast(EItemCategory::Magic, slotIdx);
 		if (slotIdx == ActiveMagicSlot)
 		{
 			Delegate_QuickSlotUpdated.Broadcast(EItemCategory::Magic, ActiveMagicSlot);
 		}
 	}
+}
+
+void USlotComponent::UnEquip(EItemCategory InCategory, const FItemStruct& InItemData)
+{
+	UInventorySubsystem* inventorySystem =
+		GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>();
+	if (!inventorySystem) return;
+
+	AEKPlayer* player = Cast<AEKPlayer>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	if (!player) return;
+
+	UEKPlayerStatusComponent* statusComp = player->GetComponentByClass<UEKPlayerStatusComponent>();
+	if (!statusComp) return;
+
+	int idx = 0;
+
+	switch (InCategory)
+	{
+	case EItemCategory::None:
+		break;
+	case EItemCategory::Weapon:
+		for (int i = 0; i < WeaponSlots.Num(); i++)
+		{
+			if (WeaponSlots[i].ID == InItemData.ID && WeaponSlots[i].Name.IsEqual(InItemData.Name))
+			{
+				WeaponSlots[i] = FItemStruct();
+				idx = i;
+
+				if (ActiveWeaponSlot == i)
+				{
+					player->UnEquipWeapon();
+				}
+
+				break;
+			}
+		}
+		break;
+	case EItemCategory::Rune:
+		for (int i = 0; i < RuneSlots.Num(); i++)
+		{
+			if (RuneSlots[i].ID == InItemData.ID && RuneSlots[i].Name.IsEqual(InItemData.Name))
+			{
+				RuneSlots[i] = FItemStruct();
+				idx = i;
+				break;
+			}
+		}
+		break;
+	case EItemCategory::FragmentOfGod:
+		// if(Fragment)
+		break;
+	case EItemCategory::UseableItem:
+		for (int i = 0; i < UseableSlots.Num(); i++)
+		{
+			if (UseableSlots[i].ID == InItemData.ID && UseableSlots[i].Name.IsEqual(InItemData.Name))
+			{
+				UseableSlots[i] = FItemStruct();
+				idx = i;
+				break;
+			}
+		}
+		break;
+	case EItemCategory::Magic:
+		break;
+	case EItemCategory::Upgrades:
+		break;
+	case EItemCategory::Hunting:
+		break;
+	default:
+		break;
+	}
+
+	Delegate_SlotUpdated.Broadcast(InCategory, idx);
+	Delegate_QuickSlotUpdated.Broadcast(InCategory, idx);
+	statusComp->Recalculate_Status();
+}
+
+void USlotComponent::UnEquipMagic(EItemCategory InCategory, const FEKPlayerMagic& InMagicData)
+{
+	int idx = 0;
+	for (int i = 0; i < MagicSlots.Num(); i++)
+	{
+		if (MagicSlots[i].MagicID == InMagicData.MagicID
+			&& MagicSlots[i].MagicName.IsEqual(InMagicData.MagicName))
+		{
+			MagicSlots[i] = FEKPlayerMagic();
+		}
+	}
+	Delegate_SlotUpdated.Broadcast(InCategory, idx);
+	Delegate_QuickSlotUpdated.Broadcast(InCategory, idx);
+}
+
+bool USlotComponent::IsAlreadyEquiped(EItemCategory InCategory, const FItemStruct& InItemData)
+{
+	switch (InCategory)
+	{
+	case EItemCategory::None:
+		break;
+	case EItemCategory::Weapon:
+		for (int i = 0; i < WeaponSlots.Num(); i++)
+		{
+			if (WeaponSlots[i].ID == InItemData.ID && WeaponSlots[i].Name.IsEqual(InItemData.Name))
+				return true;
+		}
+		break;
+	case EItemCategory::Rune:
+		for (int i = 0; i < RuneSlots.Num(); i++)
+		{
+			if (RuneSlots[i].ID == InItemData.ID && RuneSlots[i].Name.IsEqual(InItemData.Name))
+				return true;
+		}
+		break;
+	case EItemCategory::FragmentOfGod:
+		// if(Fragment)
+		break;
+	case EItemCategory::UseableItem:
+		break;
+	case EItemCategory::Magic:
+		break;
+	case EItemCategory::Upgrades:
+		break;
+	case EItemCategory::Hunting:
+		break;
+	default:
+		break;
+	}
+
+	return false;
+}
+
+bool USlotComponent::IsAlreadyEquiped(EItemCategory InCategory, const FEKPlayerMagic& InMagicData)
+{
+	for (int i = 0; i < MagicSlots.Num(); i++)
+	{
+		if (MagicSlots[i].MagicID == InMagicData.MagicID 
+			&& MagicSlots[i].MagicName.IsEqual(InMagicData.MagicName))
+			return true;
+	}
+	return false;
 }
 
 void USlotComponent::UpdateActiveSlot(EInputType InInputType)

@@ -48,6 +48,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ReturnToInitializeLocation();
 
+	UFUNCTION(BlueprintCallable)
+	FVector GetInitializeLocation();
+
+
+
 protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "AnimMontage", meta = (AllowPrivateAccess = "true"));
@@ -77,10 +82,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BehaviorTree");
 	UBehaviorTree* BehaviorTree;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Perception", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIPerception", meta = (AllowPrivateAccess = "true"))
 	TArray<AActor*> AttachedActors;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Perception", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIPerception", meta = (AllowPrivateAccess = "true"))
 	AActor* AttackTarget;
 	
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
@@ -104,8 +109,8 @@ public:
 	void RemoveTimeslowTimer();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FVector InitialLocation; 
+	float AcceptanceRadius = 10.0f; 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float AcceptanceRadius = 10.0f; 
+	FVector InitialLocation;
 };

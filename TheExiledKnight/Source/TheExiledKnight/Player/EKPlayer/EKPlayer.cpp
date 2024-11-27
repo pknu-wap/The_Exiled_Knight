@@ -303,8 +303,23 @@ void AEKPlayer::EquipWeapon(const FWeaponStruct& InWeaponInfo)
 			EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
 		else if (InWeaponInfo.WeaponClass.Get()->IsChildOf(ASpear::StaticClass()))
 			EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear);
-			
+		else if (InWeaponInfo.WeaponClass.Get()->IsChildOf(AStaff::StaticClass()))
+			EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
 		// GetMesh()->SetAnimInstanceClass(InWeaponInfo.AnimInstance);
+	}
+}
+
+void AEKPlayer::UnEquipWeapon()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->Destroy();
+		CurrentWeapon = nullptr;
+
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear);
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_BattleState);
 	}
 }
 

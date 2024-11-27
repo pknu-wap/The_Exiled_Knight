@@ -7,7 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/DamageEvents.h"
 #include"Animation/AnimInstance.h"
-#include"Enemy/DamageSystem/EKDamageType.h"
+#include"Player/Weapon/DamageType/EKPlayerDamageType.h"
 #include"Player/EKPlayer/EKPlayer.h"
 #include"Enemy/EKEnemyGamePlayTags.h"
 #include"AIController.h"
@@ -44,11 +44,11 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 		if (Damage > 0)
 		{
 			
-			if (DamageTypeClass->IsChildOf(UEKStrongDamageType::StaticClass()))
+			if (DamageTypeClass->IsChildOf(UEKPlayerStrongDamageType::StaticClass()))
 			{
 				HandleStrongAttack(Damage);
 			}
-			else
+			else //Normal and not 
 			{
 				HandleNormalAttack(Damage);
 			}
@@ -144,13 +144,12 @@ void AEK_EnemyBase::PlayHurtReactionAnimation(const FVector& DamageDirection)
 
 void AEK_EnemyBase::OnHurtAnimationEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	if (!bInterrupted)
-	{	
+		
 		UE_LOG(LogTemp, Warning, TEXT("OnHurtAnimationEnded called"));
 		EnemyStat->OnHurtAnimationEnd.Broadcast();
 		BeforeHurtMontage = nullptr;
 		
-	}
+
 	if (EnemyStat->GetCurrentPoise() <= 0 && !bIsStunned) //stun animation montage 
 	{
 		bIsStunned = true;
@@ -246,6 +245,11 @@ void AEK_EnemyBase::ReturnToInitializeLocation()
 	{
 		AIController->MoveToLocation(InitialLocation, AcceptanceRadius);
 	}
+}
+
+FVector AEK_EnemyBase::GetInitializeLocation()
+{
+	return InitialLocation;
 }
 
 void AEK_EnemyBase::RemoveTimeslow()
