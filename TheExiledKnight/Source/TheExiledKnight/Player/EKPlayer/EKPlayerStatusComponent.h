@@ -11,8 +11,8 @@
 #pragma region Max Value
 
 // Edit Player Basic Max Stat Here
-#define PlayerMaxHp 200
-#define PlayerMaxMp 200
+#define PlayerMaxHp 1000
+#define PlayerMaxMp 1000
 #define PlayerMaxStamina 1000
 
 // Edit Player Max Level Here
@@ -62,7 +62,7 @@ public:
 	int GetCalculatedStamina(int InEndurance);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	int GetCalculatedATK(int InStrength);
+	int GetCalculatedATK(int InStrength, int InAbility, int InIntelligence);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int GetCalculatedDEF(int InEndurance, int InAbility);

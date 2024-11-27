@@ -20,13 +20,25 @@ void UWidget_InvContentSlot::NativeConstruct()
 void UWidget_InvContentSlot::UpdateSlot(int slotIdx, const FInventorySlot& inData)
 {
 	SlotIdx = slotIdx;
-		SlotData = inData;
+	SlotData = inData;
 
 	if (inData.Quantity > 0)
 	{
+		Image_Item->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		Image_Item->SetBrushFromTexture(inData.Item.Icon);
 		Text_Quantity->SetText(UKismetTextLibrary::Conv_IntToText(inData.Quantity));
 	}
+	else
+	{
+		Image_Item->SetVisibility(ESlateVisibility::Collapsed);
+		Text_Quantity->SetText(FText::GetEmpty());
+	}
+}
+
+void UWidget_InvContentSlot::ClearSlot()
+{
+	Image_Item->SetVisibility(ESlateVisibility::Collapsed);
+	Text_Quantity->SetText(FText::GetEmpty());
 }
 
 void UWidget_InvContentSlot::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

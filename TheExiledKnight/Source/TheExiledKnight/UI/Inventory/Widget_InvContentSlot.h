@@ -22,6 +22,7 @@ public:
 	
 public:
 	void UpdateSlot(int slotIdx, const FInventorySlot& inData);
+	void ClearSlot();
 
 protected:
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
