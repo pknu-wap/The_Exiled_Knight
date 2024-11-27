@@ -32,6 +32,7 @@ public:
 
 	virtual void OnPossess(APawn* InPawn) override; 
 
+	
 
 private:
 	// AIPerception Sense Configurations
@@ -43,7 +44,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "AI|Perception")
 	UAISenseConfig_Damage* DamageSenseConfig;
-
 	TObjectPtr<class EK_EnemyBase>EKEnemy; 
 
 	UPROPERTY()
