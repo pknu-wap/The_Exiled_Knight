@@ -9,6 +9,8 @@
 #include"EnemyWeapon/EKEnemyWeaponBase.h"
 #include "EK_EnemyBase.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FEnemyHpUpdated, int, int)
+DECLARE_MULTICAST_DELEGATE(FEnemyDied)
 
 UCLASS()
 class THEEXILEDKNIGHT_API AEK_EnemyBase : public ACharacter
@@ -49,6 +51,8 @@ public:
 	void ReturnToInitializeLocation();
 
 	UFUNCTION(BlueprintCallable)
+	void StartBossBattle();
+	
 	FVector GetInitializeLocation();
 
 
@@ -111,6 +115,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float AcceptanceRadius = 10.0f; 
 
+public:
+	FEnemyHpUpdated Delegate_HpUpdated;
+	FEnemyDied Delegate_Died;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FVector InitialLocation;
 };
