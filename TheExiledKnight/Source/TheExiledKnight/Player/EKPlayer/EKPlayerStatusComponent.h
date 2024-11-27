@@ -62,7 +62,7 @@ public:
 	int GetCalculatedStamina(int InEndurance);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	int GetCalculatedATK(int InStrength);
+	int GetCalculatedATK(int InStrength, int InAbility, int InIntelligence);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int GetCalculatedDEF(int InEndurance, int InAbility);
