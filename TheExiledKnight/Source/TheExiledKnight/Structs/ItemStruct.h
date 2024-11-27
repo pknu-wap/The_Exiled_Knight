@@ -202,3 +202,32 @@ struct FItemObject : public FTableRowBase
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TSubclassOf<class AEKItem_Base> ItemObject = nullptr;
 };
+
+USTRUCT(BlueprintType)
+struct FFragmentOfGod : public FTableRowBase
+{
+    GENERATED_BODY()
+
+    FFragmentOfGod();
+    FFragmentOfGod(const FFragmentOfGod& Other)
+    {
+        ID = Other.ID;
+        Name = Other.Name;
+        CoolDown = Other.CoolDown;
+    };
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int ID = 0;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FName Name = "Name";
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float CoolDown;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float Radius;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float Duration;
+};

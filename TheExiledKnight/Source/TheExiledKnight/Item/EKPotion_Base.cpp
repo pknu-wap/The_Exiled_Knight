@@ -17,9 +17,9 @@ void AEKPotion_Base::BeginPlay()
 
 }
 
-void AEKPotion_Base::UseItem(UWorld* WorldContext, int level)
+void AEKPotion_Base::UseItem(UWorld* WorldContext, float PotionRate)
 {
-	Super::UseItem(WorldContext, level);
+	Super::UseItem(WorldContext, PotionRate);
 
 	// Heal Health, Mana, etc...
 

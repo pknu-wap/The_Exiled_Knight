@@ -7,7 +7,8 @@
 #include "EK_EnemyStatusComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHPIsZero);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHPIsZeroOneParam, int, AstralAmount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHPIsZeroOneAstral, int, AstralAmount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHPIsZeroOneDropItem, FName, DropItemSource);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDamageTaken);    
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHitAnimationEnd);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPoiseIsZero); 
@@ -46,6 +47,7 @@ public:
 	float GetAttackDamage();
 	float GetSightRange();
 	float GetHearingRange();
+	int GetAstral() { return Astral; }
 	UFUNCTION(BlueprintCallable)
 	float GetMaxSpeed();
 	UFUNCTION(BlueprintCallable)
@@ -60,7 +62,10 @@ public:
 	FOnHPIsZero OnHPIsZero;
 
 	UPROPERTY(BlueprintAssignable, Category = "Status")
-	FOnHPIsZeroOneParam OnHPIsZeroOneParam;
+	FOnHPIsZeroOneAstral OnHPIsZeroOneAstral;
+
+	UPROPERTY(BlueprintAssignable, Category = "Status")
+	FOnHPIsZeroOneDropItem OnHPIsZeroOneDropItemSource;
 
 	UPROPERTY(BlueprintAssignable, Category = "Status")
 	FOnHitAnimationEnd OnHurtAnimationEnd; 
