@@ -19,6 +19,9 @@ public:
 	void ShowEquipWindow();
 	void ShowEquipSelect(EItemCategory Category, int slotIdx);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateStatusInfo();
+
 public:
 	UPROPERTY(meta = (BindWidget), BlueprintReadOnly, EditAnywhere)
 	UWidgetSwitcher* WidgetSwitcher;
