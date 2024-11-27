@@ -227,7 +227,7 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 		slots[index] = tmp2;
 		tmp2 = tmp1;
 	}
-	
+
 	UE_LOG(LogTemp, Warning, TEXT("Add new Item to Inventory Slot"));
 
 	AddItemDelegate.Broadcast();
@@ -357,7 +357,7 @@ bool UInventoryComponent::DeleteItem(FItemStruct ItemToDelete, int Quantity)
 			slots[index] = tmp2;
 			tmp2 = tmp1;
 		}
-		
+
 		UE_LOG(LogTemp, Warning, TEXT("destroy item and add new empty slot"));
 	}
 

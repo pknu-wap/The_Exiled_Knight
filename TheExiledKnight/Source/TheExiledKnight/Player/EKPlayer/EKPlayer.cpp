@@ -128,13 +128,13 @@ void AEKPlayer::BeginPlay()
 		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
 	}*/
 
-	if (StaffTypeBClass)
+	/*if (StaffTypeBClass)
 	{
 		FActorSpawnParameters SpawnParams;
 		CurrentWeapon = GetWorld()->SpawnActor<AEKPlayerWeapon>(StaffTypeBClass, SpawnParams);
 		AttachWeaponToSpineSocket(CurrentWeapon);
 		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
-	}
+	}*/
 
 #pragma endregion
 
@@ -143,11 +143,6 @@ void AEKPlayer::BeginPlay()
 void AEKPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	// Test
-	// GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Cyan, FString::Printf(TEXT("HP : %d / %d"), PlayerStatusComponent->GetHp(), PlayerStatusComponent->GetMaxHp()));
-	// GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Cyan, FString::Printf(TEXT("MP : %d / %d"), PlayerStatusComponent->GetMp(), PlayerStatusComponent->GetMaxMp()));
-	//GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Cyan, FString::Printf(TEXT("Stamina : %d / %d"), PlayerStatusComponent->GetStamina(), PlayerStatusComponent->GetMaxStamina()));
 
 	if (LockOnTarget)
 	{
@@ -161,6 +156,20 @@ void AEKPlayer::Tick(float DeltaTime)
 		LockOnTargetRotation = TargetRotation;
 		EKPlayerController->SetControlRotation(LockOnTargetRotation);
 	}
+
+	if (!CurrentWeapon)
+	{
+		return;
+	}
+
+	if (CurrentWeapon->CheckAnimMontageEnd(this, CurrentWeapon->GetWeaponAttackAnim()))
+	{
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+	}
+	else
+	{
+		GetCharacterMovement()->bOrientRotationToMovement = false;
+	}
 }
 
 #pragma region Damage
@@ -172,6 +181,11 @@ float AEKPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACont
 	if (!EKPlayerController || 
 		EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Hit) ||
 		EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_StrongHit))
+	{
+		return 0.f;
+	}
+
+	if (CheckPlayerDie())
 	{
 		return 0.f;
 	}
@@ -209,32 +223,29 @@ NextFunc:
 	{
 		EKPlayerController->ConsumtionStaminaAndTimer(DefenseStamina);
 
-		if (EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Invincibility)) // Perfect Defense
+		if (!EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Invincibility))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Magenta, TEXT("Perfect Defense"));
-		}
-		else // Normal Defense
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, TEXT("Normal Defense"));
 			PlayerStatusComponent->SetHp(-Damage * 0.3);
+		}
+	}
+	else if (EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_DomainExpansion_HPPig))
+	{
+		if (!EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Invincibility))
+		{
+			PlayerStatusComponent->SetHp(-Damage * 0.2);
+			HitDirection(DamageCauser);
 		}
 	}
 	else // About Normal Logic
 	{
-		if (EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Invincibility))
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Magenta, TEXT("Invincibility"));
-		}
-		else
+		if (!EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Invincibility))
 		{
 			PlayerStatusComponent->SetHp(-Damage);
 			HitDirection(DamageCauser);
 		}
 	}
 
-	CheckPlayerDie();
-
-	EKPlayerController->InvincibilityTimer(0.5f);
+	EKPlayerController->InvincibilityTimer(0.4f);
 
 	return 0.f;
 }
@@ -244,6 +255,7 @@ bool AEKPlayer::CheckPlayerDie()
 	if (PlayerStatusComponent->GetHp() <= 0)
 	{
 		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_Die);
+		OnPlayerDieDelegate.Broadcast();
 		return true;
 	}
 	return false;
@@ -264,19 +276,6 @@ void AEKPlayer::HitDirection(AActor* Enemy)
 
 	if (CrossProduct.Z < 0) {
 		Angle = -Angle;
-	}
-
-	if (Angle > -45 && Angle <= 45) {
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Hit Front"));
-	}
-	else if (Angle > 45 && Angle <= 135) {
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Hit Right"));
-	}
-	else if (Angle < -45 && Angle >= -135) {
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Hit Left"));
-	}
-	else {
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Hit Back"));
 	}
 
 	HitAngle = Angle;

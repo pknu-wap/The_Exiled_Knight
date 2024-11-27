@@ -48,4 +48,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	UAnimMontage* GreatSwordSkillAnim;
+
+	virtual UAnimMontage* GetWeaponAttackAnim() override { return GreatSwordAttackAnim; }
 };

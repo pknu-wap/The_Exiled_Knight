@@ -8,7 +8,6 @@
 #include "Subsystems/SanctuarySubsystem.h"
 #include "UI/UISubsystem.h"
 #include "EKGameplayTags.h"
-#include "Blueprint/UserWidget.h"
 
 // Sets default values
 AEKSanctuary::AEKSanctuary()

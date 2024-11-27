@@ -60,6 +60,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	TArray<UAnimMontage*> StaffMagicAnims;
 
+	virtual UAnimMontage* GetWeaponAttackAnim() override { return StaffAttackAnim; }
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	UEKPlayerGameInstance* EKPlayerGameInstance;
