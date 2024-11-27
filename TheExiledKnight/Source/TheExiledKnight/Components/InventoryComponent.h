@@ -14,6 +14,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAdd_Item_Delegate);
 #define UPGRADE "Upgrade"
 #define HEALTH_POTION_ID 2
 #define MANA_POTION_ID 3
+#define NEBULITE 4
 #define OLIVELEAF_ID 5
 #define MAX_ITEM_LEVEL 10
 
@@ -53,7 +54,13 @@ public:
 	bool UseItem(FItemStruct ItemToUse, int Quantity = 1);
 
 	UFUNCTION(BlueprintCallable)
-	bool UpgradeItem(FItemStruct ItemToUpgrade, FItemStruct Upgrade = FItemStruct(), int MaterialCount = 1);
+	bool UpgradeWeapon(FItemStruct ItemToUpgrade);
+
+	UFUNCTION(BlueprintCallable)
+	bool UpgradePotionRate(FItemStruct ItemToUpgrade);
+
+	UFUNCTION(BlueprintCallable)
+	bool UpgradePotionCount(FItemStruct ItemToUpgrade);
 
 	UFUNCTION(BlueprintCallable)
 	bool DeleteItem(FItemStruct ItemToDelete, int Quantity = 0);

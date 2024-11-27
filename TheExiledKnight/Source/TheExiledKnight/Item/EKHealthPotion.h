@@ -22,5 +22,5 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void UseItem(UWorld* WorldContext, int level) override;
+	virtual void UseItem(UWorld* WorldContext, float level) override;
 };

@@ -28,6 +28,7 @@ public:
 
 	FWeaponStruct* GetWeaponInfo(uint8 ID);
 	FRune* GetRuneInfo(uint8 ID);
+	FFragmentOfGod* GetFOGInfo(uint8 ID);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
@@ -46,6 +47,9 @@ protected:
 	TMap<uint8, TSubclassOf<AEKItem_Base>> ItemInstanceDictionary;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
+	TMap<uint8, FLevelRate> LevelRateDictionary;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
 	TObjectPtr<UDataTable> WeaponDB;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
@@ -56,4 +60,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
 	TMap<uint8, FRune> RuneDictionary;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
+	TObjectPtr<UDataTable> FOGDB;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
+	TMap<uint8, FFragmentOfGod> FOGDictionary;
 };

@@ -204,7 +204,7 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 		UE_LOG(LogTemp, Warning, TEXT("Expand Inventory Slot"));
 
 		AddNewSlot(slots);
-		indexToAdd = GetIndexToAdd(ItemToAdd.ID, ItemToAdd.ItemCategory);
+		// indexToAdd = GetIndexToAdd(ItemToAdd.ID, ItemToAdd.ItemCategory);
 	}
 
 	// if empty slot exists
@@ -260,14 +260,20 @@ bool UInventoryComponent::UseItem(FItemStruct ItemToUse, int Quantity)
 		return false;
 	}
 
-	ItemInstance->UseItem(GetWorld());
+	if (ItemToUse.ID == HEALTH_POTION_ID || ItemToUse.ID == MANA_POTION_ID)
+	{
+		FLevelRate levelRate = *GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetLevelRateInfo(ItemToUse.ItemLevel);
+		ItemInstance->UseItem(GetWorld(), levelRate.PotionHealRate);
+	}
+	else
+		ItemInstance->UseItem(GetWorld(), ItemToUse.ItemLevel);
 
 	DeleteItem(ItemToUse, Quantity);
 
 	return true;
 }
 
-bool UInventoryComponent::UpgradeItem(FItemStruct ItemToUpgrade, FItemStruct Upgrade, int MaterialCount)
+bool UInventoryComponent::UpgradeWeapon(FItemStruct ItemToUpgrade)
 {
 	if (ItemToUpgrade.ItemLevel > MAX_ITEM_LEVEL)
 		return false;
@@ -284,18 +290,14 @@ bool UInventoryComponent::UpgradeItem(FItemStruct ItemToUpgrade, FItemStruct Upg
 
 	FItemStruct upgrade;
 
-	if (Upgrade.ID == EMPTY_ID)
-	{
-		FName upgradeName;
-		upgradeName = FName(*FString::Printf(TEXT(UPGRADE"%d"), ItemToUpgrade.ItemLevel));
+	FName upgradeName;
+	upgradeName = FName(*FString::Printf(TEXT(UPGRADE"%d"), ItemToUpgrade.ItemLevel));
 
-		if (nullptr == GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfoDB()->FindRow<FItemStruct>(upgradeName, TEXT("GetItemRow")))
-			return false;
+	if (nullptr == GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfoDB()->FindRow<FItemStruct>(upgradeName, TEXT("GetItemRow")))
+		return false;
 
-		upgrade = *GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfoDB()->FindRow<FItemStruct>(upgradeName, TEXT("GetItemRow"));
-	}
-	else
-		upgrade = Upgrade;
+	upgrade = *GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfoDB()->FindRow<FItemStruct>(upgradeName, TEXT("GetItemRow"));
+
 
 	// Find Upgrades 
 	int upgradeIndex = GetItemIndex(upgrade.ID, upgrade.ItemCategory);
@@ -306,25 +308,87 @@ bool UInventoryComponent::UpgradeItem(FItemStruct ItemToUpgrade, FItemStruct Upg
 		return false;
 	}
 
-	if (Upgrades[upgradeIndex].Quantity < MaterialCount)
+	if (!DeleteItem(upgrade, 1))
+		return false;
+
+	slots[index].Item.ItemLevel++;
+
+	UE_LOG(LogTemp, Warning, TEXT("Upgrade Complete."));
+
+	return true;
+}
+
+bool UInventoryComponent::UpgradePotionRate(FItemStruct ItemToUpgrade)
+{
+	if (ItemToUpgrade.ItemLevel > MAX_ITEM_LEVEL)
+		return false;
+
+	TArray<FInventorySlot>& slots = GetContents(ItemToUpgrade.ItemCategory);
+
+	int index = GetItemIndex(ItemToUpgrade.ID, ItemToUpgrade.ItemCategory);
+
+	if (index == INVALID_INDEX)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("You need more MaterialCount."));
+		UE_LOG(LogTemp, Warning, TEXT("You don't have that item."));
 		return false;
 	}
 
-	if (DeleteItem(upgrade, MaterialCount))
+	FItemStruct upgrade;
+
+	upgrade = *GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfo(NEBULITE);
+
+	// Find Upgrades 
+	int upgradeIndex = GetItemIndex(upgrade.ID, upgrade.ItemCategory);
+
+	if (upgradeIndex == INVALID_INDEX)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("You don't have upgrade."));
+		return false;
+	}
+
+	if (!DeleteItem(upgrade, 1))
 		return false;
 
-	if (upgrade.ID == OLIVELEAF_ID)
-	{
-		TotalPotionQuantity++;
-		MaxHealthPotionQuantity++;
+	slots[index].Item.ItemLevel++;
 
-		// Potion Count Reset
-		DividePotion(MaxHealthPotionQuantity, MaxManaPotionQuantity);
+	UE_LOG(LogTemp, Warning, TEXT("Upgrade Complete."));
+
+	return true;
+}
+
+bool UInventoryComponent::UpgradePotionCount(FItemStruct ItemToUpgrade)
+{
+	if (ItemToUpgrade.ItemLevel > MAX_ITEM_LEVEL)
+		return false;
+
+	TArray<FInventorySlot>& slots = GetContents(ItemToUpgrade.ItemCategory);
+
+	int index = GetItemIndex(ItemToUpgrade.ID, ItemToUpgrade.ItemCategory);
+
+	if (index == INVALID_INDEX)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("You don't have that item."));
+		return false;
 	}
-	else
-		slots[index].Item.ItemLevel++;
+
+	FItemStruct upgrade;
+
+	upgrade = *GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfo(OLIVELEAF_ID);
+
+	// Find Upgrades 
+	int upgradeIndex = GetItemIndex(upgrade.ID, upgrade.ItemCategory);
+
+	if (upgradeIndex == INVALID_INDEX)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("You don't have upgrade."));
+		return false;
+	}
+
+	if (!DeleteItem(upgrade, 1))
+		return false;
+
+	TotalPotionQuantity++;
+	DividePotion(MaxHealthPotionQuantity + 1, MaxManaPotionQuantity);
 
 	UE_LOG(LogTemp, Warning, TEXT("Upgrade Complete."));
 
@@ -344,21 +408,16 @@ bool UInventoryComponent::DeleteItem(FItemStruct ItemToDelete, int Quantity)
 
 	if (slots[index].Quantity <= 0 && slots[index].Item.bDestroyable)
 	{
-		slots[index] = FInventorySlot();
+		//slots[index] = FInventorySlot();
 
-		FInventorySlot tmp1, tmp2 = slots[index + 1];
-
-		for (index; index < slots.Num(); index++)
+		for (int i = index; i < slots.Num() - 1; i++)
 		{
-			if (slots[index].Item.ID == 1)
-				break;
-
-			tmp1 = slots[index];
-			slots[index] = tmp2;
-			tmp2 = tmp1;
+			slots[i] = slots[i + 1];
 		}
 
-		UE_LOG(LogTemp, Warning, TEXT("destroy item and add new empty slot"));
+		slots[slots.Num() - 1] = FInventorySlot();
+
+		UE_LOG(LogTemp, Warning, TEXT("destroy item"));
 	}
 
 	UpdateSlots(slots);
@@ -375,7 +434,7 @@ bool UInventoryComponent::UpdateSlots(TArray<FInventorySlot>& Slots)
 
 	for (int i = 0; i < Slots.Num(); i++)
 	{
-		if (Slots[i].Item.ID == 1)
+		if (Slots[i].Item.ID == EMPTY_ID)
 			emptySlotCnt++;
 	}
 

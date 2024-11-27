@@ -34,3 +34,7 @@ FLevelRate::FLevelRate()
 FRune::FRune()
 {
 }
+
+FFragmentOfGod::FFragmentOfGod()
+{
+}

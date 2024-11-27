@@ -22,7 +22,7 @@ void AEKItem_Base::BeginPlay()
 
 }
 
-void AEKItem_Base::UseItem(UWorld* WorldContext, int level)
+void AEKItem_Base::UseItem(UWorld* WorldContext, float level)
 {
 
 }
