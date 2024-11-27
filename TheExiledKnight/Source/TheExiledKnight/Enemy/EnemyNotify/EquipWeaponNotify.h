@@ -13,5 +13,12 @@ UCLASS()
 class THEEXILEDKNIGHT_API UEquipWeaponNotify : public UAnimNotify
 {
 	GENERATED_BODY()
+
+	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Socket", meta = (AllowPrivateAccess = "true"))
+	FName SocketName;
+
+
 	
 };
