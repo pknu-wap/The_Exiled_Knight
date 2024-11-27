@@ -21,6 +21,12 @@
 #include "Player/Weapon/DamageType/EKPlayerDamageType.h"
 #include "Engine/DamageEvents.h"
 #include "Enemy/DamageSystem/EKDamageType.h"
+#include "EKGameplayTags.h"
+#include "UI/UISubsystem.h"
+#include "UI/YouDied/Widget_YouDied.h"
+#include "Subsystems/SanctuarySubsystem.h"
+#include "Map/Sanctuary/EKSanctuary.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AEKPlayer::AEKPlayer()
@@ -255,6 +261,21 @@ bool AEKPlayer::CheckPlayerDie()
 	if (PlayerStatusComponent->GetHp() <= 0)
 	{
 		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_Die);
+
+		UUISubsystem* UISystem = GetGameInstance()->GetSubsystem<UUISubsystem>();
+		if (!UISystem) return true;
+		UISystem->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_Game_Died, ESlateVisibility::SelfHitTestInvisible);
+
+		UUserWidget* widget = UISystem->GetWidget(FEKGameplayTags::Get().UI_Widget_Game_Died);
+		if (!widget) return true;
+		UWidget_YouDied* userWidget = Cast<UWidget_YouDied>(widget);
+		if (!userWidget) return true;
+
+		userWidget->PlayerDied();
+
+		GetWorld()->GetTimerManager().SetTimer(Handle_PlayerDied, this,	&AEKPlayer::PlayerRestart,
+			4, false);
+
 		OnPlayerDieDelegate.Broadcast();
 		return true;
 	}
@@ -363,6 +384,31 @@ void AEKPlayer::StrongHitTimer()
 {
 	EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_StrongHit);
 	GetWorldTimerManager().SetTimer(StrongHitTagHandle, this, &ThisClass::RemoveStrongHitTag, NextStrongHitTime, false);
+}
+
+void AEKPlayer::PlayerRestart()
+{
+	USanctuarySubsystem* SanctuarySystem = GetGameInstance()->GetSubsystem<USanctuarySubsystem>();
+	if (!SanctuarySystem) return;
+	AEKSanctuary* sanctuary = SanctuarySystem->GetSanctuary(this, SanctuarySystem->GetLastVisitIdx());
+	if (!sanctuary) return;
+	FVector STLocation = sanctuary->GetActorLocation();
+
+	FHitResult hitResult;
+	bool hit = GetWorld()->LineTraceSingleByChannel(hitResult,
+		STLocation + FVector(0, 0, 150), STLocation - FVector(0, 0, 150), ECollisionChannel::ECC_Visibility);
+	if (hit)
+	{
+		SetActorLocation(hitResult.Location);
+	}
+	else
+	{
+		SetActorLocation(STLocation + FVector(0, 0, 150));
+	}
+
+	// Restore State
+	if (PlayerStatusComponent)
+		PlayerStatusComponent->RestoreState();
 }
 
 #pragma endregion

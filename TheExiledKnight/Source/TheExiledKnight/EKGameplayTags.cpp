@@ -98,6 +98,11 @@ void FEKGameplayTags::InitializeNativeGameplayTags()
 		FString("BossBattle")
 	);
 
+	GameplayTags.UI_Widget_Game_Died = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("UI.Widget.Game.Died"),
+		FString("Died")
+	);
+
 	GameplayTags.UI_Widget_Menu_MainMenu = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("UI.Widget.Menu.MainMenu"),
 		FString("MainMenu")
@@ -107,7 +112,4 @@ void FEKGameplayTags::InitializeNativeGameplayTags()
 		FName("UI.Widget.Menu.Setting"),
 		FString("Setting")
 	);
-
-
-
 }

@@ -11,7 +11,10 @@
 #include"Player/EKPlayer/EKPlayer.h"
 #include"Enemy/EKEnemyGamePlayTags.h"
 #include"AIController.h"
-
+#include "EKGameplayTags.h"
+#include "UI/UISubsystem.h"
+#include "Blueprint/UserWidget.h"
+#include "UI/BossBattle/Widget_BossBattle.h"
 
 
 // Sets default values
@@ -57,6 +60,8 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 			if (EnemyStat->GetCurrentHealth() <= 0)
 			{
 				EnemyStat->SetIsDead(true);
+				Delegate_HpUpdated.Broadcast(EnemyStat->GetMaxHealth(), EnemyStat->GetCurrentHealth());
+				Delegate_Died.Broadcast();
 				PlayDieReactionAnimation();
 				EnemyStat->OnHPIsZero.Broadcast();
 				EnemyStat->OnHPIsZeroOneParam.Broadcast(50);
@@ -66,6 +71,8 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 			// �ǰ� �ִϸ��̼� ���
 			FVector DamageDirection = (DamageCauser->GetActorLocation() - GetActorLocation()).GetSafeNormal();
 			PlayHurtReactionAnimation(DamageDirection);
+
+			Delegate_HpUpdated.Broadcast(EnemyStat->GetMaxHealth(), EnemyStat->GetCurrentHealth());
 		}
 	}
 
@@ -245,6 +252,20 @@ void AEK_EnemyBase::ReturnToInitializeLocation()
 	{
 		AIController->MoveToLocation(InitialLocation, AcceptanceRadius);
 	}
+}
+
+void AEK_EnemyBase::StartBossBattle()
+{
+	UUISubsystem* UISystem = GetGameInstance()->GetSubsystem<UUISubsystem>();
+	if (!UISystem) return;
+
+	UISystem->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_Game_BossBattle, ESlateVisibility::SelfHitTestInvisible);
+
+	UUserWidget* widget = UISystem->GetWidget(FEKGameplayTags::Get().UI_Widget_Game_BossBattle);
+	if (!widget) return;
+	UWidget_BossBattle* userWidget = Cast<UWidget_BossBattle>(widget);
+	if (!userWidget) return;
+	userWidget->StartBossBattle(this);
 }
 
 FVector AEK_EnemyBase::GetInitializeLocation()

@@ -11,8 +11,8 @@
 #pragma region Max Value
 
 // Edit Player Basic Max Stat Here
-#define PlayerMaxHp 1000
-#define PlayerMaxMp 1000
+#define PlayerMaxHp 200
+#define PlayerMaxMp 200
 #define PlayerMaxStamina 1000
 
 // Edit Player Max Level Here
@@ -44,6 +44,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
+	void RestoreState();
+
 	UFUNCTION(BlueprintCallable)
 	void Recalculate_Status();
 
