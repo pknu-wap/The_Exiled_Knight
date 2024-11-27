@@ -158,12 +158,12 @@ void AEKPlayerController::LookTriggered(const FInputActionValue& InputValue)
 {
 	LookAxisVector = InputValue.Get<FVector2D>();
 
-	EKPlayer->EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_Look);
-
 	if (!EKPlayer)
 	{
 		return;
 	}
+
+	EKPlayer->EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_Look);
 
 	EKPlayer->AddControllerYawInput(LookAxisVector.X);
 	EKPlayer->AddControllerPitchInput(LookAxisVector.Y);
