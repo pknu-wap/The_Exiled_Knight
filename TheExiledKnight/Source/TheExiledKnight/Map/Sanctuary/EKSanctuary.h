@@ -48,6 +48,9 @@ private:
 
 	FTimerHandle Handle_Transform;
 
+public:
+	int GetSanctuaryID() { return SanctuaryID; }
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent* SMComp;

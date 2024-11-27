@@ -106,6 +106,13 @@ void UEKPlayerStatusComponent::SetStamina(int32 SetData)
 	Delegate_StaminaUpdated.Broadcast(MaxStamina, Stamina);
 }
 
+void UEKPlayerStatusComponent::RestoreState()
+{
+	Hp = MaxHp;
+	Mp = MaxMp;
+	Stamina = MaxStamina;
+}
+
 void UEKPlayerStatusComponent::Recalculate_Status()
 {
 	Calculate_NormalStatus();

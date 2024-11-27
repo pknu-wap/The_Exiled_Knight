@@ -612,6 +612,8 @@ void AEKPlayerController::FindInteractableObjects()
 	FRotator Rotation;
 	TArray<FHitResult> HitResults;
 
+	if (!EKPlayer) return;
+
 	EKPlayer->GetActorEyesViewPoint(Location, Rotation);
 
 	FVector Start = Location;

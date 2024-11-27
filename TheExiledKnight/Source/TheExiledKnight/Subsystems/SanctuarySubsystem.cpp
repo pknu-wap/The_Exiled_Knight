@@ -2,7 +2,8 @@
 
 
 #include "Subsystems/SanctuarySubsystem.h"
-
+#include "Map/Sanctuary/EKSanctuary.h"
+#include "Kismet/GameplayStatics.h"
 
 void USanctuarySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -42,4 +43,27 @@ bool USanctuarySubsystem::IsActivated(int SanctuaryID)
 	}
 
 	return false;
+}
+
+AEKSanctuary* USanctuarySubsystem::GetSanctuary(const UObject* WorldContextObject, int InSanctuaryID)
+{
+	if (!WorldContextObject) return nullptr;
+	
+	TArray<AActor*> Actors;
+
+	UGameplayStatics::GetAllActorsOfClass(WorldContextObject, AEKSanctuary::StaticClass(), Actors);
+
+	for (int i = 0; i < Actors.Num(); i++)
+	{
+		AEKSanctuary* sanctuary = Cast<AEKSanctuary>(Actors[i]);
+		if (!sanctuary) continue;
+
+		int ID = sanctuary->GetSanctuaryID();
+		if (ID == InSanctuaryID)
+		{
+			return sanctuary;
+		}
+	}
+
+	return nullptr;
 }

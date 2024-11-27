@@ -99,6 +99,7 @@ public:
 protected:
 	FTimerHandle HitTagHandle;
 	FTimerHandle StrongHitTagHandle;
+	FTimerHandle Handle_PlayerDied;
 
 	const float NextHitTime = 0.5f;
 	const float NextStrongHitTime = 2.f;
@@ -108,6 +109,8 @@ protected:
 
 	void RemoveStrongHitTag();
 	void StrongHitTimer();
+
+	void PlayerRestart();
 
 #pragma endregion
 
