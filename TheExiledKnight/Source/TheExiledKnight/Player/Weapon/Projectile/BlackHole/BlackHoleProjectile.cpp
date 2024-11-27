@@ -102,8 +102,7 @@ void ABlackHoleProjectile::CanDamaged()
 		if (HitEnemy)
 		{
 			TSubclassOf<UEKPlayerNormalDamageType> PlayerDamageType = UEKPlayerNormalDamageType::StaticClass();
-			UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer->GetCurrentWeapon(), PlayerDamageType);
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, TEXT("Black Hole"));
+			UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer, PlayerDamageType);
 		}
 	}
 

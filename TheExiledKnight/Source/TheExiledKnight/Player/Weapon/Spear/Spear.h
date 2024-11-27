@@ -46,4 +46,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	UAnimMontage* SpearSkillAnim;
+
+	virtual UAnimMontage* GetWeaponAttackAnim() override { return SpearAttackAnim; }
 };

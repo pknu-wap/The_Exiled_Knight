@@ -65,13 +65,12 @@ void AFireStormProjectile::Tick(float DeltaTime)
 			TSubclassOf<UEKPlayerNormalDamageType> PlayerDamageType = UEKPlayerNormalDamageType::StaticClass();
 			if (HitEnemy)
 			{
-				UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer->GetCurrentWeapon(), PlayerDamageType);
+				UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer, PlayerDamageType);
 				if (HitParticle)
 				{
 					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, HitEnemy->GetActorLocation(), HitEnemy->GetActorRotation());
 					HitEnemy->Jump();
 				}
-				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Purple, TEXT("Fire Storm"));
 			}
 		}
 	}

@@ -50,12 +50,11 @@ void AFireBallProjectile::Tick(float DeltaTime)
 		if (HitEnemy)
 		{
 			TSubclassOf<UEKPlayerNormalDamageType> PlayerDamageType = UEKPlayerNormalDamageType::StaticClass();
-			UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer->GetCurrentWeapon(), PlayerDamageType);
+			UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer, PlayerDamageType);
 			if (HitParticle)
 			{
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, HitEnemy->GetActorLocation(), HitEnemy->GetActorRotation());
 			}
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Fire Ball"));
 			Destroy();
 			return;
 		}
