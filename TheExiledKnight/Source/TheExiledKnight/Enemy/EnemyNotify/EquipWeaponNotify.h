@@ -19,6 +19,4 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Socket", meta = (AllowPrivateAccess = "true"))
 	FName SocketName;
 
-
-	
 };
