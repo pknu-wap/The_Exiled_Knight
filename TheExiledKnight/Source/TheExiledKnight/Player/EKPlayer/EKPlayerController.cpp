@@ -798,7 +798,8 @@ void AEKPlayerController::SetBattleStateEnd()
 		{
 			return;
 		}
-		EKPlayer->GetCurrentWeapon()->PlayWeaponEquipAnimMontage(EKPlayer, this);
+		if(EKPlayer->GetCurrentWeapon())
+			EKPlayer->GetCurrentWeapon()->PlayWeaponEquipAnimMontage(EKPlayer, this);
 	}
 }
 

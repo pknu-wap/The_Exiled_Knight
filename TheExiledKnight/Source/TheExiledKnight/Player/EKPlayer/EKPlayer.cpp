@@ -3,6 +3,7 @@
 #include "EKPlayer.h"
 #include "EKPlayerStatusComponent.h"
 #include "EKPlayerController.h"
+#include "Components/InventoryComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -27,6 +28,8 @@
 #include "Subsystems/SanctuarySubsystem.h"
 #include "Map/Sanctuary/EKSanctuary.h"
 #include "Kismet/GameplayStatics.h"
+#include "EKGameplayTags.h"
+#include "Subsystems/SanctuarySubsystem.h"
 
 AEKPlayer::AEKPlayer()
 {
@@ -323,7 +326,15 @@ void AEKPlayer::EquipWeapon(const FWeaponStruct& InWeaponInfo)
 	{
 		FActorSpawnParameters SpawnParams;
 		CurrentWeapon = GetWorld()->SpawnActor<AEKPlayerWeapon>(InWeaponInfo.WeaponClass, SpawnParams);
+		if (!CurrentWeapon || !EKPlayerController) return;
+
+		EKPlayerController->bIsEquipWeapon = false;
 		AttachWeaponToSpineSocket(CurrentWeapon);
+
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_BattleState);
+		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear);
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
 
 		if (InWeaponInfo.WeaponClass.Get()->IsChildOf(AGreatSword::StaticClass()))
 			EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
@@ -331,6 +342,7 @@ void AEKPlayer::EquipWeapon(const FWeaponStruct& InWeaponInfo)
 			EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear);
 		else if (InWeaponInfo.WeaponClass.Get()->IsChildOf(AStaff::StaticClass()))
 			EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
+
 		// GetMesh()->SetAnimInstanceClass(InWeaponInfo.AnimInstance);
 	}
 }
@@ -411,11 +423,35 @@ void AEKPlayer::PlayerRestart()
 		SetActorLocation(STLocation + FVector(0, 0, 150));
 	}
 
+	// Widget Visibility Change
+	UUISubsystem* UISystem = GetGameInstance()->GetSubsystem<UUISubsystem>();
+	if (!UISystem) return;
+	UISystem->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_Game_BossBattle, ESlateVisibility::Collapsed);
+
+	// Restore Map & State
+	PlayerRestore();
+}
+
+void AEKPlayer::PlayerRestore()
+{
+	USanctuarySubsystem* SanctuarySystem = GetGameInstance()->GetSubsystem<USanctuarySubsystem>();
+	if (!SanctuarySystem) return;
+
 	EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_Die);
 
-	// Restore State
+	StopAnimMontage();
+
+	// Restore Player State & Restore Potion
 	if (PlayerStatusComponent)
 		PlayerStatusComponent->RestoreState();
+
+	if (EKPlayerController && EKPlayerController->GetInventoryComponent())
+	{
+		EKPlayerController->GetInventoryComponent()->RestorePotionQuantity();
+	}
+
+	// Restore Map
+	SanctuarySystem->RestoreAllMap(this);
 }
 
 #pragma endregion

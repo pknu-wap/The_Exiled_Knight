@@ -52,6 +52,9 @@ public:
 	void SetWidgetVisibility(FGameplayTag WidgetTag, ESlateVisibility Visibility);
 
 	UFUNCTION(BlueprintCallable)
+	ESlateVisibility GetWidgetVisibility(FGameplayTag WidgetTag);
+
+	UFUNCTION(BlueprintCallable)
 	UUserWidget* GetLayer(FGameplayTag LayerTag);
 
 	UFUNCTION(BlueprintCallable)

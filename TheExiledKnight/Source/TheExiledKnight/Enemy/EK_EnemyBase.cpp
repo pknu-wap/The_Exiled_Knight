@@ -47,11 +47,11 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 	//{
 	//	UAISense_Damage::ReportDamageEvent(
 	//		GetWorld(),
-	//		this,               // ?°ë?ì§€ë¥?ë°›ì? Actor
-	//		DamageCauser,       // ?°ë?ì§€ë¥?ì¤€ Actor
-	//		DamageAmount,       // ?°ë?ì§€ ??
-	//		GetActorLocation(), // ?°ë?ì§€ ?„ì¹˜
-	//		FVector::ZeroVector // ?°ë?ì§€ ë°©í–¥
+	//		this,               // ?ï¿½ï¿½?ì§€ï¿½?ë°›ï¿½? Actor
+	//		DamageCauser,       // ?ï¿½ï¿½?ì§€ï¿½?ì¤€ Actor
+	//		DamageAmount,       // ?ï¿½ï¿½?ì§€ ??
+	//		GetActorLocation(), // ?ï¿½ï¿½?ì§€ ?ï¿½ì¹˜
+	//		FVector::ZeroVector // ?ï¿½ï¿½?ì§€ ë°©í–¥
 	//	);
 
 	//}
