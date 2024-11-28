@@ -55,9 +55,6 @@ private:
 	float AttackDamagePercent;
 
 	UPROPERTY(EditAnywhere, Category = Attack, Meta = (AllowPrivteAccess = true))
-	bool bAttackHitCheck;
-
-	UPROPERTY(EditAnywhere, Category = Attack, Meta = (AllowPrivteAccess = true))
 	FName StartSocketName;
 
 	float  DefaultDamage = 50.0f;
