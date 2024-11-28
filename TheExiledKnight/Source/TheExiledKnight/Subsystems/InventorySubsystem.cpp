@@ -28,8 +28,6 @@ void UInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 		}
 	}
 
-	// Item Object Dictionary Initialize
-
 	ItemClassDB = LoadObject<UDataTable>(this, TEXT("/Script/Engine.DataTable'/Game/TheExiledKnight/Inventory/DataTables/ItemData/DT_ItemClass.DT_ItemClass'"));
 
 	if (ItemClassDB == nullptr)

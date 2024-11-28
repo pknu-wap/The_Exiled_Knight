@@ -180,12 +180,10 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 		if (slots[indexToAdd].Quantity + Quantity > slots[indexToAdd].Item.MaxStackSize)
 		{
 			slots[indexToAdd].Quantity = ItemToAdd.MaxStackSize;
-			UE_LOG(LogTemp, Warning, TEXT("This Slot is full"));
 		}
 		else
 		{
 			slots[indexToAdd].Quantity += Quantity;
-			UE_LOG(LogTemp, Warning, TEXT("Quantity++"));
 			AddItemDelegate.Broadcast();
 		}
 
@@ -206,7 +204,6 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 	// Sort
 	if (indexToAdd == INVALID_INDEX)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("GetIndexToAdd returns INVALID_INDEX"))
 		return false;
 	}
 

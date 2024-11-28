@@ -640,12 +640,8 @@ void AEKPlayerController::SitDownStarted(const FInputActionValue& InputValue)
 
 void AEKPlayerController::Interact(const FInputActionValue& InputValue)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Interact"));
-
 	if (Item != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Can Interact with Item"));
-
 		InventoryComponent->AddItem(Item->GetItemInfo(), Item->GetItemQuantity());
 	}
 
