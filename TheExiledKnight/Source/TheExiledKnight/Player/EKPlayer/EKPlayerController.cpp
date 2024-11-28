@@ -642,7 +642,10 @@ void AEKPlayerController::Interact(const FInputActionValue& InputValue)
 {
 	if (Item != nullptr)
 	{
-		InventoryComponent->AddItem(Item->GetItemInfo(), Item->GetItemQuantity());
+		FItemStruct itemToAdd = Item->GetItemInfo();
+		int quantity = Item->GetItemQuantity();
+		InventoryComponent->AddItem(itemToAdd, quantity);
+		Item = nullptr;
 	}
 
 	if (InteractableActor)
