@@ -23,7 +23,7 @@ void AEKManaPotion::UseItem(UWorld* WorldContext, float PotionRate)
 	if (player != nullptr)
 	{
 		int32 HealAmount;
-		HealAmount = player->GetPlayerStatusComponent()->GetMaxMp() * 0.2 * PotionRate;
+		HealAmount = player->GetPlayerStatusComponent()->GetMaxMp() * 0.4 * PotionRate;
 		player->GetPlayerStatusComponent()->SetMp(HealAmount);
 		UE_LOG(LogTemp, Warning, TEXT("MP HEAL : %d"), HealAmount);
 	}
