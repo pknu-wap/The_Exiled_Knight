@@ -56,9 +56,6 @@ private:
 	float  DamagePercentage = 1.0f;
 
 	UPROPERTY(EditAnywhere, Category = Attack, Meta = (AllowPrivteAccess = true))
-	bool bAttackHitCheck; //debug line  or not
-
-	UPROPERTY(EditAnywhere, Category = Attack, Meta = (AllowPrivteAccess = true))
 	FName StartSocketName;
 
 

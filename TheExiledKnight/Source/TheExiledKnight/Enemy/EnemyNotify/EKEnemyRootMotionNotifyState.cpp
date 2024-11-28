@@ -18,7 +18,7 @@ void UEKEnemyRootMotionNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp
 		UCharacterMovementComponent* MovementComponent = OwnerCharacter->GetCharacterMovement(); 
 		MovementComponent->bAllowPhysicsRotationDuringAnimRootMotion = true;
 		
-		UE_LOG(LogTemp, Warning, TEXT("Root motion rotation allowed for %s"), *OwnerCharacter->GetName());
+		
 	}
 }
 
@@ -32,6 +32,6 @@ void UEKEnemyRootMotionNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, 
 		UCharacterMovementComponent* MovementComponent = OwnerCharacter->GetCharacterMovement();
 		MovementComponent->bAllowPhysicsRotationDuringAnimRootMotion = false;
 		
-		UE_LOG(LogTemp, Warning, TEXT("Root motion rotation is not allowed for %s"), *OwnerCharacter->GetName());
+		
 	}
 }
