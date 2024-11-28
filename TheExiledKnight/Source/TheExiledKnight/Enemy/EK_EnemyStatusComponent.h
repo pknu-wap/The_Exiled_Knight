@@ -55,6 +55,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentSpeed();
 
+	bool GetIsBoss() { return bIsBoss; }
     bool  GetIsDead();
 	
 	UPROPERTY(BlueprintAssignable, Category = "Status")

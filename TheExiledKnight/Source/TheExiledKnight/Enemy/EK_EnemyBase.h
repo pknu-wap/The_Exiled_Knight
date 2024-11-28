@@ -29,6 +29,8 @@ public:
 	
 	void BeginPlay()override;
 
+	void InitStat();
+
 	void PlayHurtReactionAnimation(const FVector& DamageDirection);   
 	
 	void OnHurtAnimationEnded(UAnimMontage* Montage, bool bInterrupted);

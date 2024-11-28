@@ -53,6 +53,11 @@ private:
 
 	FTimerHandle Handle_Transform;
 
+	UPROPERTY()
+	AActor* SavedBoss = nullptr;
+
+	FTransform SavedBossTransform;
+
 public:
 	int GetSanctuaryID() { return SanctuaryID; }
 
