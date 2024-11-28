@@ -7,6 +7,7 @@
 #include"Player/EKPlayer//EKPlayerStatusComponent.h"
 #include"Enemy/EK_EnemyBase.h"
 #include"Enemy/EK_EnemyStatusComponent.h"
+#include"Components/CapsuleComponent.h"
 UEKEnergyBeamNotifyState::UEKEnergyBeamNotifyState()
 {
 	MoveDistancePerSec = 0;
@@ -89,6 +90,10 @@ void UEKEnergyBeamNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAni
 					AEKPlayer* DetectedPlayer = Cast<AEKPlayer>(HitActor);
 					if (DetectedPlayer && Hit.GetComponent()->GetCollisionObjectType() != ECC_WorldDynamic)
 					{
+						if (Hit.GetComponent() != DetectedPlayer->GetCapsuleComponent())
+						{
+							return;
+						}
 						UGameplayStatics::ApplyDamage(HitActor, Damage, Hit.GetActor()->GetInstigatorController(), HitActor, DamageTypeClass);
 					}
 				}

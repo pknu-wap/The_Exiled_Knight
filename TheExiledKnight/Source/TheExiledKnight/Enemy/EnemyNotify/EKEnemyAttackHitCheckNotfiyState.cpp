@@ -95,9 +95,12 @@ void UEKEnemyAttackHitCheckNotfiyState::NotifyTick(USkeletalMeshComponent* MeshC
 					AEKPlayer* DetectedPlayer = Cast<AEKPlayer>(HitActor);
 					if (DetectedPlayer&& Hit.GetComponent()->GetCollisionObjectType() != ECC_WorldDynamic)
 					{
+						if (Hit.GetComponent() != DetectedPlayer->GetCapsuleComponent())
+						{
+							return;
+						}
 						UGameplayStatics::ApplyDamage(HitActor, Damage, Hit.GetActor()->GetInstigatorController(), Owner, DamageTypeClass);   
 						HitActors.Add(HitActor);
-					
 					}
 				}
 			}
