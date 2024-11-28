@@ -7,6 +7,7 @@
 #include "Subsystems/InventorySubsystem.h"
 #include "Enemy/EK_EnemyStatusComponent.h"
 #include"Enemy/EK_EnemyBase.h"
+
 AEKPlayerWeapon::AEKPlayerWeapon()
 {
 	PrimaryActorTick.bCanEverTick = true;

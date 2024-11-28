@@ -54,6 +54,9 @@ public:
 	bool AddItem(FItemStruct ItemToAdd, int Quantity = 1);
 
 	UFUNCTION(BlueprintCallable)
+	void AddItemFromID(int ItemID);
+
+	UFUNCTION(BlueprintCallable)
 	bool UseItem(FItemStruct ItemToUse, int Quantity = 1);
 
 	UFUNCTION(BlueprintCallable)
