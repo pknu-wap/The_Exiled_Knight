@@ -42,7 +42,12 @@ public:
 	void LoadMap();
 
 private:
+	UPROPERTY()
 	TArray<AActor*> SavedActors;
+
+	UPROPERTY()
+	TArray<AActor*> PatrolRoutes;
+
 	TArray<FTransform> SavedTransforms;
 	TArray<UClass*> SavedClasses;
 

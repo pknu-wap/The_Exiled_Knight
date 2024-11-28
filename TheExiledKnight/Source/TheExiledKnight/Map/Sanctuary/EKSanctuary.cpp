@@ -8,6 +8,7 @@
 #include "Subsystems/SanctuarySubsystem.h"
 #include "UI/UISubsystem.h"
 #include "EKGameplayTags.h"
+#include "Blueprint/UserWidget.h"
 
 // Sets default values
 AEKSanctuary::AEKSanctuary()
@@ -113,6 +114,7 @@ void AEKSanctuary::SaveMap()
 		if (enemy->SantuaryID == SanctuaryID)
 		{
 			SavedActors.Add(actor);
+			PatrolRoutes.Add(enemy->GetPatrolRoute());
 			SavedTransforms.Add(enemy->GetTransform());
 			SavedClasses.Add(enemy->GetClass());
 		}
@@ -130,9 +132,15 @@ void AEKSanctuary::LoadMap()
 		}
 
 		const auto actor = SavedActors[i];
-		if (IsValid(actor))
+		
+		if (IsValid(actor) && !actor->GetFName().IsEqual(FName("None")))
 		{
 			AEK_EnemyBase* enemy = Cast<AEK_EnemyBase>(actor);
+			if (!enemy)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("AEKSanctuary : Failed to Get Saved Enemy."));
+				continue;
+			}
 
 			// Recover Start State
 
@@ -146,9 +154,17 @@ void AEKSanctuary::LoadMap()
 			if (!enemy)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("AEKSanctuary : Failed to Spawn Saved Enemy."));
+				continue;
 			}
 
+			SavedActors[i] = enemy;
+
+			// Set Patrol Route
+			if(PatrolRoutes.IsValidIndex(i) && IsValid(PatrolRoutes[i]))
+				enemy->SetPatrolRoute(PatrolRoutes[i]);
+
 			// Recover Start State
+			enemy->SpawnDefaultController();
 
 			// Set Transform
 			enemy->SetActorTransform(SavedTransforms[i], false, nullptr, ETeleportType::ResetPhysics);

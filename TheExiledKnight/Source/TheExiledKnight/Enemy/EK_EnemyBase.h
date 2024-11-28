@@ -127,4 +127,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FRotator InitialRotation;
+
+public:
+	UFUNCTION(BlueprintImplementableEvent)
+	AActor* GetPatrolRoute();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetPatrolRoute(AActor* InPatrolRoute);
+
 };

@@ -45,6 +45,21 @@ bool USanctuarySubsystem::IsActivated(int SanctuaryID)
 	return false;
 }
 
+void USanctuarySubsystem::RestoreAllMap(const UObject* WorldContextObject)
+{
+	if (!WorldContextObject) return;
+
+	TArray<AActor*> Actors;
+	UGameplayStatics::GetAllActorsOfClass(WorldContextObject, AEKSanctuary::StaticClass(), Actors);
+
+	for (int i = 0; i < Actors.Num(); i++)
+	{
+		AEKSanctuary* sanctuary = Cast<AEKSanctuary>(Actors[i]);
+		if (!sanctuary) continue;
+		sanctuary->LoadMap();
+	}
+}
+
 AEKSanctuary* USanctuarySubsystem::GetSanctuary(const UObject* WorldContextObject, int InSanctuaryID)
 {
 	if (!WorldContextObject) return nullptr;

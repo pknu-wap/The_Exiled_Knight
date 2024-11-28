@@ -41,6 +41,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsActivated(int SanctuaryID);
 
+	UFUNCTION(BlueprintCallable)
+	void RestoreAllMap(const UObject* WorldContextObject);
+
 	class AEKSanctuary* GetSanctuary(const UObject* WorldContextObject, int InSanctuaryID);
 
 	int GetLastVisitIdx() { return LastSanctuary_Idx; }

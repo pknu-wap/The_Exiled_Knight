@@ -3,6 +3,7 @@
 #include "EKPlayer.h"
 #include "EKPlayerStatusComponent.h"
 #include "EKPlayerController.h"
+#include "Components/InventoryComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -27,7 +28,8 @@
 #include "Subsystems/SanctuarySubsystem.h"
 #include "Map/Sanctuary/EKSanctuary.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "EKGameplayTags.h"
+#include "Subsystems/SanctuarySubsystem.h"
 
 AEKPlayer::AEKPlayer()
 {
@@ -422,9 +424,22 @@ void AEKPlayer::PlayerRestart()
 
 	StopAnimMontage();
 
-	// Restore State
+	// Restore Player State & Restore Potion
 	if (PlayerStatusComponent)
 		PlayerStatusComponent->RestoreState();
+
+	if (EKPlayerController && EKPlayerController->GetInventoryComponent())
+	{
+		EKPlayerController->GetInventoryComponent()->RestorePotionQuantity();
+	}
+
+	// Widget Visibility Change
+	UUISubsystem* UISystem = GetGameInstance()->GetSubsystem<UUISubsystem>();
+	if (!UISystem) return;
+	UISystem->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_Game_BossBattle, ESlateVisibility::Collapsed);
+
+	// Restore Map
+	SanctuarySystem->RestoreAllMap(this);
 }
 
 #pragma endregion
