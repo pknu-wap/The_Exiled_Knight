@@ -260,23 +260,26 @@ bool AEKPlayer::CheckPlayerDie()
 {
 	if (PlayerStatusComponent->GetHp() <= 0)
 	{
-		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_Die);
+		if (!EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Die))
+		{
+			EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_Die);
 
-		UUISubsystem* UISystem = GetGameInstance()->GetSubsystem<UUISubsystem>();
-		if (!UISystem) return true;
-		UISystem->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_Game_Died, ESlateVisibility::SelfHitTestInvisible);
+			UUISubsystem* UISystem = GetGameInstance()->GetSubsystem<UUISubsystem>();
+			if (!UISystem) return true;
+			UISystem->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_Game_Died, ESlateVisibility::SelfHitTestInvisible);
 
-		UUserWidget* widget = UISystem->GetWidget(FEKGameplayTags::Get().UI_Widget_Game_Died);
-		if (!widget) return true;
-		UWidget_YouDied* userWidget = Cast<UWidget_YouDied>(widget);
-		if (!userWidget) return true;
+			UUserWidget* widget = UISystem->GetWidget(FEKGameplayTags::Get().UI_Widget_Game_Died);
+			if (!widget) return true;
+			UWidget_YouDied* userWidget = Cast<UWidget_YouDied>(widget);
+			if (!userWidget) return true;
 
-		userWidget->PlayerDied();
+			userWidget->PlayerDied();
 
-		GetWorld()->GetTimerManager().SetTimer(Handle_PlayerDied, this,	&AEKPlayer::PlayerRestart,
-			4, false);
+			GetWorld()->GetTimerManager().SetTimer(Handle_PlayerDied, this, &AEKPlayer::PlayerRestart,
+				4, false);
 
-		OnPlayerDieDelegate.Broadcast();
+			OnPlayerDieDelegate.Broadcast();
+		}
 		return true;
 	}
 	return false;
@@ -405,6 +408,8 @@ void AEKPlayer::PlayerRestart()
 	{
 		SetActorLocation(STLocation + FVector(0, 0, 150));
 	}
+
+	EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_Die);
 
 	// Restore State
 	if (PlayerStatusComponent)

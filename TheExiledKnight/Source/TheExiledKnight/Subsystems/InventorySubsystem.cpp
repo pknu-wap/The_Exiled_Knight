@@ -56,6 +56,17 @@ void UInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 		return;
 	}
 
+	int i = 1;
+	for (FName RowName : LevelRateDB->GetRowNames())
+	{
+		FLevelRate* LevelRate = LevelRateDB->FindRow<FLevelRate>(RowName, TEXT("GetItemRow"));
+		if (LevelRate != nullptr)
+		{
+			LevelRateDictionary.Add(i, *LevelRate);
+			i++;
+		}
+	}
+
 	WeaponDB = LoadObject<UDataTable>(this, TEXT("/Script/Engine.DataTable'/Game/TheExiledKnight/Inventory/DataTables/WeaponData/DT_WeaponInfo.DT_WeaponInfo'"));
 
 	if (WeaponDB == nullptr)
@@ -93,6 +104,25 @@ void UInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 			RuneDictionary.Add(runeInfo->ID, *runeInfo);
 		}
 	}
+
+	FOGDB = LoadObject<UDataTable>(this, TEXT("/Script/Engine.DataTable'/Game/TheExiledKnight/Inventory/DataTables/FragmentOfGod/DT_FragmentOfGod_Info.DT_FragmentOfGod_Info'"));
+
+	if (FOGDB == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("FOGDB is null"));
+		return;
+	}
+
+	TArray<FName> FOGDBNames = FOGDB->GetRowNames();
+
+	for (FName RowName : FOGDBNames)
+	{
+		FFragmentOfGod* FOGInfo = FOGDB->FindRow<FFragmentOfGod>(RowName, TEXT("GetItemRow"));
+		if (FOGInfo != nullptr)
+		{
+			FOGDictionary.Add(FOGInfo->ID, *FOGInfo);
+		}
+	}
 }
 
 const FItemStruct* UInventorySubsystem::GetItemInfo(uint8 ID)
@@ -117,12 +147,7 @@ AEKItem_Base* UInventorySubsystem::CreateItemInstance(uint8 ID)
 
 FLevelRate* UInventorySubsystem::GetLevelRateInfo(int level)
 {
-	if (LevelRateDB == nullptr)
-		return nullptr;
-
-	FName fnameLevel = FName(*FString::FromInt(level));
-
-	FLevelRate* levelInfo = LevelRateDB->FindRow<FLevelRate>(fnameLevel, TEXT("GetItemRow"));
+	FLevelRate* levelInfo = LevelRateDictionary.Find(level);
 
 	if (levelInfo == nullptr)
 	{
@@ -157,4 +182,17 @@ FRune* UInventorySubsystem::GetRuneInfo(uint8 ID)
 	}
 
 	return runeInfo;
+}
+
+FFragmentOfGod* UInventorySubsystem::GetFOGInfo(uint8 ID)
+{
+	FFragmentOfGod* FOGInfo = FOGDictionary.Find(ID);
+
+	if (FOGInfo == nullptr)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("GetRuneInfo : runeInfo == nullptr"));
+		return nullptr;
+	}
+
+	return FOGInfo;
 }

@@ -58,7 +58,7 @@ void UWidget_UpgradeEquipment::LevelUp_Equipment(const FItemStruct& InItem)
 	if (!pc) return;
 	UInventoryComponent* inventory = pc->GetComponentByClass<UInventoryComponent>();
 	if (!inventory) return;
-	inventory->UpgradeItem(InItem);
+	inventory->UpgradeWeapon(InItem);
 
 	ContentList->UpdateUpgradeContents(CurrentType);
 

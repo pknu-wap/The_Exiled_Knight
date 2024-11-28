@@ -14,16 +14,17 @@ void AEKManaPotion::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AEKManaPotion::UseItem(UWorld* WorldContext, int level)
+void AEKManaPotion::UseItem(UWorld* WorldContext, float PotionRate)
 {
-	Super::UseItem(WorldContext, level);
+	Super::UseItem(WorldContext, PotionRate);
 
 	AEKPlayer* player = Cast<AEKPlayer>(UGameplayStatics::GetPlayerCharacter(WorldContext, 0));
 
 	if (player != nullptr)
 	{
 		int32 HealAmount;
-		HealAmount = 10 * WorldContext->GetGameInstance<UInventorySubsystem>()->GetLevelRateInfo(level)->PotionHealRate;
+		HealAmount = player->GetPlayerStatusComponent()->GetMaxMp() * 0.2 * PotionRate;
 		player->GetPlayerStatusComponent()->SetMp(HealAmount);
+		UE_LOG(LogTemp, Warning, TEXT("MP HEAL : %d"), HealAmount);
 	}
 }
