@@ -45,8 +45,6 @@ void AEKPlayerController::BeginPlay()
 	TryInteractLoop();
 
 	EKPlayerGameInstance = Cast<UEKPlayerGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-
-	ChangeDomainExpansion(2);
 }
 
 void AEKPlayerController::SetupInputComponent()

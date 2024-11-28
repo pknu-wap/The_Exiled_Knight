@@ -72,9 +72,6 @@ void UWeaponBaseAttack::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequen
 			TSubclassOf<UEKPlayerNormalDamageType> PlayerDamageType = UEKPlayerNormalDamageType::StaticClass();
 
 			UGameplayStatics::ApplyDamage(HitEnemy, EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue, EKPlayerController, EKPlayer->GetCurrentWeapon(), PlayerDamageType);
-
-			UE_LOG(LogTemp, Warning, TEXT("ApplyDamge : %.2f"), EKPlayer->GetPlayerStatusComponent()->GetPlayerFinalDamage() * DamageValue);
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("Attack"));
 		}
 	}
 }
