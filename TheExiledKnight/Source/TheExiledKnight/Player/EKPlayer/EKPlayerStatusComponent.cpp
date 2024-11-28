@@ -176,9 +176,16 @@ void UEKPlayerStatusComponent::Calculate_BasicStatus()
 	DEF = 7.5 * Endurance + 2.5 * Ability;
 
 	// Calculate Weapon Stat
-	FWeaponStruct* weaponInfo = invSystem->GetWeaponInfo(slotComp->WeaponSlots[slotComp->ActiveWeaponSlot].ID);
-	if (!weaponInfo) return;
-	ATK = weaponInfo->AttackPow + 0.2 * (weaponInfo->STRRate * Strength + weaponInfo->DEXRate * Ability + weaponInfo->INTRate * Intelligence);
+	if (slotComp->WeaponSlots.IsValidIndex(slotComp->ActiveWeaponSlot))
+	{
+		FWeaponStruct* weaponInfo = invSystem->GetWeaponInfo(slotComp->WeaponSlots[slotComp->ActiveWeaponSlot].ID);
+		if (!weaponInfo) return;
+		ATK = weaponInfo->AttackPow + 0.2 * (weaponInfo->STRRate * Strength + weaponInfo->DEXRate * Ability + weaponInfo->INTRate * Intelligence);
+	}
+	else
+	{
+		ATK = 0;
+	}
 }
 
 void UEKPlayerStatusComponent::Calculate_NormalStatus()
@@ -301,31 +308,38 @@ void UEKPlayerStatusComponent::SetPlayerFinalDamage()
 	USlotComponent* slotComp = pc->GetComponentByClass<USlotComponent>();
 	if (!slotComp) return;
 
-	FItemStruct currentWeapon = *invSystem->GetItemInfo(slotComp->WeaponSlots[slotComp->ActiveWeaponSlot].ID);
+	if (slotComp->WeaponSlots.IsValidIndex(slotComp->ActiveWeaponSlot))
+	{
+		FItemStruct currentWeapon = *invSystem->GetItemInfo(slotComp->WeaponSlots[slotComp->ActiveWeaponSlot].ID);
 
-	if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword))
-	{
-		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseStrength);
-		EKPlayerStatusData = *EKPlayerStatusTemp;
-		FinalDamage = DefaultDamage + EKPlayerStatusData.Strength + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
-		ATK *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->SwordRate;
-	}
-	else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear))
-	{
-		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseAbility);
-		EKPlayerStatusData = *EKPlayerStatusTemp;
-		FinalDamage = DefaultDamage + EKPlayerStatusData.Ability + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
-		ATK *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->SpearRate;
-	}
-	else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff))
-	{
-		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseIntelligence);
-		EKPlayerStatusData = *EKPlayerStatusTemp;
-		FinalDamage = DefaultDamage + EKPlayerStatusData.Intelligence + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
-		ATK *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->StaffRate;
-	}
+		if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword))
+		{
+			FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseStrength);
+			EKPlayerStatusData = *EKPlayerStatusTemp;
+			FinalDamage = DefaultDamage + EKPlayerStatusData.Strength + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
+			ATK *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->SwordRate;
+		}
+		else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear))
+		{
+			FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseAbility);
+			EKPlayerStatusData = *EKPlayerStatusTemp;
+			FinalDamage = DefaultDamage + EKPlayerStatusData.Ability + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
+			ATK *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->SpearRate;
+		}
+		else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff))
+		{
+			FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseIntelligence);
+			EKPlayerStatusData = *EKPlayerStatusTemp;
+			FinalDamage = DefaultDamage + EKPlayerStatusData.Intelligence + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
+			ATK *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->StaffRate;
+		}
 
-	FinalDamage += ATK;
+		FinalDamage += ATK;
+	}
+	else
+	{
+		ATK = 0;
+	}
 }
 
 #pragma endregion
