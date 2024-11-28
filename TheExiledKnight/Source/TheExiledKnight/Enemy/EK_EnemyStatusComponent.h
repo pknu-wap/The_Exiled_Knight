@@ -40,6 +40,7 @@ public:
 	void DamageCurrentHealth(float amount); 
 	void ResetCurrentPoise();
 
+	FName GetEnemyName() { return EnemyName; }
 	float GetMaxHealth();
     float GetMaxPoise();
 	float GetCurrentHealth();
@@ -78,6 +79,7 @@ public:
 	FOnStunAnimationEnd OnStunAnimationEnd;
 
 	virtual void BeginPlay()override;
+
 private:
 	UPROPERTY(EditAnywhere, Category = Data , Meta=(AllowPrivteAccess = "true"))
 	class UDataTable* EnemyDataTable;

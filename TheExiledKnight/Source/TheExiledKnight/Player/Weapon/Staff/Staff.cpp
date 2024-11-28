@@ -37,6 +37,8 @@ void AStaff::BeginPlay()
 	if (!slotComp) return;
 	slotComp->Delegate_QuickSlotUpdated.RemoveAll(this);
 	slotComp->Delegate_QuickSlotUpdated.AddDynamic(this, &AStaff::MagicUpdated);
+
+	MagicUpdated(EItemCategory::Magic, slotComp->ActiveMagicSlot);
 }
 
 void AStaff::Tick(float DeltaTime)

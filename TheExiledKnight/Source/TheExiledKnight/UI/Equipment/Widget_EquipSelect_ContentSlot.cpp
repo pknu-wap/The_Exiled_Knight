@@ -26,6 +26,7 @@ void UWidget_EquipSelect_ContentSlot::UpdateSlot(EItemCategory inCategory, const
 
 	Image_Item->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	Image_Item->SetBrushFromTexture(MagicData.Icon);
+	Text_Quantity->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UWidget_EquipSelect_ContentSlot::UpdateSlot(EItemCategory inCategory, const FInventorySlot& inData)

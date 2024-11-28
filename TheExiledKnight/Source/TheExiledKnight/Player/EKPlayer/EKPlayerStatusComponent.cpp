@@ -54,8 +54,8 @@ void UEKPlayerStatusComponent::BeginPlay()
 		EKPlayerStatusData = *EKPlayerStatusTemp;
 	}
 
-	SetStatusHandle();
 	Recalculate_Status();
+	SetStatusHandle();
 }
 
 void UEKPlayerStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -154,6 +154,10 @@ void UEKPlayerStatusComponent::Recalculate_Status()
 	SetPlayerDefaultDamage();
 	SetPlayerFinalDamage();
 	ATK = FinalDamage;
+
+	Delegate_HPUpdated.Broadcast(MaxHp, Hp);
+	Delegate_MPUpdated.Broadcast(MaxMp, Mp);
+	Delegate_StaminaUpdated.Broadcast(MaxStamina, Stamina);
 }
 
 void UEKPlayerStatusComponent::Calculate_BasicStatus()

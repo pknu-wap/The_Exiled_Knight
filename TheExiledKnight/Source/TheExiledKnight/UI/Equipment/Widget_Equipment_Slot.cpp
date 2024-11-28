@@ -10,6 +10,7 @@
 #include "EKGameplayTags.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SlotComponent.h"
+#include "Components/InventoryComponent.h"
 
 void UWidget_Equipment_Slot::NativeConstruct()
 {
@@ -50,6 +51,8 @@ FEventReply UWidget_Equipment_Slot::RedirectMouseDownToWidget(const FGeometry& I
 void UWidget_Equipment_Slot::SlotUpdated(EItemCategory inCategory, int inSlotIdx)
 {
 	if (Category != inCategory || inSlotIdx != SlotIdx) return;
+
+	Text_Quantity->SetVisibility(ESlateVisibility::Collapsed);
 
 	APlayerController* playerController = GetOwningPlayer();
 	if (!playerController) return;

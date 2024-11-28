@@ -19,6 +19,7 @@ void UWidget_BossBattle::StartBossBattle(AEK_EnemyBase* InBoss)
 	float maxHP = StatusComp->GetMaxHealth();
 
 	ProgressBar_HP->SetPercent(currentHP / maxHP);
+	SetBossName(StatusComp->GetEnemyName());
 }
 
 void UWidget_BossBattle::EndBossBattle()

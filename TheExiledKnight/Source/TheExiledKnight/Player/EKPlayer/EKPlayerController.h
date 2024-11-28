@@ -214,7 +214,7 @@ public:
 	const float BattleEndTime = 10.f;
 	bool bCanAttackNext = false;
 
-	const float InteractCheckTime = 0.5f;
+	const float InteractCheckTime = 0.05f;
 
 protected:
 	FTimerHandle StaminaRecoveryHandle;

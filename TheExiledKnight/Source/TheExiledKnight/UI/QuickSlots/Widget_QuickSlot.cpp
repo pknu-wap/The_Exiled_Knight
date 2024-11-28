@@ -7,6 +7,7 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include "Components/InventoryComponent.h"
 
 void UWidget_QuickSlot::NativeConstruct()
 {
@@ -16,9 +17,14 @@ void UWidget_QuickSlot::NativeConstruct()
 	if (!playerController) return;
 	USlotComponent* slotComp = playerController->GetComponentByClass<USlotComponent>();
 	if (!slotComp) return;
+	UInventoryComponent* inventoryComp = playerController->GetComponentByClass<UInventoryComponent>();
+	if (!inventoryComp) return;
 
 	slotComp->Delegate_QuickSlotUpdated.RemoveAll(this);
 	slotComp->Delegate_QuickSlotUpdated.AddDynamic(this, &UWidget_QuickSlot::SlotUpdated);
+
+	inventoryComp->Delegate_QuickSlotUpdated.RemoveAll(this);
+	inventoryComp->Delegate_QuickSlotUpdated.AddDynamic(this, &UWidget_QuickSlot::SlotUpdated);
 }
 
 void UWidget_QuickSlot::SlotUpdated(EItemCategory inCategory, int inSlotIdx)
@@ -27,6 +33,8 @@ void UWidget_QuickSlot::SlotUpdated(EItemCategory inCategory, int inSlotIdx)
 	{
 		return;
 	}
+
+	Text_Quantity->SetVisibility(ESlateVisibility::Collapsed);
 
 	APlayerController* playerController = GetOwningPlayer();
 	if (!playerController) return;
@@ -75,11 +83,19 @@ void UWidget_QuickSlot::SlotUpdated(EItemCategory inCategory, int inSlotIdx)
 		{
 			Image_Item->SetBrushFromTexture(slotComp->UseableSlots[inSlotIdx].Icon);
 			Image_Item->SetOpacity(1);
+
+			UInventoryComponent* inventoryComp = GetOwningPlayer()->GetComponentByClass<UInventoryComponent>();
+
+			int quantity = inventoryComp->GetQuantity(slotComp->UseableSlots[inSlotIdx].ID, EItemCategory::UseableItem);
+			Text_Quantity->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			Text_Quantity->SetText(FText::FromString(FString::FromInt(quantity)));
 		}
 		else
 		{
 			Image_Item->SetOpacity(0);
 		}
+
+
 		break;
 	}
 	case EItemCategory::Magic:
