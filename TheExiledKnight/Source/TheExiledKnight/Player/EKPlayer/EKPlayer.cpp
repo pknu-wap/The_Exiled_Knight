@@ -332,7 +332,7 @@ void AEKPlayer::EquipWeapon(const FWeaponStruct& InWeaponInfo)
 		AttachWeaponToSpineSocket(CurrentWeapon);
 
 		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_BattleState);
-		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
 		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear);
 		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
 
