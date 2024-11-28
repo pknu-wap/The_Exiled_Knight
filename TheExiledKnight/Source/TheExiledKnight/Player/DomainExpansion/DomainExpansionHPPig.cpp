@@ -8,6 +8,8 @@ ADomainExpansionHPPig::ADomainExpansionHPPig()
 
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ADomainExpansionHPPig::OnOverlapBegin);
 	SphereComponent->OnComponentEndOverlap.AddDynamic(this, &ADomainExpansionHPPig::OnOverlapEnd);
+
+	SetLifeSpan(DomainDuration + 1);
 }
 
 void ADomainExpansionHPPig::BeginPlay()
