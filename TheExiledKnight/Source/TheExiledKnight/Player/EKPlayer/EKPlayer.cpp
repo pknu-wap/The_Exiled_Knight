@@ -274,6 +274,7 @@ void AEKPlayer::EquipWeapon(const FWeaponStruct& InWeaponInfo)
 		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
 		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear);
 		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_UseItem);
 
 		if (InWeaponInfo.WeaponClass.Get()->IsChildOf(AGreatSword::StaticClass()))
 			EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);

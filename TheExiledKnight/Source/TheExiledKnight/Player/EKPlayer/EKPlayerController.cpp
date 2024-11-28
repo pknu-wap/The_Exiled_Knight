@@ -587,21 +587,6 @@ void AEKPlayerController::UseItem(const FInputActionValue& InputValue)
 		return;
 
 	InventoryComponent->UseItem(*GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfo(useableItemID));
-
-	//EKPlayer->PlayAnimMontage(UsePotionAnim);
-
-	//if (InventoryComponent != nullptr)
-	//	InventoryComponent->UseItem(*GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfo(3));
-
-	//if (InventoryComponent != nullptr)
-	//{
-	//	FItemStruct& ItemToUpgrade = InventoryComponent->GetContents(EItemCategory::Weapon)[0].Item;
-
-	//	if (ItemToUpgrade.ID != 1)
-	//		InventoryComponent->UpgradeItem(ItemToUpgrade);
-	//}
-
-	EKPlayer->EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_UseItem);
 }
 
 void AEKPlayerController::SitDownStarted(const FInputActionValue& InputValue)
@@ -781,6 +766,7 @@ void AEKPlayerController::SetAttackEndTimer(float Time)
 void AEKPlayerController::SetBattleStateEnd()
 {
 	EKPlayer->EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_BattleState);
+	EKPlayer->EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_UseItem);
 	if (bIsEquipWeapon)
 	{
 		if (EKPlayer->CheckPlayerDie())
