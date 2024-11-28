@@ -85,67 +85,6 @@ void AEKPlayer::BeginPlay()
 
 	TargetFindLockOnBox->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnTargetEnterRange);
 	TargetFindLockOnBox->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnTargetExitRange);
-
-#pragma region Weapon Test
-
-	// Test Change Weapon
-
-	// Test GreatSword Version
-
-	/*if (GreatSwordTypeAClass)
-	{
-		FActorSpawnParameters SpawnParams;
-		CurrentWeapon = GetWorld()->SpawnActor<AEKPlayerWeapon>(GreatSwordTypeAClass, SpawnParams);
-		AttachWeaponToSpineSocket(CurrentWeapon);
-		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
-	}*/
-
-	/*if (GreatSwordTypeBClass)
-	{
-		FActorSpawnParameters SpawnParams;
-		CurrentWeapon = GetWorld()->SpawnActor<AEKPlayerWeapon>(GreatSwordTypeBClass, SpawnParams);
-		AttachWeaponToSpineSocket(CurrentWeapon);
-		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
-	}*/
-
-	// Test Spear Version
-
-	/*if (SpearTypeAClass)
-	{
-		FActorSpawnParameters SpawnParams;
-		CurrentWeapon = GetWorld()->SpawnActor<AEKPlayerWeapon>(SpearTypeAClass, SpawnParams);
-		AttachWeaponToSpineSocket(CurrentWeapon);
-		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear);
-	}*/
-
-	/*if (SpearTypeBClass)
-	{
-		FActorSpawnParameters SpawnParams;
-		CurrentWeapon = GetWorld()->SpawnActor<AEKPlayerWeapon>(SpearTypeBClass, SpawnParams);
-		AttachWeaponToSpineSocket(CurrentWeapon);
-		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear);
-	}*/
-
-	// Test Staff Version Don't Select This
-
-	/*if (StaffTypeAClass)
-	{
-		FActorSpawnParameters SpawnParams;
-		CurrentWeapon = GetWorld()->SpawnActor<AEKPlayerWeapon>(StaffTypeAClass, SpawnParams);
-		AttachWeaponToSpineSocket(CurrentWeapon);
-		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
-	}*/
-
-	/*if (StaffTypeBClass)
-	{
-		FActorSpawnParameters SpawnParams;
-		CurrentWeapon = GetWorld()->SpawnActor<AEKPlayerWeapon>(StaffTypeBClass, SpawnParams);
-		AttachWeaponToSpineSocket(CurrentWeapon);
-		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
-	}*/
-
-#pragma endregion
-
 }
 
 void AEKPlayer::Tick(float DeltaTime)
@@ -332,7 +271,7 @@ void AEKPlayer::EquipWeapon(const FWeaponStruct& InWeaponInfo)
 		AttachWeaponToSpineSocket(CurrentWeapon);
 
 		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_BattleState);
-		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
 		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear);
 		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
 

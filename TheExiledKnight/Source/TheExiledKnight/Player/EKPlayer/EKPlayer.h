@@ -84,29 +84,6 @@ public:
 
 #pragma endregion
 
-#pragma region Weapon Class
-
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<class AGreatSword> GreatSwordTypeAClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<class AGreatSword> GreatSwordTypeBClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<class ASpear> SpearTypeAClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<class ASpear> SpearTypeBClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<class AStaff> StaffTypeAClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<class AStaff> StaffTypeBClass;
-
-#pragma endregion
-
 protected:
 	FOnPlayerDieDelegate OnPlayerDieDelegate;
 
