@@ -152,6 +152,7 @@ void AEKSanctuary::LoadMap()
 			}
 
 			// Recover Start State
+			enemy->RestoreState();
 
 			// Set Transform
 			enemy->StopAnimMontage();

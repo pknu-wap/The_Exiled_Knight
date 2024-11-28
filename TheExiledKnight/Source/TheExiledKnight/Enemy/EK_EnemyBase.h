@@ -135,4 +135,5 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetPatrolRoute(AActor* InPatrolRoute);
 
+	void RestoreState();
 };

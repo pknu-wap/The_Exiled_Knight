@@ -47,8 +47,8 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 	//{
 	//	UAISense_Damage::ReportDamageEvent(
 	//		GetWorld(),
-	//		this,               // ?��?지�?받�? Actor
-	//		DamageCauser,       // ?��?지�?준 Actor
+	//		this,               // ?��?지�?받�? Actor
+	//		DamageCauser,       // ?��?지�?준 Actor
 	//		DamageAmount,       // ?��?지 ??
 	//		GetActorLocation(), // ?��?지 ?�치
 	//		FVector::ZeroVector // ?��?지 방향
@@ -302,4 +302,10 @@ void AEK_EnemyBase::RemoveTimeslowTimer()
 {
 	this->CustomTimeDilation = TimeDelayValue;
 	GetWorldTimerManager().SetTimer(RemoveTimeslowHandle, this, &ThisClass::RemoveTimeslow, TimeslowDuration, false);
+}
+
+void AEK_EnemyBase::RestoreState()
+{
+	if (!EnemyStat) return;
+	EnemyStat->SetHealth(EnemyStat->GetMaxHealth());
 }
