@@ -364,7 +364,8 @@ void AEKPlayerController::WeaponAttackStarted(const FInputActionValue& InputValu
 
 	if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Jump) ||
 		EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Attack) ||
-		EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Dodge))
+		EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Dodge) ||
+		EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_UseItem))
 	{
 		return;
 	}
@@ -411,7 +412,8 @@ void AEKPlayerController::SkillStarted(const FInputActionValue& InputValue)
 
 	if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Jump) ||
 		EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Attack) ||
-		EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Dodge))
+		EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Dodge) ||
+		EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_UseItem))
 	{
 		return;
 	}
@@ -450,7 +452,7 @@ void AEKPlayerController::SkillStarted(const FInputActionValue& InputValue)
 
 void AEKPlayerController::WeaponDefenseStarted(const FInputActionValue& InputValue)
 {
-	if (!EKPlayer)
+	if (!EKPlayer || EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_UseItem))
 	{
 		return;
 	}
@@ -585,21 +587,6 @@ void AEKPlayerController::UseItem(const FInputActionValue& InputValue)
 		return;
 
 	InventoryComponent->UseItem(*GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfo(useableItemID));
-
-	//EKPlayer->PlayAnimMontage(UsePotionAnim);
-
-	//if (InventoryComponent != nullptr)
-	//	InventoryComponent->UseItem(*GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfo(3));
-
-	//if (InventoryComponent != nullptr)
-	//{
-	//	FItemStruct& ItemToUpgrade = InventoryComponent->GetContents(EItemCategory::Weapon)[0].Item;
-
-	//	if (ItemToUpgrade.ID != 1)
-	//		InventoryComponent->UpgradeItem(ItemToUpgrade);
-	//}
-
-	EKPlayer->EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_UseItem);
 }
 
 void AEKPlayerController::SitDownStarted(const FInputActionValue& InputValue)

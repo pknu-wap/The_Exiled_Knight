@@ -43,18 +43,7 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 		SetAttackTarget(DamageCauser);
 	}
 	AEKEnemyAIController* EnemyController = Cast<AEKEnemyAIController>(this);
-	//if (EnemyController&&DamageCauser)
-	//{
-	//	UAISense_Damage::ReportDamageEvent(
-	//		GetWorld(),
-	//		this,               // ?��?지�?받�? Actor
-	//		DamageCauser,       // ?��?지�?준 Actor
-	//		DamageAmount,       // ?��?지 ??
-	//		GetActorLocation(), // ?��?지 ?�치
-	//		FVector::ZeroVector // ?��?지 방향
-	//	);
-
-	//}
+	
 	if (EnemyStat->GetCurrentHealth() > 0 && !EnemyStat->GetIsDead())
 	{
 		if (Damage > 0)
@@ -166,11 +155,11 @@ void AEK_EnemyBase::PlayHurtReactionAnimation(const FVector& DamageDirection)
 
 void AEK_EnemyBase::OnHurtAnimationEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-		
-		UE_LOG(LogTemp, Warning, TEXT("OnHurtAnimationEnded called"));
-		EnemyStat->OnHurtAnimationEnd.Broadcast();
-		BeforeHurtMontage = nullptr;
-		
+	
+	
+	EnemyStat->OnHurtAnimationEnd.Broadcast();
+	BeforeHurtMontage = nullptr;
+	
 
 	if (EnemyStat->GetCurrentPoise() <= 0 && !bIsStunned) //stun animation montage 
 	{
@@ -220,7 +209,7 @@ void AEK_EnemyBase::OnDeathAnimationEnded(UAnimMontage* Montage, bool bInterrupt
 }
 #pragma endregion
 #pragma region PlayStunMontage
-void AEK_EnemyBase::PlayStunReactionAnimation() //just one time so I use Enemy_State_Stunned 
+void AEK_EnemyBase::PlayStunReactionAnimation() 
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance(); 
 	if (AnimInstance && StunMontage)
