@@ -16,7 +16,6 @@
 #include "../Weapon/DamageType/EKPlayerDamageType.h"
 #include "Item/EKItem_Base.h"
 #include "Subsystems/InventorySubsystem.h"
-#include "DrawDebugHelpers.h"
 #include "Interfaces/UInteractableInterface.h"
 #include "Player/DomainExpansion/DomainExpansionBase.h"
 
@@ -681,17 +680,6 @@ void AEKPlayerController::FindInteractableObjects()
 		if (Item != nullptr)
 			break;
 	}
-
-	FColor Color = Item ? FColor::Green : FColor::Red;
-
-	DrawDebugLine(GetWorld(), Start, End, Color, false, 2.0f);
-
-	if (Item)
-	{
-		// Show Interact UI
-
-	}
-
 }
 
 void AEKPlayerController::OnPressed_GameMenu(const FInputActionValue& InputValue)
