@@ -2,12 +2,14 @@
 
 
 #include "UI/GameMenu/Widget_GameMenu_Button.h"
+#include "UI/Sanctuary/Widget_Sanctuary.h"
 #include "Components/Button.h"
 #include "UI/UISubsystem.h"
 #include "EKGameplayTags.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UI/Equipment/Widget_EquipSelectWindow.h"
+#include "Components/InventoryComponent.h"
 
 void UWidget_GameMenu_Button::NativeConstruct()
 {
@@ -68,10 +70,54 @@ void UWidget_GameMenu_Button::MenuButtonClicked()
 	}
 	case EGameMenuCategory::PT_Quantity:
 	{
+		APlayerController* pc = UGameplayStatics::GetPlayerController(this, 0);
+		if (!pc) return;
+		UInventoryComponent* inventoryComp = pc->GetComponentByClass<UInventoryComponent>();
+		if (!inventoryComp) return;
+
+		UUserWidget* widget = UIManager->GetWidget(FEKGameplayTags::Get().UI_Widget_GameMenu_Santuary);
+		if (!widget) return;
+		UWidget_Sanctuary* userWidget = Cast<UWidget_Sanctuary>(widget);
+		if (!userWidget) return;
+
+		// inventoryComp->UpgradePotionCount()
+		bool success = false;
+
+		if (success)
+		{
+			userWidget->CountUpgrade_Success();
+		}
+		else
+		{
+			userWidget->CountUpgrade_Failed();
+		}
+
 		break;
 	}
 	case EGameMenuCategory::PT_HealRate:
 	{
+		APlayerController* pc = UGameplayStatics::GetPlayerController(this, 0);
+		if (!pc) return;
+		UInventoryComponent* inventoryComp = pc->GetComponentByClass<UInventoryComponent>();
+		if (!inventoryComp) return;
+
+		UUserWidget* widget = UIManager->GetWidget(FEKGameplayTags::Get().UI_Widget_GameMenu_Santuary);
+		if (!widget) return;
+		UWidget_Sanctuary* userWidget = Cast<UWidget_Sanctuary>(widget);
+		if (!userWidget) return;
+
+		// inventoryComp->UpgradePotionCount()
+		bool success = false;
+
+		if (success)
+		{
+			userWidget->RateUpgrade_Success();
+		}
+		else
+		{
+			userWidget->RateUpgrade_Failed();
+		}
+
 		break;
 	}
 	case EGameMenuCategory::UpgradeStatus:

@@ -321,7 +321,15 @@ void AEKPlayer::EquipWeapon(const FWeaponStruct& InWeaponInfo)
 	{
 		FActorSpawnParameters SpawnParams;
 		CurrentWeapon = GetWorld()->SpawnActor<AEKPlayerWeapon>(InWeaponInfo.WeaponClass, SpawnParams);
+		if (!CurrentWeapon || !EKPlayerController) return;
+
+		EKPlayerController->bIsEquipWeapon = false;
 		AttachWeaponToSpineSocket(CurrentWeapon);
+
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_BattleState);
+		EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear);
+		EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
 
 		if (InWeaponInfo.WeaponClass.Get()->IsChildOf(AGreatSword::StaticClass()))
 			EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword);
@@ -329,6 +337,7 @@ void AEKPlayer::EquipWeapon(const FWeaponStruct& InWeaponInfo)
 			EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear);
 		else if (InWeaponInfo.WeaponClass.Get()->IsChildOf(AStaff::StaticClass()))
 			EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff);
+
 		// GetMesh()->SetAnimInstanceClass(InWeaponInfo.AnimInstance);
 	}
 }
@@ -410,6 +419,8 @@ void AEKPlayer::PlayerRestart()
 	}
 
 	EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_Die);
+
+	StopAnimMontage();
 
 	// Restore State
 	if (PlayerStatusComponent)
