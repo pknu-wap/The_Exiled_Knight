@@ -50,35 +50,21 @@ AEKEnemyAIController::AEKEnemyAIController()
 	 
 
 }
-void AEKEnemyAIController::OnPossess(APawn* InPawn)
+
+
+void AEKEnemyAIController::SettingRange(float SightRange, float HearingDis)
 {
-	Super::OnPossess(InPawn);
+	if (!SightConfig)return;
+	SightConfig->SightRadius = SightRange;
+	SightConfig->LoseSightRadius = 2 * SightRange;
+	AIPerception->ConfigureSense(*SightConfig);
 
-	
-	AEK_EnemyBase* EnemyPerception = Cast<AEK_EnemyBase>(InPawn);
-	if (EnemyPerception)
-	{
-		if (SightConfig)
-		{
-			float Range= EnemyPerception->GetStatusComponent()->GetSightRange();
-			SightConfig->SightRadius = Range;
-			SightConfig->LoseSightRadius = 2 * Range;
-			AIPerception->ConfigureSense(*SightConfig);
-		}
-		if (HearingConfig)
-		{
-			HearingConfig->HearingRange = EnemyPerception->GetStatusComponent()->GetHearingRange();
+	if (!HearingConfig)return;
+	HearingConfig->HearingRange = HearingDis;
+	AIPerception->ConfigureSense(*HearingConfig);
 
-			AIPerception->ConfigureSense(*HearingConfig);
-		}
-	}
 }
-#pragma region Perception
 
-
-
-
-#pragma endregion
 
 
 
