@@ -20,7 +20,7 @@ UEKPlayerStatusComponent::UEKPlayerStatusComponent()
 	Stamina = MaxStamina;
 	DefaultDamage = 10.f;
 	FinalDamage = DefaultDamage;
-	
+
 	// Edit Basic Status Value Here
 	Level = 1;
 	Vitality = 1; BaseVitality = 1;
@@ -162,9 +162,9 @@ void UEKPlayerStatusComponent::Recalculate_Status()
 
 void UEKPlayerStatusComponent::Calculate_BasicStatus()
 {
-	MaxHp = PlayerMaxHp + Vitality * 100;
-	MaxMp = PlayerMaxMp + Mental * 100;
-	MaxStamina = PlayerMaxStamina + Endurance * 100;
+	SetMaxHp();
+	SetMaxMp();
+	SetMaxStamina();
 
 	UInventorySubsystem* invSystem = GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>();
 	if (!invSystem) return;
@@ -211,7 +211,7 @@ void UEKPlayerStatusComponent::Calculate_NormalStatus()
 		if (itemID > 1)
 		{
 			FRune* runeInfo = invSystem->GetRuneInfo(itemID);
-			if (!runeInfo) 
+			if (!runeInfo)
 				continue;
 
 			Vitality += runeInfo->Vitality;
@@ -228,54 +228,72 @@ void UEKPlayerStatusComponent::Calculate_NormalStatus()
 
 int UEKPlayerStatusComponent::GetCalculatedHP(int InVitality)
 {
-	float rate = 1 + 0.02 * InVitality;
-	float CalculatedHP = PlayerMaxHp + 100 * InVitality;
+	FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(InVitality);
+	if (!EKPlayerStatusTemp) return 0;
+	int32 CalculatedHP = EKPlayerStatusTemp->Vitality;
 	return CalculatedHP;
 }
 
 int UEKPlayerStatusComponent::GetCalculatedMP(int InMental)
 {
-	float rate = 1 + 0.02 * InMental;
-	float CalculatedMP = PlayerMaxMp + 100 * InMental;
+	FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(InMental);
+	if (!EKPlayerStatusTemp) return 0;
+	int32 CalculatedMP = EKPlayerStatusTemp->Mental;
 	return CalculatedMP;
 }
 
 int UEKPlayerStatusComponent::GetCalculatedStamina(int InEndurance)
 {
-	float rate = 1 + 0.02 * InEndurance;
-	float CalculatedStamina = PlayerMaxStamina + 100 * InEndurance;
+	FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(InEndurance);
+	if (!EKPlayerStatusTemp) return 0;
+	int32 CalculatedStamina = EKPlayerStatusTemp->Endurance;
 	return CalculatedStamina;
 }
 
 int UEKPlayerStatusComponent::GetCalculatedATK(int InStrength, int InAbility, int InIntelligence)
 {
 	// Calculate 
-	float damage = 0;
+	int calculated = 0;
 	if (!EKPlayerGameInstance || !EKPlayer->GetCurrentWeapon())
 	{
-		return 0;
+		return calculated;
 	}
 
-	if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword))
+	UInventorySubsystem* invSystem = GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>();
+	if (!invSystem) return calculated;
+	APlayerController* pc = UGameplayStatics::GetPlayerController(this, 0);
+	if (!pc) return calculated;
+	USlotComponent* slotComp = pc->GetComponentByClass<USlotComponent>();
+	if (!slotComp) return calculated;
+
+	if (slotComp->WeaponSlots.IsValidIndex(slotComp->ActiveWeaponSlot))
 	{
-		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(InStrength);
-		EKPlayerStatusData = *EKPlayerStatusTemp;
-		damage = DefaultDamage + EKPlayerStatusData.Strength + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
-	}
-	else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear))
-	{
-		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(InAbility);
-		EKPlayerStatusData = *EKPlayerStatusTemp;
-		damage = DefaultDamage + EKPlayerStatusData.Ability + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
-	}
-	else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff))
-	{
-		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(InIntelligence);
-		EKPlayerStatusData = *EKPlayerStatusTemp;
-		damage = DefaultDamage + EKPlayerStatusData.Intelligence + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
+		FItemStruct currentWeapon = *invSystem->GetItemInfo(slotComp->WeaponSlots[slotComp->ActiveWeaponSlot].ID);
+
+		if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword))
+		{
+			FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(InStrength);
+			EKPlayerStatusData = *EKPlayerStatusTemp;
+			calculated = DefaultDamage + EKPlayerStatusData.Strength + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
+			calculated *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->SwordRate;
+		}
+		else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear))
+		{
+			FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(InAbility);
+			EKPlayerStatusData = *EKPlayerStatusTemp;
+			calculated = DefaultDamage + EKPlayerStatusData.Ability + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
+			calculated *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->SpearRate;
+		}
+		else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff))
+		{
+			FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(InIntelligence);
+			EKPlayerStatusData = *EKPlayerStatusTemp;
+			calculated = DefaultDamage + EKPlayerStatusData.Intelligence + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
+			calculated *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->StaffRate;
+		}
 	}
 
-	return damage;
+	return calculated;
 }
 
 int UEKPlayerStatusComponent::GetCalculatedDEF(int InEndurance, int InAbility)
@@ -296,8 +314,10 @@ void UEKPlayerStatusComponent::SetPlayerDefaultDamage()
 
 void UEKPlayerStatusComponent::SetPlayerFinalDamage()
 {
-	if (!EKPlayerGameInstance)
+	if (!EKPlayerGameInstance || !EKPlayer->GetCurrentWeapon())
 	{
+		FinalDamage = 0;
+		ATK = FinalDamage;
 		return;
 	}
 
@@ -317,24 +337,24 @@ void UEKPlayerStatusComponent::SetPlayerFinalDamage()
 			FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseStrength);
 			EKPlayerStatusData = *EKPlayerStatusTemp;
 			FinalDamage = DefaultDamage + EKPlayerStatusData.Strength + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
-			ATK *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->SwordRate;
+			FinalDamage *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->SwordRate;
 		}
 		else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear))
 		{
 			FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseAbility);
 			EKPlayerStatusData = *EKPlayerStatusTemp;
 			FinalDamage = DefaultDamage + EKPlayerStatusData.Ability + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
-			ATK *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->SpearRate;
+			FinalDamage *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->SpearRate;
 		}
 		else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff))
 		{
 			FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseIntelligence);
 			EKPlayerStatusData = *EKPlayerStatusTemp;
 			FinalDamage = DefaultDamage + EKPlayerStatusData.Intelligence + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
-			ATK *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->StaffRate;
+			FinalDamage *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->StaffRate;
 		}
 
-		FinalDamage += ATK;
+		ATK = FinalDamage;
 	}
 	else
 	{
