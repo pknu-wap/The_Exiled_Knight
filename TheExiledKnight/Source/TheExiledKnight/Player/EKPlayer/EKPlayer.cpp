@@ -224,8 +224,10 @@ NextFunc:
 
 	EKPlayerController->BattleStateTimer();
 
+	HitDirection(DamageCauser);
+
 	// About Defense Logic
-	if (EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Defense) && PlayerStatusComponent->GetStamina() >= DefenseStamina)
+	if (EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Defense) && PlayerStatusComponent->GetStamina() >= DefenseStamina && HitAngle >= -30 && HitAngle <= 30)
 	{
 		EKPlayerController->ConsumtionStaminaAndTimer(DefenseStamina);
 
@@ -238,16 +240,16 @@ NextFunc:
 	{
 		if (!EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Invincibility))
 		{
+			EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_Defense);
 			PlayerStatusComponent->SetHp(-Damage * 0.2);
-			HitDirection(DamageCauser);
 		}
 	}
 	else // About Normal Logic
 	{
 		if (!EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_Invincibility))
 		{
+			EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_Defense);
 			PlayerStatusComponent->SetHp(-Damage);
-			HitDirection(DamageCauser);
 		}
 	}
 
