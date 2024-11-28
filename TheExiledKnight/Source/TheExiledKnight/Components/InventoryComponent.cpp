@@ -262,7 +262,12 @@ bool UInventoryComponent::UseItem(FItemStruct ItemToUse, int Quantity)
 
 	if (ItemToUse.ID == HEALTH_POTION_ID || ItemToUse.ID == MANA_POTION_ID)
 	{
-		FLevelRate levelRate = *GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetLevelRateInfo(ItemToUse.ItemLevel);
+		int level = PotionLevel;
+
+		if (level > 10)
+			level = 10;
+
+		FLevelRate levelRate = *GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetLevelRateInfo(level);
 		ItemInstance->UseItem(GetWorld(), levelRate.PotionHealRate);
 	}
 	else
@@ -342,14 +347,14 @@ bool UInventoryComponent::UpgradePotionRate(FItemStruct ItemToUpgrade)
 
 	if (upgradeIndex == INVALID_INDEX)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("You don't have upgrade."));
+		UE_LOG(LogTemp, Warning, TEXT("You don't have NEBULITE."));
 		return false;
 	}
 
 	if (!DeleteItem(upgrade, 1))
 		return false;
 
-	slots[index].Item.ItemLevel++;
+	PotionLevel++;
 
 	UE_LOG(LogTemp, Warning, TEXT("Upgrade Complete."));
 

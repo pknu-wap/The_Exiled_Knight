@@ -23,7 +23,7 @@ void AEKHealthPotion::UseItem(UWorld* WorldContext, float PotionRate)
 	if (player != nullptr)
 	{
 		int32 HealAmount;
-		HealAmount = player->GetPlayerStatusComponent()->GetMaxHp() * 0.2 * PotionRate;
+		HealAmount = player->GetPlayerStatusComponent()->GetMaxHp() * 0.4 * PotionRate;
 		player->GetPlayerStatusComponent()->SetHp(HealAmount);
 		UE_LOG(LogTemp, Warning, TEXT("HP HEAL : %d"), HealAmount);
 	}
