@@ -28,7 +28,6 @@
 #include "Map/Sanctuary/EKSanctuary.h"
 #include "Kismet/GameplayStatics.h"
 
-
 AEKPlayer::AEKPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
