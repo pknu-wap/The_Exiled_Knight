@@ -20,6 +20,9 @@ public:
 	void EndBossBattle();
 
 public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetBossName(FName InName);
+
 	UFUNCTION()
 	void BossHPUpdated(int MaxHP, int CurrentHP);
 
