@@ -63,10 +63,7 @@ void UEKEnemyAttackHitCheckNotfiyState::NotifyTick(USkeletalMeshComponent* MeshC
 
 		FVector AttackRangeStart = SocketLocation;
 		FVector AttackRangeEnd = SocketLocation + SocketForward * AttackHalfHeight * 2;
-		if (bAttackHitCheck) {
-			DrawDebugCapsule(MeshComp->GetWorld(), (AttackRangeStart + AttackRangeEnd) * 0.5f, AttackHalfHeight, AttackRadius,
-				FRotationMatrix::MakeFromZ(AttackRangeEnd - AttackRangeStart).ToQuat(), FColor::Green, false, 0.5f);
-		}
+		
 		
 		FCollisionQueryParams Params(NAME_None, false, Owner);
 

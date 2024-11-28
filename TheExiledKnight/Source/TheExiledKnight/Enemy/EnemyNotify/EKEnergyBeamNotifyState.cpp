@@ -54,10 +54,7 @@ void UEKEnergyBeamNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAni
 
 		FVector AttackRangeStart = SocketLocation;
 		FVector AttackRangeEnd = SocketLocation + SocketForward * AttackHalfHeight * 2;
-		if (bAttackHitCheck) {
-			DrawDebugCapsule(MeshComp->GetWorld(), (AttackRangeStart + AttackRangeEnd) * 0.5f, AttackHalfHeight, AttackRadius,
-				FRotationMatrix::MakeFromZ(AttackRangeEnd - AttackRangeStart).ToQuat(), FColor::Red, false, 0.2f);
-		}
+		
 
 		FCollisionQueryParams Params(NAME_None, false, Owner);
 		TArray<FHitResult> HitResults;
