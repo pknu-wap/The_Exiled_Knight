@@ -47,8 +47,8 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 	//{
 	//	UAISense_Damage::ReportDamageEvent(
 	//		GetWorld(),
-	//		this,               // ?��?지�?받�? Actor
-	//		DamageCauser,       // ?��?지�?준 Actor
+	//		this,               // ?��?지�?받�? Actor
+	//		DamageCauser,       // ?��?지�?준 Actor
 	//		DamageAmount,       // ?��?지 ??
 	//		GetActorLocation(), // ?��?지 ?�치
 	//		FVector::ZeroVector // ?��?지 방향
@@ -77,7 +77,9 @@ float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 				PlayDieReactionAnimation();
 				EnemyStat->OnHPIsZero.Broadcast();
 				EnemyStat->OnHPIsZeroOneAstral.Broadcast(EnemyStat->GetAstral());
-				//EnemyStat->OnHPIsZeroOneDropItemSource.Broadcast();
+				int itemID = EnemyStat->GetDropItem();
+				if (itemID != EMPTY_ID)
+					EnemyStat->OnHPIsZeroOneDropItemID.Broadcast(EnemyStat->GetDropItem());
 				return 0.0f;
 			}
 

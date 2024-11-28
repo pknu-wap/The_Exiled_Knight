@@ -174,7 +174,7 @@ void UEKPlayerStatusComponent::Calculate_BasicStatus()
 	// Calculate Weapon Stat
 	FWeaponStruct* weaponInfo = invSystem->GetWeaponInfo(slotComp->WeaponSlots[slotComp->ActiveWeaponSlot].ID);
 	if (!weaponInfo) return;
-	ATK = weaponInfo->AttackPow + weaponInfo->STRRate * Strength + weaponInfo->DEXRate * Ability + weaponInfo->INTRate * Intelligence;
+	ATK = weaponInfo->AttackPow + 0.2 * (weaponInfo->STRRate * Strength + weaponInfo->DEXRate * Ability + weaponInfo->INTRate * Intelligence);
 }
 
 void UEKPlayerStatusComponent::Calculate_NormalStatus()
@@ -290,24 +290,38 @@ void UEKPlayerStatusComponent::SetPlayerFinalDamage()
 		return;
 	}
 
+	UInventorySubsystem* invSystem = GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>();
+	if (!invSystem) return;
+	APlayerController* pc = UGameplayStatics::GetPlayerController(this, 0);
+	if (!pc) return;
+	USlotComponent* slotComp = pc->GetComponentByClass<USlotComponent>();
+	if (!slotComp) return;
+
+	FItemStruct currentWeapon = *invSystem->GetItemInfo(slotComp->WeaponSlots[slotComp->ActiveWeaponSlot].ID);
+
 	if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_GreatSword))
 	{
 		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseStrength);
 		EKPlayerStatusData = *EKPlayerStatusTemp;
 		FinalDamage = DefaultDamage + EKPlayerStatusData.Strength + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
+		ATK *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->SwordRate;
 	}
 	else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Spear))
 	{
 		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseAbility);
 		EKPlayerStatusData = *EKPlayerStatusTemp;
 		FinalDamage = DefaultDamage + EKPlayerStatusData.Ability + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
+		ATK *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->SpearRate;
 	}
 	else if (EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_Equip_Staff))
 	{
 		FEKPlayerStatus* EKPlayerStatusTemp = EKPlayerGameInstance->GetEKPlayerStatusData(BaseIntelligence);
 		EKPlayerStatusData = *EKPlayerStatusTemp;
 		FinalDamage = DefaultDamage + EKPlayerStatusData.Intelligence + EKPlayer->GetCurrentWeapon()->WeaponAdditionalDamage;
+		ATK *= invSystem->GetLevelRateInfo(currentWeapon.ItemLevel)->StaffRate;
 	}
+
+	FinalDamage += ATK;
 }
 
 #pragma endregion

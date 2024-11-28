@@ -142,11 +142,8 @@ void UInventoryComponent::InitializeInventory()
 	AddNewSlot(GetContents(EItemCategory::Rune));
 	AddNewSlot(GetContents(EItemCategory::FragmentOfGod));
 	AddNewSlot(GetContents(EItemCategory::UseableItem));
-	// AddNewSlot(GetContents(EItemCategory::Magic));
 	AddNewSlot(GetContents(EItemCategory::Upgrades));
 	AddNewSlot(GetContents(EItemCategory::Hunting));
-
-	UE_LOG(LogTemp, Warning, TEXT("InitializeInventory"))
 }
 
 TArray<FInventorySlot>& UInventoryComponent::GetContents(EItemCategory Category)
@@ -183,12 +180,10 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 		if (slots[indexToAdd].Quantity + Quantity > slots[indexToAdd].Item.MaxStackSize)
 		{
 			slots[indexToAdd].Quantity = ItemToAdd.MaxStackSize;
-			UE_LOG(LogTemp, Warning, TEXT("This Slot is full"));
 		}
 		else
 		{
 			slots[indexToAdd].Quantity += Quantity;
-			UE_LOG(LogTemp, Warning, TEXT("Quantity++"));
 			AddItemDelegate.Broadcast();
 		}
 
@@ -200,11 +195,7 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 
 	if (indexToAdd == INVALID_INDEX) // if inventory is full
 	{
-		// extand inventory
-		UE_LOG(LogTemp, Warning, TEXT("Expand Inventory Slot"));
-
 		AddNewSlot(slots);
-		// indexToAdd = GetIndexToAdd(ItemToAdd.ID, ItemToAdd.ItemCategory);
 	}
 
 	// if empty slot exists
@@ -213,7 +204,6 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 	// Sort
 	if (indexToAdd == INVALID_INDEX)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("GetIndexToAdd returns INVALID_INDEX"))
 		return false;
 	}
 
@@ -228,11 +218,16 @@ bool UInventoryComponent::AddItem(FItemStruct ItemToAdd, int Quantity)
 		tmp2 = tmp1;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Add new Item to Inventory Slot"));
-
 	AddItemDelegate.Broadcast();
 
 	return true;
+}
+
+void UInventoryComponent::AddItemFromID(int ItemID)
+{
+	FItemStruct itemToAdd = *GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->GetItemInfo(ItemID);
+
+	AddItem(itemToAdd);
 }
 
 bool UInventoryComponent::UseItem(FItemStruct ItemToUse, int Quantity)
@@ -246,7 +241,6 @@ bool UInventoryComponent::UseItem(FItemStruct ItemToUse, int Quantity)
 
 	if (index == INVALID_INDEX)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("You don't have that item."));
 		return false;
 	}
 
@@ -256,7 +250,6 @@ bool UInventoryComponent::UseItem(FItemStruct ItemToUse, int Quantity)
 	AEKItem_Base* ItemInstance = GetWorld()->GetGameInstance()->GetSubsystem<UInventorySubsystem>()->CreateItemInstance(ItemToUse.ID);
 	if (ItemInstance == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("UseItem : ItemInstance is nullptr"));
 		return false;
 	}
 
@@ -289,7 +282,6 @@ bool UInventoryComponent::UpgradeWeapon(FItemStruct ItemToUpgrade)
 
 	if (index == INVALID_INDEX)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("You don't have that item."));
 		return false;
 	}
 
@@ -309,7 +301,6 @@ bool UInventoryComponent::UpgradeWeapon(FItemStruct ItemToUpgrade)
 
 	if (upgradeIndex == INVALID_INDEX)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("You don't have upgrade."));
 		return false;
 	}
 
@@ -317,8 +308,6 @@ bool UInventoryComponent::UpgradeWeapon(FItemStruct ItemToUpgrade)
 		return false;
 
 	slots[index].Item.ItemLevel++;
-
-	UE_LOG(LogTemp, Warning, TEXT("Upgrade Complete."));
 
 	return true;
 }
@@ -334,7 +323,6 @@ bool UInventoryComponent::UpgradePotionRate(FItemStruct ItemToUpgrade)
 
 	if (index == INVALID_INDEX)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("You don't have that item."));
 		return false;
 	}
 
@@ -347,7 +335,6 @@ bool UInventoryComponent::UpgradePotionRate(FItemStruct ItemToUpgrade)
 
 	if (upgradeIndex == INVALID_INDEX)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("You don't have NEBULITE."));
 		return false;
 	}
 
@@ -355,8 +342,6 @@ bool UInventoryComponent::UpgradePotionRate(FItemStruct ItemToUpgrade)
 		return false;
 
 	PotionLevel++;
-
-	UE_LOG(LogTemp, Warning, TEXT("Upgrade Complete."));
 
 	return true;
 }
@@ -372,7 +357,6 @@ bool UInventoryComponent::UpgradePotionCount(FItemStruct ItemToUpgrade)
 
 	if (index == INVALID_INDEX)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("You don't have that item."));
 		return false;
 	}
 
@@ -385,7 +369,6 @@ bool UInventoryComponent::UpgradePotionCount(FItemStruct ItemToUpgrade)
 
 	if (upgradeIndex == INVALID_INDEX)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("You don't have upgrade."));
 		return false;
 	}
 
@@ -394,8 +377,6 @@ bool UInventoryComponent::UpgradePotionCount(FItemStruct ItemToUpgrade)
 
 	TotalPotionQuantity++;
 	DividePotion(MaxHealthPotionQuantity + 1, MaxManaPotionQuantity);
-
-	UE_LOG(LogTemp, Warning, TEXT("Upgrade Complete."));
 
 	return true;
 }
@@ -413,8 +394,6 @@ bool UInventoryComponent::DeleteItem(FItemStruct ItemToDelete, int Quantity)
 
 	if (slots[index].Quantity <= 0 && slots[index].Item.bDestroyable)
 	{
-		//slots[index] = FInventorySlot();
-
 		for (int i = index; i < slots.Num() - 1; i++)
 		{
 			slots[i] = slots[i + 1];
@@ -422,7 +401,6 @@ bool UInventoryComponent::DeleteItem(FItemStruct ItemToDelete, int Quantity)
 
 		slots[slots.Num() - 1] = FInventorySlot();
 
-		UE_LOG(LogTemp, Warning, TEXT("destroy item"));
 	}
 
 	UpdateSlots(slots);
@@ -481,15 +459,13 @@ void UInventoryComponent::AddAstral(int Amount)
 
 	Astral += Amount;
 
-	UE_LOG(LogTemp, Warning, TEXT("AddAstral"));
-
 	return;
 }
 
 bool UInventoryComponent::RestorePotionQuantity()
 {
 	int healthPotionIndex = GetItemIndex(HEALTH_POTION_ID, EItemCategory::UseableItem);
-	int manaPotionIndex = GetItemIndex(HEALTH_POTION_ID, EItemCategory::UseableItem);
+	int manaPotionIndex = GetItemIndex(MANA_POTION_ID, EItemCategory::UseableItem);
 	
 	if (healthPotionIndex == INVALID_INDEX || manaPotionIndex == INVALID_INDEX)
 		return false;
