@@ -5,6 +5,8 @@
 #include "Components/InventoryComponent.h"
 #include "EKEnemyData.h"
 #include "Kismet/GameplayStatics.h"
+#include"Enemy/EK_EnemyBase.h"
+#include"Enemy/EnemyAI/EKEnemyAIController.h"
 #include "Player/EKPlayer/EKPlayerController.h"
 
 // Sets default values for this component's properties
@@ -45,6 +47,16 @@ void UEK_EnemyStatusComponent::InitSetting()
 			DropItem = FoundData->DropItem;
 			bIsBoss = FoundData->bIsBoss;
 		}
+	}
+	AEK_EnemyBase* EnemyBase = Cast<AEK_EnemyBase>(GetOwner());  
+	if (EnemyBase) 
+	{
+		AEKEnemyAIController * EnemyController = Cast<AEKEnemyAIController>(EnemyBase->GetController());
+		if (EnemyController)
+		{
+			EnemyController->SettingRange(SightRadius, HearingRange);
+		}
+
 	}
 
 	AEKPlayerController* playerController = Cast<AEKPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
