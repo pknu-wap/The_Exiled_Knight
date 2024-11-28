@@ -4,6 +4,7 @@
 #include "Item/EKManaPotion.h"
 #include "Player/EKPlayer/EKPlayerStatusComponent.h"
 #include "Subsystems/InventorySubsystem.h"
+#include "Player/EKPlayerGameplayTags.h"
 
 AEKManaPotion::AEKManaPotion()
 {
@@ -26,5 +27,6 @@ void AEKManaPotion::UseItem(UWorld* WorldContext, float PotionRate)
 		HealAmount = player->GetPlayerStatusComponent()->GetMaxMp() * 0.4 * PotionRate;
 		player->GetPlayerStatusComponent()->SetMp(HealAmount);
 		UE_LOG(LogTemp, Warning, TEXT("MP HEAL : %d"), HealAmount);
+		player->EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_UseItem);
 	}
 }
