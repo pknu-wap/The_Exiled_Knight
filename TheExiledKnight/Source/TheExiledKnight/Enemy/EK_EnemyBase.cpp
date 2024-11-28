@@ -27,6 +27,7 @@ void AEK_EnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 	InitialLocation = GetActorLocation();
+	InitialRotation = GetActorRotation();
 }
 
 #pragma region DamageSystem

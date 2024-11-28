@@ -47,19 +47,42 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Capsule")
 	TObjectPtr<class UCapsuleComponent> LeftLegCapsuleComponent;
 
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimationBlueprint")
+	class UAnimInstance* ABPEKPlayer;
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FGameplayTagContainer EKPlayerStateContainer;
+
 #pragma endregion
+
+#pragma region Damage
 
 public:
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 	bool CheckPlayerDie();
 
 	void HitDirection(AActor* Enemy);
+
 	float HitAngle = 0.f;
 
+#pragma endregion
+
+#pragma region Weapon
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	class AEKPlayerWeapon* CurrentWeapon;
+
+public:
 	void EquipWeapon(const FWeaponStruct& InWeaponInfo);
 	void UnEquipWeapon();
 	void AttachWeaponToSpineSocket(TObjectPtr<class AEKPlayerWeapon> Weapon);
 	void AttachWeaponToHandSocket(TObjectPtr<class AEKPlayerWeapon> Weapon);
+
+#pragma endregion
 
 #pragma region Weapon Class
 
@@ -83,18 +106,6 @@ protected:
 	TSubclassOf<class AStaff> StaffTypeBClass;
 
 #pragma endregion
-
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	class AEKPlayerWeapon* CurrentWeapon;
-
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimationBlueprint")
-	class UAnimInstance* ABPEKPlayer;
-
-public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FGameplayTagContainer EKPlayerStateContainer;
 
 protected:
 	FOnPlayerDieDelegate OnPlayerDieDelegate;
@@ -145,4 +156,6 @@ protected:
 	void OnTargetExitRange(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 #pragma endregion
 
+public:
+	void PlayerRevive();
 };

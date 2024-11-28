@@ -21,6 +21,10 @@ public:
 	// Sets default values for this character's properties
 	AEK_EnemyBase(); 
 
+
+	FVector GetInitializeLocation(); 
+
+
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInvestigator, AActor* DamageCauser)override;
 	
 	void BeginPlay()override;
@@ -53,10 +57,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StartBossBattle();
 	
-	FVector GetInitializeLocation();
-
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon") 
+	AActor* Weapon;
 protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "AnimMontage", meta = (AllowPrivateAccess = "true"));
@@ -95,6 +97,7 @@ public:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
 	bool bIsStunned = false;
 
+
 	virtual TObjectPtr <UEK_EnemyStatusComponent> GetStatusComponent(); 
 
 	UAnimMontage* BeforeHurtMontage = nullptr;
@@ -121,4 +124,7 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FVector InitialLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FRotator InitialRotation;
 };

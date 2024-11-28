@@ -124,5 +124,5 @@ private:
 	int Astral = 0;
 
 	UPROPERTY(EditAnywhere, Category = "Item", Meta = (AllowPrivateAccess = "true"))
-	FName DropItem = NAME_None;
+	int DropItem = 0;
 };

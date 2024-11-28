@@ -8,6 +8,8 @@ ADomainExpansionTimeSlow::ADomainExpansionTimeSlow()
 
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ADomainExpansionTimeSlow::OnOverlapBegin);
 	SphereComponent->OnComponentEndOverlap.AddDynamic(this, &ADomainExpansionTimeSlow::OnOverlapEnd);
+
+	SetLifeSpan(DomainDuration + 1);
 }
 
 void ADomainExpansionTimeSlow::BeginPlay()
@@ -62,7 +64,7 @@ void ADomainExpansionTimeSlow::OnOverlapBegin(UPrimitiveComponent* OverlappedCom
 	if (OverlappedComponent->IsA(AEK_EnemyBase::StaticClass()))
 	{
 		AEK_EnemyBase* HitEnemy = Cast<AEK_EnemyBase>(OverlappedComponent);
-		HitEnemy->CustomTimeDilation = 0.5f;
+		HitEnemy->RemoveTimeslowTimer();
 	}
 }
 
@@ -76,6 +78,6 @@ void ADomainExpansionTimeSlow::OnOverlapEnd(UPrimitiveComponent* OverlappedCompo
 	if (OverlappedComponent->IsA(AEK_EnemyBase::StaticClass()))
 	{
 		AEK_EnemyBase* HitEnemy = Cast<AEK_EnemyBase>(OverlappedComponent);
-		HitEnemy->CustomTimeDilation = 1.f;
+		HitEnemy->RemoveTimeslowTimer();
 	}
 }
