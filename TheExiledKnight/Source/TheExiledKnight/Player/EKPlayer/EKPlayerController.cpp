@@ -781,6 +781,7 @@ void AEKPlayerController::SetAttackEndTimer(float Time)
 void AEKPlayerController::SetBattleStateEnd()
 {
 	EKPlayer->EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_BattleState);
+	EKPlayer->EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_UseItem);
 	if (bIsEquipWeapon)
 	{
 		if (EKPlayer->CheckPlayerDie())
