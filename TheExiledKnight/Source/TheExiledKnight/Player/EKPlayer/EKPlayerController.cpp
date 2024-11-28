@@ -452,7 +452,7 @@ void AEKPlayerController::SkillStarted(const FInputActionValue& InputValue)
 
 void AEKPlayerController::WeaponDefenseStarted(const FInputActionValue& InputValue)
 {
-	if (!EKPlayer)
+	if (!EKPlayer || EKPlayer->EKPlayerStateContainer.HasTag(EKPlayerGameplayTags::EKPlayer_State_UseItem))
 	{
 		return;
 	}
