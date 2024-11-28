@@ -126,7 +126,9 @@ protected:
 	void RemoveStrongHitTag();
 	void StrongHitTimer();
 
+public:
 	void PlayerRestart();
+	void PlayerRestore();
 
 #pragma endregion
 

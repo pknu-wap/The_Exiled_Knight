@@ -89,6 +89,17 @@ void UUISubsystem::SetWidgetVisibility(FGameplayTag WidgetTag, ESlateVisibility 
 
 }
 
+ESlateVisibility UUISubsystem::GetWidgetVisibility(FGameplayTag WidgetTag)
+{
+	UUserWidget** widget = WidgetMap.Find(WidgetTag);
+	if (widget)
+	{
+		return (*widget)->GetVisibility();
+	}
+
+	return ESlateVisibility::Collapsed;
+}
+
 UUserWidget* UUISubsystem::GetLayer(FGameplayTag LayerTag)
 {
 	UUserWidget** layer = LayerMap.Find(LayerTag);

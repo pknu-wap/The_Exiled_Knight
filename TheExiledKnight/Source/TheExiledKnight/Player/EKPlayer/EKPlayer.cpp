@@ -420,6 +420,20 @@ void AEKPlayer::PlayerRestart()
 		SetActorLocation(STLocation + FVector(0, 0, 150));
 	}
 
+	// Widget Visibility Change
+	UUISubsystem* UISystem = GetGameInstance()->GetSubsystem<UUISubsystem>();
+	if (!UISystem) return;
+	UISystem->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_Game_BossBattle, ESlateVisibility::Collapsed);
+
+	// Restore Map & State
+	PlayerRestore();
+}
+
+void AEKPlayer::PlayerRestore()
+{
+	USanctuarySubsystem* SanctuarySystem = GetGameInstance()->GetSubsystem<USanctuarySubsystem>();
+	if (!SanctuarySystem) return;
+
 	EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_Die);
 
 	StopAnimMontage();
@@ -432,11 +446,6 @@ void AEKPlayer::PlayerRestart()
 	{
 		EKPlayerController->GetInventoryComponent()->RestorePotionQuantity();
 	}
-
-	// Widget Visibility Change
-	UUISubsystem* UISystem = GetGameInstance()->GetSubsystem<UUISubsystem>();
-	if (!UISystem) return;
-	UISystem->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_Game_BossBattle, ESlateVisibility::Collapsed);
 
 	// Restore Map
 	SanctuarySystem->RestoreAllMap(this);

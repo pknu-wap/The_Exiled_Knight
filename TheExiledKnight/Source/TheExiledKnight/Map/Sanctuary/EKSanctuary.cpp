@@ -9,6 +9,7 @@
 #include "UI/UISubsystem.h"
 #include "EKGameplayTags.h"
 #include "Blueprint/UserWidget.h"
+#include "Player/EKPlayer/EKPlayer.h"
 
 // Sets default values
 AEKSanctuary::AEKSanctuary()
@@ -50,6 +51,12 @@ void AEKSanctuary::Tick(float DeltaTime)
 
 void AEKSanctuary::Interact()
 {
+	// Can't Interact While BossBattle
+	UUISubsystem* UISystem = GetGameInstance()->GetSubsystem<UUISubsystem>();
+	if (!UISystem
+		|| UISystem->GetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_Game_BossBattle) == ESlateVisibility::SelfHitTestInvisible)
+		return;
+
 	USanctuarySubsystem* sanctuarySystem = GetGameInstance()->GetSubsystem<USanctuarySubsystem>();
 	if (!sanctuarySystem) return;
 
@@ -69,10 +76,6 @@ void AEKSanctuary::Interact()
 
 	sanctuarySystem->VisitSanctuary(SanctuaryID);
 
-	LoadMap();
-
-	UUISubsystem* UISystem = GetGameInstance()->GetSubsystem<UUISubsystem>();
-	if (!UISystem) return;
 	UISystem->SetLayerVisibility(FEKGameplayTags::Get().UI_Layer_GameMenu, ESlateVisibility::SelfHitTestInvisible);
 	UISystem->SetWidgetVisibility(FEKGameplayTags::Get().UI_Widget_GameMenu_Santuary, ESlateVisibility::SelfHitTestInvisible);
 
@@ -83,6 +86,12 @@ void AEKSanctuary::Interact()
 		pc->SetInputMode(UIInputMode);
 		pc->SetShowMouseCursor(true);
 	}
+
+	ACharacter* character = UGameplayStatics::GetPlayerCharacter(this, 0);
+	if (!character) return;
+	AEKPlayer* player = Cast<AEKPlayer>(character);
+	if (!player) return;
+	player->PlayerRestore();
 }
 
 void AEKSanctuary::ActivateSantuary()

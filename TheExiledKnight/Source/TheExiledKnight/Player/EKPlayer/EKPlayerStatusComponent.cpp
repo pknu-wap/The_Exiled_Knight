@@ -142,9 +142,9 @@ void UEKPlayerStatusComponent::SetStamina(int32 SetData)
 
 void UEKPlayerStatusComponent::RestoreState()
 {
-	Hp = MaxHp;
-	Mp = MaxMp;
-	Stamina = MaxStamina;
+	SetHp(MaxHp);
+	SetMp(MaxMp);
+	SetStamina(MaxStamina);
 }
 
 void UEKPlayerStatusComponent::Recalculate_Status()

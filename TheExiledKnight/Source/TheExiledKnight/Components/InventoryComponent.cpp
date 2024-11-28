@@ -34,7 +34,7 @@ void UInventoryComponent::BeginPlay()
 
 	UEKPlayerGameInstance* gameInst = Cast<UEKPlayerGameInstance>(GetWorld()->GetGameInstance());
 	if (!gameInst) return;
-	for (int i = 0; i < 10; i++)
+	for (int i = 1; i <= 10; i++)
 	{
 		FEKPlayerMagic* magicInfo = gameInst->GetEKPlayerMagicData(i);
 		if (!magicInfo) continue;
