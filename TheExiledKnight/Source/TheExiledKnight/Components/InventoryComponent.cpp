@@ -2,8 +2,10 @@
 
 
 #include "Components/InventoryComponent.h"
+#include "Components/SlotComponent.h"
 #include "Subsystems/InventorySubsystem.h"
 #include "Player/GameInstance/EKPlayerGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -34,9 +36,9 @@ void UInventoryComponent::BeginPlay()
 
 	UEKPlayerGameInstance* gameInst = Cast<UEKPlayerGameInstance>(GetWorld()->GetGameInstance());
 	if (!gameInst) return;
-	for (int i = 1; i <= 10; i++)
+	for (int i = 1; i <= 11; i++)
 	{
-		FEKPlayerMagic* magicInfo = gameInst->GetEKPlayerMagicData(i);
+		FEKPlayerMagic* magicInfo = gameInst->GetEKPlayerMagicData(i - 1);
 		if (!magicInfo) continue;
 		Magic.Add(*magicInfo);
 	}
@@ -92,6 +94,19 @@ const TArray<FInventorySlot>& UInventoryComponent::GetConstContents(EItemCategor
 	default:
 		return None;
 	}
+}
+
+int UInventoryComponent::GetQuantity(uint8 ID, EItemCategory Category)
+{
+	const TArray<FInventorySlot>& slots = GetConstContents(Category);
+
+	for (int index = 0; index < slots.Num(); index++)
+	{
+		if (slots[index].Item.ID == ID)
+			return slots[index].Quantity;
+	}
+
+	return INVALID_INDEX;
 }
 
 int UInventoryComponent::GetIndexToAdd(uint8 ID, EItemCategory Category)
@@ -275,6 +290,12 @@ bool UInventoryComponent::UseItem(FItemStruct ItemToUse, int Quantity)
 
 	DeleteItem(ItemToUse, Quantity);
 
+	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
+	if (!playerController) return true;
+	USlotComponent* slotComponent = playerController->GetComponentByClass<USlotComponent>();
+	if (!slotComponent) return true;
+	Delegate_QuickSlotUpdated.Broadcast(EItemCategory::UseableItem, slotComponent->ActiveUseableSlot);
+
 	return true;
 }
 
@@ -358,6 +379,12 @@ bool UInventoryComponent::UpgradePotionRate(FItemStruct ItemToUpgrade)
 
 	UE_LOG(LogTemp, Warning, TEXT("Upgrade Complete."));
 
+	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
+	if (!playerController) return true;
+	USlotComponent* slotComponent = playerController->GetComponentByClass<USlotComponent>();
+	if (!slotComponent) return true;
+	Delegate_QuickSlotUpdated.Broadcast(EItemCategory::UseableItem, slotComponent->ActiveUseableSlot);
+
 	return true;
 }
 
@@ -396,6 +423,12 @@ bool UInventoryComponent::UpgradePotionCount(FItemStruct ItemToUpgrade)
 	DividePotion(MaxHealthPotionQuantity + 1, MaxManaPotionQuantity);
 
 	UE_LOG(LogTemp, Warning, TEXT("Upgrade Complete."));
+
+	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
+	if (!playerController) return true;
+	USlotComponent* slotComponent = playerController->GetComponentByClass<USlotComponent>();
+	if (!slotComponent) return true;
+	Delegate_QuickSlotUpdated.Broadcast(EItemCategory::UseableItem, slotComponent->ActiveUseableSlot);
 
 	return true;
 }
@@ -489,13 +522,20 @@ void UInventoryComponent::AddAstral(int Amount)
 bool UInventoryComponent::RestorePotionQuantity()
 {
 	int healthPotionIndex = GetItemIndex(HEALTH_POTION_ID, EItemCategory::UseableItem);
-	int manaPotionIndex = GetItemIndex(HEALTH_POTION_ID, EItemCategory::UseableItem);
+	int manaPotionIndex = GetItemIndex(MANA_POTION_ID, EItemCategory::UseableItem);
 	
 	if (healthPotionIndex == INVALID_INDEX || manaPotionIndex == INVALID_INDEX)
 		return false;
 
 	UseableItem[healthPotionIndex].Quantity = MaxHealthPotionQuantity;
 	UseableItem[manaPotionIndex].Quantity = MaxManaPotionQuantity;
+
+	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
+	if (!playerController) return true;
+	USlotComponent* slotComponent = playerController->GetComponentByClass<USlotComponent>();
+	if (!slotComponent) return true;
+	Delegate_QuickSlotUpdated.Broadcast(EItemCategory::UseableItem, slotComponent->ActiveUseableSlot);
+
 
 	return true;
 }

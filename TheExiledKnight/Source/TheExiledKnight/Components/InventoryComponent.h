@@ -18,6 +18,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAdd_Item_Delegate);
 #define OLIVELEAF_ID 5
 #define MAX_ITEM_LEVEL 10
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FUpdateQuickSlot, EItemCategory, InCategory, int, InSlotIdx);
+
 UCLASS( ClassGroup=(Custom), Blueprintable, meta=(BlueprintSpawnableComponent) )
 class THEEXILEDKNIGHT_API UInventoryComponent : public UActorComponent
 {
@@ -43,6 +45,7 @@ public:
 	const TArray<FInventorySlot>& GetConstContents(EItemCategory Category);
 	const TArray<FEKPlayerMagic>& GetMagics() { return Magic; }
 
+	int GetQuantity(uint8 ID, EItemCategory Category);
 	int GetIndexToAdd(uint8 ID, EItemCategory Category);
 	int GetItemIndex(uint8 ID, EItemCategory Category);
 	int GetEmptySlotIndex(EItemCategory Category);
@@ -124,4 +127,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
 	int MaxManaPotionQuantity = 1;
+
+public:
+	FUpdateQuickSlot Delegate_QuickSlotUpdated;
 };

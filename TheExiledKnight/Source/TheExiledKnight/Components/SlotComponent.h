@@ -66,7 +66,7 @@ public:
 	// Magics
 	TArray<FEKPlayerMagic> MagicSlots;
 	int ActiveMagicSlot = 0;
-	int MaxMagicSlot = 6;
+	int MaxMagicSlot = 4;
 
 	// Special Skill
 	int ActiveFragmentSlot = 0;
