@@ -16,7 +16,6 @@
 #include "../Weapon/DamageType/EKPlayerDamageType.h"
 #include "Item/EKItem_Base.h"
 #include "Subsystems/InventorySubsystem.h"
-#include "DrawDebugHelpers.h"
 #include "Interfaces/UInteractableInterface.h"
 #include "Player/DomainExpansion/DomainExpansionBase.h"
 
@@ -641,13 +640,12 @@ void AEKPlayerController::SitDownStarted(const FInputActionValue& InputValue)
 
 void AEKPlayerController::Interact(const FInputActionValue& InputValue)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Interact"));
-
 	if (Item != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Can Interact with Item"));
-
-		InventoryComponent->AddItem(Item->GetItemInfo(), Item->GetItemQuantity());
+		FItemStruct itemToAdd = Item->GetItemInfo();
+		int quantity = Item->GetItemQuantity();
+		InventoryComponent->AddItem(itemToAdd, quantity);
+		Item = nullptr;
 	}
 
 	if (InteractableActor)
@@ -681,17 +679,6 @@ void AEKPlayerController::FindInteractableObjects()
 		if (Item != nullptr)
 			break;
 	}
-
-	FColor Color = Item ? FColor::Green : FColor::Red;
-
-	DrawDebugLine(GetWorld(), Start, End, Color, false, 2.0f);
-
-	if (Item)
-	{
-		// Show Interact UI
-
-	}
-
 }
 
 void AEKPlayerController::OnPressed_GameMenu(const FInputActionValue& InputValue)

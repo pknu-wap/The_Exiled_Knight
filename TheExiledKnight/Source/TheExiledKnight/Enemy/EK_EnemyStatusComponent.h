@@ -8,7 +8,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHPIsZero);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHPIsZeroOneAstral, int, AstralAmount);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHPIsZeroOneDropItem, FName, DropItemSource);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHPIsZeroOneDropItem, int, DropItemSource);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDamageTaken);    
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHitAnimationEnd);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPoiseIsZero); 
@@ -48,6 +48,7 @@ public:
 	float GetSightRange();
 	float GetHearingRange();
 	int GetAstral() { return Astral; }
+	int GetDropItem() { return DropItem; }
 	UFUNCTION(BlueprintCallable)
 	float GetMaxSpeed();
 	UFUNCTION(BlueprintCallable)
@@ -65,7 +66,7 @@ public:
 	FOnHPIsZeroOneAstral OnHPIsZeroOneAstral;
 
 	UPROPERTY(BlueprintAssignable, Category = "Status")
-	FOnHPIsZeroOneDropItem OnHPIsZeroOneDropItemSource;
+	FOnHPIsZeroOneDropItem OnHPIsZeroOneDropItemID;
 
 	UPROPERTY(BlueprintAssignable, Category = "Status")
 	FOnHitAnimationEnd OnHurtAnimationEnd; 
@@ -124,5 +125,5 @@ private:
 	int Astral = 0;
 
 	UPROPERTY(EditAnywhere, Category = "Item", Meta = (AllowPrivateAccess = "true"))
-	int DropItem = 0;
+	int DropItem = 1;
 };

@@ -52,7 +52,7 @@ void UEK_EnemyStatusComponent::InitSetting()
 	UInventoryComponent* inventoryComponent = playerController->GetInventoryComponent();
 	if (!inventoryComponent) return;
 	OnHPIsZeroOneAstral.AddDynamic(inventoryComponent, &UInventoryComponent::AddAstral);
-	//OnHPIsZeroOneDropItemSource.AddDynamic(inventoryComponent, &UInventoryComponent::AddItem);
+	OnHPIsZeroOneDropItemID.AddDynamic(inventoryComponent, &UInventoryComponent::AddItemFromID);
 }
 void UEK_EnemyStatusComponent::SetHealth(float amount)
 {

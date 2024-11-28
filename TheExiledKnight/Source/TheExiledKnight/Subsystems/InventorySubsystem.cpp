@@ -16,7 +16,6 @@ void UInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	if (ItemInfoDB == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ItemDB is null"));
 		return;
 	}
 
@@ -29,13 +28,10 @@ void UInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 		}
 	}
 
-	// Item Object Dictionary Initialize
-
 	ItemClassDB = LoadObject<UDataTable>(this, TEXT("/Script/Engine.DataTable'/Game/TheExiledKnight/Inventory/DataTables/ItemData/DT_ItemClass.DT_ItemClass'"));
 
 	if (ItemClassDB == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ItemClassDB is null"));
 		return;
 	}
 
@@ -52,7 +48,6 @@ void UInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	if (LevelRateDB == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("LevelRateDB is null"));
 		return;
 	}
 
@@ -71,7 +66,6 @@ void UInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	if (WeaponDB == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("WeaponDB is null"));
 		return;
 	}
 
@@ -90,7 +84,6 @@ void UInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	if (RuneDB == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("RuneDB is null"));
 		return;
 	}
 
@@ -109,7 +102,6 @@ void UInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	if (FOGDB == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("FOGDB is null"));
 		return;
 	}
 
@@ -131,7 +123,6 @@ const FItemStruct* UInventorySubsystem::GetItemInfo(uint8 ID)
 
 	if (ItemInfo == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("GetItemInfo : ItemInfo == nullptr"));
 		return nullptr;
 	}
 
@@ -151,7 +142,6 @@ FLevelRate* UInventorySubsystem::GetLevelRateInfo(int level)
 
 	if (levelInfo == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("GetItemInfo : ItemInfo == nullptr"));
 		return nullptr;
 	}
 
@@ -164,7 +154,6 @@ FWeaponStruct* UInventorySubsystem::GetWeaponInfo(uint8 ID)
 
 	if (weaponInfo == nullptr)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("GetWeaponInfo : weaponInfo == nullptr"));
 		return nullptr;
 	}
 
@@ -177,7 +166,6 @@ FRune* UInventorySubsystem::GetRuneInfo(uint8 ID)
 
 	if (runeInfo == nullptr)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("GetRuneInfo : runeInfo == nullptr"));
 		return nullptr;
 	}
 
@@ -190,7 +178,6 @@ FFragmentOfGod* UInventorySubsystem::GetFOGInfo(uint8 ID)
 
 	if (FOGInfo == nullptr)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("GetRuneInfo : runeInfo == nullptr"));
 		return nullptr;
 	}
 
