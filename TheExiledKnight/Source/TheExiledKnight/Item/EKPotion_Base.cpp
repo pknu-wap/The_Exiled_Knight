@@ -2,6 +2,7 @@
 
 
 #include "Item/EKPotion_Base.h"
+#include "Player/EKPlayerGameplayTags.h"
 
 AEKPotion_Base::AEKPotion_Base()
 {
@@ -27,6 +28,7 @@ void AEKPotion_Base::UseItem(UWorld* WorldContext, float PotionRate)
 
 	if (player != nullptr && ItemUseAnimMontage != nullptr)
 	{
+		player->EKPlayerStateContainer.AddTag(EKPlayerGameplayTags::EKPlayer_State_UseItem);
 		player->PlayAnimMontage(ItemUseAnimMontage);
 	}
 }
