@@ -30,9 +30,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI|Perception")
 	UAIPerceptionComponent* AIPerception;
 
-	virtual void OnPossess(APawn* InPawn) override; 
-
-	
+	void SettingRange(float SightRange, float HearingDis);
 
 private:
 	// AIPerception Sense Configurations
