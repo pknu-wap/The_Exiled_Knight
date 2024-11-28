@@ -57,6 +57,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StartBossBattle();
 	
+	UFUNCTION(BlueprintCallable)
+	void ClearTarget();
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon") 
 	AActor* Weapon;
 protected:
