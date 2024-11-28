@@ -5,6 +5,7 @@
 #include "NiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Enemy/EK_EnemyBase.h"
+#include "Enemy/EK_EnemyStatusComponent.h"
 #include "Subsystems/SanctuarySubsystem.h"
 #include "UI/UISubsystem.h"
 #include "EKGameplayTags.h"
@@ -119,19 +120,46 @@ void AEKSanctuary::SaveMap()
 	{
 		AEK_EnemyBase* enemy = Cast<AEK_EnemyBase>(actor);
 		if (!enemy) continue;
+		enemy->InitStat();
 
 		if (enemy->SantuaryID == SanctuaryID)
 		{
-			SavedActors.Add(actor);
-			PatrolRoutes.Add(enemy->GetPatrolRoute());
-			SavedTransforms.Add(enemy->GetTransform());
-			SavedClasses.Add(enemy->GetClass());
+			if (enemy->EnemyStat && enemy->EnemyStat->GetIsBoss())
+			{
+				SavedBoss = enemy;
+				SavedBossTransform = enemy->GetTransform();
+			}
+			else
+			{
+				SavedActors.Add(actor);
+				PatrolRoutes.Add(enemy->GetPatrolRoute());
+				SavedTransforms.Add(enemy->GetTransform());
+				SavedClasses.Add(enemy->GetClass());
+			}
 		}
 	}
 }
 
 void AEKSanctuary::LoadMap()
 {
+	// Load Boss State
+	if (IsValid(SavedBoss) && !SavedBoss->GetFName().IsEqual(FName("None")))
+	{
+		AEK_EnemyBase* enemy = Cast<AEK_EnemyBase>(SavedBoss);
+		if (!enemy)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("AEKSanctuary : Failed to Get Saved Enemy."));
+		}
+		else
+		{
+			// Recover Start State
+			enemy->RestoreState();
+
+			// Set Transform
+			enemy->StopAnimMontage();
+		}
+	}
+
 	// Load Enemy Transform
 	for (int i = 0; i < SavedActors.Num(); i++)
 	{
@@ -141,7 +169,7 @@ void AEKSanctuary::LoadMap()
 		}
 
 		const auto actor = SavedActors[i];
-		
+
 		if (IsValid(actor) && !actor->GetFName().IsEqual(FName("None")))
 		{
 			AEK_EnemyBase* enemy = Cast<AEK_EnemyBase>(actor);
@@ -170,7 +198,7 @@ void AEKSanctuary::LoadMap()
 			SavedActors[i] = enemy;
 
 			// Set Patrol Route
-			if(PatrolRoutes.IsValidIndex(i) && IsValid(PatrolRoutes[i]))
+			if (PatrolRoutes.IsValidIndex(i) && IsValid(PatrolRoutes[i]))
 				enemy->SetPatrolRoute(PatrolRoutes[i]);
 
 			// Recover Start State
@@ -183,6 +211,13 @@ void AEKSanctuary::LoadMap()
 
 	GetWorld()->GetTimerManager().SetTimer(Handle_Transform,
 		[&]() {
+			// Load Boss Transform
+			if (IsValid(SavedBoss) && !SavedBoss->GetFName().IsEqual(FName("None")))
+			{
+				SavedBoss->SetActorTransform(SavedBossTransform, false, nullptr, ETeleportType::ResetPhysics);
+			}
+
+			// Load Enemy Transform
 			for (int i = 0; i < SavedActors.Num(); i++)
 			{
 				if (SavedActors[i])

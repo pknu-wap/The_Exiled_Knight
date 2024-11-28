@@ -30,6 +30,12 @@ void AEK_EnemyBase::BeginPlay()
 	InitialRotation = GetActorRotation();
 }
 
+void AEK_EnemyBase::InitStat()
+{
+	if (!EnemyStat) return;
+	EnemyStat->InitSetting();
+}
+
 #pragma region DamageSystem
 
 float AEK_EnemyBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInvestigator, AActor* DamageCauser)
