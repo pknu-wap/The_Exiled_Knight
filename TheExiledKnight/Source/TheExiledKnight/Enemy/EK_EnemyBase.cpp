@@ -283,6 +283,11 @@ void AEK_EnemyBase::StartBossBattle()
 	userWidget->StartBossBattle(this);
 }
 
+void AEK_EnemyBase::ClearTarget()
+{
+	AttackTarget = nullptr;
+}
+
 FVector AEK_EnemyBase::GetInitializeLocation()
 {
 	return InitialLocation;
