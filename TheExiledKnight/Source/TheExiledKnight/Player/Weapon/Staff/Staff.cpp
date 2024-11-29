@@ -173,9 +173,13 @@ void AStaff::MagicUpdated(EItemCategory Category, int InSlotIdx)
 	USlotComponent* slotComp = pc->GetComponentByClass<USlotComponent>();
 	if (!slotComp) return;
 
-	if (slotComp->MagicSlots.IsValidIndex(InSlotIdx) 
+	if (slotComp->MagicSlots.IsValidIndex(InSlotIdx)
 		&& StaffMagicAnims.IsValidIndex(slotComp->MagicSlots[InSlotIdx].MagicID))
 	{
+		FEKPlayerMagic* EKPlayerStatusTemp =
+			EKPlayerGameInstance->GetEKPlayerMagicData(slotComp->MagicSlots[InSlotIdx].MagicID + 1);
+		if (EKPlayerStatusTemp)
+			EKPlayerMagic = *EKPlayerStatusTemp;
 		StaffCurrentMagicAnim = StaffMagicAnims[slotComp->MagicSlots[InSlotIdx].MagicID];
 	}
 }

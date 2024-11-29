@@ -119,6 +119,13 @@ void AEKPlayer::Tick(float DeltaTime)
 	}
 }
 
+void AEKPlayer::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+
+	EKPlayerStateContainer.RemoveTag(EKPlayerGameplayTags::EKPlayer_State_Jump);
+}
+
 #pragma region Damage
 
 float AEKPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
