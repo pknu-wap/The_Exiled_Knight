@@ -177,7 +177,7 @@ void AStaff::MagicUpdated(EItemCategory Category, int InSlotIdx)
 		&& StaffMagicAnims.IsValidIndex(slotComp->MagicSlots[InSlotIdx].MagicID))
 	{
 		FEKPlayerMagic* EKPlayerStatusTemp =
-			EKPlayerGameInstance->GetEKPlayerMagicData(slotComp->MagicSlots[InSlotIdx].MagicID);
+			EKPlayerGameInstance->GetEKPlayerMagicData(slotComp->MagicSlots[InSlotIdx].MagicID + 1);
 		if (EKPlayerStatusTemp)
 			EKPlayerMagic = *EKPlayerStatusTemp;
 		StaffCurrentMagicAnim = StaffMagicAnims[slotComp->MagicSlots[InSlotIdx].MagicID];
