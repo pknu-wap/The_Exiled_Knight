@@ -21,6 +21,7 @@ public:
 public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	virtual void Landed(const FHitResult& Hit) override;
 
 #pragma region Player Base Component
 
